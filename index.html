@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SocialBuddy - Fun Social Skills Practice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header>
+    <div class="brand">
+      <!-- Mascot-like Mini Icon -->
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: hsl(217, 91%, 60%);">
+        <path d="M12 8V4H8" />
+        <rect width="16" height="12" x="4" y="8" rx="2" />
+        <path d="M2 14h2" />
+        <path d="M20 14h2" />
+        <path d="M15 13v2" />
+        <path d="M9 13v2" />
+      </svg>
+      <h1>SocialBuddy</h1>
+    </div>
+    
+    <button class="btn btn-outline" id="settings-btn" title="System Settings">
+      <!-- Settings Gear SVG -->
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+      Settings
+    </button>
+  </header>
+
+  <main class="app-container">
+
+    <!-- LEFT PANEL: Kid's Practice Stage & Dialogue Arena -->
+    <section class="left-panel">
+      
+      <!-- Screen 1: Home (Module Selector) -->
+      <div id="home-screen" class="fade-in-slide-up">
+        <div class="hero-section">
+          <h2>Say Hello to <span>SocialBuddy</span>!</h2>
+          <p>Choose a friend to practice speaking with. We'll help you find the best things to say in every situation!</p>
+        </div>
+        
+        <div class="module-grid">
+          <!-- Teacher Card -->
+          <div class="glass-card module-card teacher-card" data-module="teacher">
+            <div class="module-icon-wrap">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                <path d="M6 6h10" />
+                <path d="M6 10h10" />
+              </svg>
+            </div>
+            <h3>Teacher</h3>
+            <p>Classroom Decorum</p>
+          </div>
+          
+          <!-- Parent Card -->
+          <div class="glass-card module-card parent-card" data-module="parent">
+            <div class="module-icon-wrap">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <h3>Parent</h3>
+            <p>Honesty & Apologies</p>
+          </div>
+          
+          <!-- Friend Card -->
+          <div class="glass-card module-card friend-card" data-module="friend">
+            <div class="module-icon-wrap">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                <circle cx="12" cy="12" r="10" stroke="none" fill="rgba(255,255,255,0.1)"/>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" />
+                <line x1="15" y1="9" x2="15.01" y2="9" />
+              </svg>
+            </div>
+            <h3>Friend</h3>
+            <p>Sharing & Turn-Taking</p>
+          </div>
+          
+          <!-- Stranger Card -->
+          <div class="glass-card module-card stranger-card" data-module="stranger">
+            <div class="module-icon-wrap">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3>Stranger</h3>
+            <p>Safety Danger Rules</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 2: Scene Loader (Transition Screen) -->
+      <div id="loading-screen" class="glass-card">
+        <div class="loader-animation">
+          <div class="loader-ring"></div>
+          <div class="loader-ring"></div>
+          <div class="loader-ring"></div>
+        </div>
+        <h3 id="loading-text">Walking to the Classroom...</h3>
+      </div>
+
+      <!-- Screen 3: Practice Arena -->
+      <div id="practice-screen" class="fade-in-slide-up">
+        
+        <!-- Game Stage (backdrop) -->
+        <div class="stage scene-classroom">
+          
+          <!-- Character Bubble Dialogue -->
+          <div class="dialogue-bubble" id="dialogue-bubble">
+            <h4 id="dialogue-speaker-name">Teacher</h4>
+            <p id="dialogue-bubble-text">Loading...</p>
+          </div>
+          
+          <!-- Mascot Feedback Bubble (Shown dynamically on top) -->
+          <div class="mascot-bubble" id="mascot-bubble">
+            <h4>Buddy Mascot</h4>
+            <p id="mascot-bubble-text">Loading...</p>
+          </div>
+          
+          <!-- Cartoon Character SVGs -->
+          <div class="character-box" id="character-container">
+            <!-- Dynamic SVG injected here -->
+          </div>
+          
+          <!-- Floating Guide Mascot -->
+          <div class="mascot-box" id="mascot-container">
+            <!-- Dynamic SVG injected here -->
+          </div>
+          
+          <!-- Star Feedback Popup Results Screen -->
+          <div class="overlay-screen" id="results-overlay" style="display: none;">
+            <h3 class="rating-title">Evaluation Complete!</h3>
+            <p class="rating-subtitle">Buddy has analyzed your response. Let's see how you did!</p>
+            
+            <div class="stars-wrap" id="star-rating">
+              <!-- Instanced Stars -->
+            </div>
+            
+            <div class="evaluation-summary-card">
+              <div class="summary-score-line">
+                <span>Politeness Metric:</span>
+                <strong id="eval-politeness">10/10</strong>
+              </div>
+              <div class="summary-score-line">
+                <span>Safety Protocol:</span>
+                <strong id="eval-safety">10/10</strong>
+              </div>
+              <div class="summary-score-line">
+                <span>Relevance & Cosine Sim:</span>
+                <strong id="eval-relevance">10/10</strong>
+              </div>
+              <div class="summary-feedback" id="eval-feedback">
+                Outstanding job! You stated your need politely and followed classroom protocols.
+              </div>
+            </div>
+            
+            <div class="action-controls">
+              <button class="btn btn-outline" id="retry-scenario-btn">Try Again</button>
+              <button class="btn btn-primary" id="next-scenario-btn">Next Scenario</button>
+            </div>
+          </div>
+          
+        </div>
+        
+        <!-- Bottom Controls & Interactive Recorder -->
+        <div class="glass-card control-bar">
+          <div class="voice-input-section">
+            <div class="mic-btn-wrap">
+              <button class="mic-btn" id="mic-btn" title="Speak to Respond">
+                <!-- Microphone SVG icon -->
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                </svg>
+              </button>
+            </div>
+            
+            <div class="input-instructions">
+              <h4 id="mic-status">Press the mic to speak, or type below</h4>
+              
+              <!-- Waveform visualizer -->
+              <div class="waveform-container" id="waveform">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+              </div>
+              
+              <div class="text-fallback-wrap">
+                <input type="text" class="text-input" id="text-input" placeholder="Type what you want to say here...">
+                <button class="btn btn-primary" id="submit-btn">
+                  <!-- Send icon -->
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn btn-outline" id="skip-scenario-btn">Exit Module</button>
+        </div>
+        
+      </div>
+      
+    </section>
+
+  </main>
+
+  <!-- Settings Modal Dialog -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>System Audio Settings</h3>
+        <button class="btn btn-outline" id="close-settings-btn" style="padding:0.4rem; border-radius:50%;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <label for="voice-select">Speech Voice (TTS):</label>
+          <select id="voice-select">
+            <option>Loading voices...</option>
+          </select>
+        </div>
+        
+        <div class="setting-row">
+          <label for="mute-toggle">Mute Speech Synthesis:</label>
+          <input type="checkbox" id="mute-toggle">
+        </div>
+        
+        <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.4;">
+          Note: Buddy uses speech recognition to hear you. If your microphone is not working, you can type your answers in the box!
+        </div>
+      </div>
+      <button class="btn btn-primary" id="back-to-home-btn" style="width:100%; justify-content:center;">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- Main script imports loaded sequentially -->
+  <script src="scenarios.js"></script>
+  <script src="characters.js"></script>
+  <script src="pipeline.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
