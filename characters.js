@@ -305,5 +305,55 @@ window.getCharacterSVG = function(characterId, emotion = "neutral", isTalking = 
           </g>
         </svg>
       `;
+    case "mascot-waving": // Buddy raising arm to wave - used in attention overlay
+      return `
+        <svg viewBox="0 0 250 280" class="mascot-svg mascot-waving-svg" xmlns="http://www.w3.org/2000/svg">
+          <!-- Floating shadow -->
+          <ellipse cx="125" cy="240" rx="40" ry="9" fill="rgba(0,0,0,0.12)" class="mascot-shadow-anim" />
+
+          <!-- Floating Body Group -->
+          <g class="mascot-float-anim">
+            <!-- Antenna (glowing during alert) -->
+            <circle cx="125" cy="18" r="12" fill="#ecc94b" opacity="0.5" class="mascot-pulse" />
+            <line x1="125" y1="55" x2="125" y2="22" stroke="#4a5568" stroke-width="5" />
+            <circle cx="125" cy="22" r="7" fill="#ecc94b" />
+
+            <!-- Side ears -->
+            <rect x="56" y="92" width="12" height="30" rx="4" fill="#4a5568" />
+            <rect x="182" y="92" width="12" height="30" rx="4" fill="#4a5568" />
+
+            <!-- Body -->
+            <rect x="66" y="58" width="118" height="100" rx="28" fill="#3182ce" stroke="#2b6cb0" stroke-width="6" />
+
+            <!-- Screen face -->
+            <rect x="76" y="68" width="98" height="65" rx="16" fill="#1a202c" stroke="#4a5568" stroke-width="3" />
+
+            <!-- Happy eyes (curved upward arcs) -->
+            <path d="M 90 98 Q 100 88 110 98 M 140 98 Q 150 88 160 98" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" fill="none" />
+
+            <!-- Big smile mouth -->
+            <path d="M 102 120 Q 125 132 148 120" stroke="#48bb78" stroke-width="5" stroke-linecap="round" fill="none" />
+
+            <!-- LEFT arm (down, static) -->
+            <rect x="46" y="100" width="20" height="50" rx="10" fill="#2b6cb0" />
+            <circle cx="56" cy="155" r="10" fill="#2563eb" />
+
+            <!-- RIGHT arm RAISED and WAVING (animated) -->
+            <g class="mascot-wave-arm">
+              <!-- Upper arm -->
+              <rect x="184" y="80" width="20" height="45" rx="10" fill="#2b6cb0" transform="rotate(-45 194 80)" />
+              <!-- Hand/fist waving -->
+              <circle cx="210" cy="68" r="13" fill="#2563eb" />
+              <!-- Little wave lines radiating from hand -->
+              <path d="M 222 55 Q 232 48 228 40" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" fill="none" />
+              <path d="M 226 62 Q 238 60 238 50" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" fill="none" />
+            </g>
+
+            <!-- Jets / Thruster -->
+            <path d="M 110 158 L 140 158 L 125 178 Z" fill="#e53e3e" />
+            <path d="M 115 158 L 135 158 L 125 192 Z" fill="#dd6b20" class="mascot-fire-anim" />
+          </g>
+        </svg>
+      `;
   }
 }

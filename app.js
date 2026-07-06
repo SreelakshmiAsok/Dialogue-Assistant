@@ -26,7 +26,11 @@ let state = {
   
   // TTS settings
   voice: null,
-  isMuted: false
+  isMuted: false,
+
+  // Attention System
+  childName: "Friend",          // Default; set by user in settings
+  attentionAlertActive: false
 };
 
 // Elements cache
@@ -73,6 +77,13 @@ function initElements() {
   el.closeSettingsBtn = document.getElementById("close-settings-btn");
   el.voiceSelect = document.getElementById("voice-select");
   el.muteToggle = document.getElementById("mute-toggle");
+
+  // Attention Overlay Elements
+  el.attentionOverlay     = document.getElementById("attention-overlay");
+  el.attentionMascot      = document.getElementById("attention-mascot");
+  el.attentionNameDisplay = document.getElementById("attention-name-display");
+  el.attentionPromptText  = document.getElementById("attention-prompt-text");
+  el.childNameInput       = document.getElementById("child-name-input");
 }
 
 // ==========================================
@@ -145,65 +156,79 @@ function stopRecording() {
 }
 
 // Text-to-Speech (TTS)
-function speakText(text, onStart, onEnd) {
+// options: { rate, pitch } — defaults tuned for a calm, warm delivery
+function speakText(text, onStart, onEnd, options = {}) {
   if (state.isMuted) {
     if (onStart) onStart();
-    setTimeout(() => {
-      if (onEnd) onEnd();
-    }, 1500); // Simulated delay
+    setTimeout(() => { if (onEnd) onEnd(); }, 1500);
     return;
   }
 
-  // Cancel any active speech
   window.speechSynthesis.cancel();
-  
+
   const utterance = new SpeechSynthesisUtterance(text);
-  
-  if (state.voice) {
-    utterance.voice = state.voice;
-  }
-  
-  utterance.onstart = () => {
-    if (onStart) onStart();
-  };
-  
-  utterance.onend = () => {
-    if (onEnd) onEnd();
-  };
-  
+
+  if (state.voice) utterance.voice = state.voice;
+
+  // Calm, unhurried delivery — slightly slower and warmer than browser default
+  utterance.rate  = options.rate  ?? 0.87;   // 1.0 = normal; 0.87 feels gentle
+  utterance.pitch = options.pitch ?? 1.05;   // Slightly raised = warmer/friendlier
+  utterance.volume = 0.95;
+
+  utterance.onstart = () => { if (onStart) onStart(); };
+  utterance.onend   = () => { if (onEnd)   onEnd();   };
   utterance.onerror = (e) => {
     console.error("Speech Synthesis Error:", e);
     if (onEnd) onEnd();
   };
-  
+
   window.speechSynthesis.speak(utterance);
 }
 
 // Load and populate speech synthesis voices
+// Priority: warm/natural-sounding voices over robotic ones
+const SOFT_VOICE_PRIORITY = [
+  // Warm, calm, child-friendly voices (ordered by preference)
+  "Samantha",   // macOS/iOS — very natural
+  "Karen",      // macOS/iOS Australian — soft
+  "Moira",      // macOS/iOS Irish — gentle
+  "Tessa",      // macOS/iOS South African
+  "Fiona",      // macOS/iOS Scottish — soft
+  "Google UK English Female",
+  "Microsoft Libby",
+  "Microsoft Aria",
+  "Microsoft Jenny",
+  "Microsoft Zira",
+  "Google US English",
+];
+
 function populateVoices() {
   if (!window.speechSynthesis) return;
-  
+
   const voices = window.speechSynthesis.getVoices();
   el.voiceSelect.innerHTML = "";
-  
+
+  // Find the best soft voice automatically
+  if (!state.voice) {
+    for (const preferred of SOFT_VOICE_PRIORITY) {
+      const match = voices.find(v => v.name.includes(preferred) && v.lang.startsWith("en"));
+      if (match) { state.voice = match; break; }
+    }
+    // Fallback: any en-GB or en-AU (tend to be softer than en-US)
+    if (!state.voice) {
+      state.voice = voices.find(v => v.lang === "en-GB" || v.lang === "en-AU")
+                 ?? voices.find(v => v.lang.startsWith("en-"))
+                 ?? voices[0];
+    }
+  }
+
   voices.forEach((voice, i) => {
     const option = document.createElement("option");
     option.value = i;
     option.textContent = `${voice.name} (${voice.lang})`;
-    
-    // Choose sensible default voice
-    if (voice.lang.startsWith("en-") && !state.voice) {
-      if (voice.name.includes("Google") || voice.name.includes("Natural") || voice.name.includes("Zira")) {
-        state.voice = voice;
-        option.selected = true;
-      }
-    }
+    if (state.voice && voice.name === state.voice.name) option.selected = true;
     el.voiceSelect.appendChild(option);
   });
-  
-  if (!state.voice && voices.length > 0) {
-    state.voice = voices[0];
-  }
 }
 
 // ==========================================
@@ -227,6 +252,9 @@ function transitionTo(newState) {
       el.stageSubtitle.innerText = "Practice speaking with different friends!";
       state.currentModuleId = null;
       state.currentScenario = null;
+      // Stop attention monitoring when back on home
+      if (window.AttentionSystem) window.AttentionSystem.stop();
+      hideAttentionAlert();
       break;
       
     case "LOADING":
@@ -271,6 +299,15 @@ function transitionTo(newState) {
       setTimeout(() => {
         speakPrompt();
       }, 400);
+
+      // Start attention monitoring (only during active practice)
+      if (window.AttentionSystem) {
+        window.AttentionSystem.reset();
+        window.AttentionSystem.start(
+          showAttentionAlert,   // called when child looks away > 5s
+          hideAttentionAlert    // called when child looks back
+        );
+      }
       break;
       
     case "EVALUATING":
@@ -374,6 +411,53 @@ function triggerMascotFeedback() {
       }, 1500);
     }
   );
+}
+
+// ==========================================
+// Attention Re-engagement
+// ==========================================
+
+function showAttentionAlert() {
+  if (state.attentionAlertActive) return;
+  state.attentionAlertActive = true;
+
+  // Stop TTS so it doesn't overlap
+  window.speechSynthesis.cancel();
+
+  // Render waving Buddy into the overlay
+  el.attentionMascot.innerHTML = getCharacterSVG("mascot-waving", "happy", false);
+
+  // Set personalised name greeting
+  el.attentionNameDisplay.innerText = `Hey, ${state.childName}! 👋`;
+  el.attentionPromptText.innerText = `It's okay! Take your time. Buddy is right here waiting for you!`;
+
+  el.attentionOverlay.style.display = "flex";
+
+  // Gentle TTS nudge — extra slow & warm so it doesn't startle the child
+  speakText(
+    `Hey ${state.childName}... come back. Buddy is right here waiting for you.`,
+    null,
+    null,
+    { rate: 0.78, pitch: 1.12 }   // noticeably slower & warmer than normal speech
+  );
+}
+
+function hideAttentionAlert() {
+  if (!state.attentionAlertActive) return;
+  state.attentionAlertActive = false;
+
+  el.attentionOverlay.style.display = "none";
+
+  // Resume scenario prompt if we're mid-play
+  if (state.gameState === "PLAYING" && state.currentScenario) {
+    setTimeout(() => {
+      speakText(
+        `Welcome back, ${state.childName}! Let's continue.`,
+        null,
+        () => speakPrompt()
+      );
+    }, 400);
+  }
 }
 
 // ==========================================
@@ -510,10 +594,16 @@ function bindEvents() {
       window.speechSynthesis.cancel();
     }
   });
+
+  // Child name input — personalises attention alert greeting
+  el.childNameInput.addEventListener("input", (e) => {
+    const name = e.target.value.trim();
+    state.childName = name.length > 0 ? name : "Friend";
+  });
 }
 
 // Window load entry
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   initElements();
   bindEvents();
   initSpeechRecognition();
@@ -524,6 +614,11 @@ window.addEventListener("DOMContentLoaded", () => {
       window.speechSynthesis.onvoiceschanged = populateVoices;
     }
     populateVoices();
+  }
+
+  // Initialise attention detection (async, non-blocking)
+  if (window.AttentionSystem) {
+    await window.AttentionSystem.init();
   }
   
   // Start on Home screen

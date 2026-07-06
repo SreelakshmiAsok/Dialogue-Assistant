@@ -888,3 +888,125 @@ header {
     height: 550px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   ATTENTION RE-ENGAGEMENT OVERLAY
+   ══════════════════════════════════════════════════════════ */
+
+.attention-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(14, 30, 60, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: attention-fade-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes attention-fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.attention-card {
+  background: linear-gradient(145deg, #ffffff, #f0f7ff);
+  border: 4px solid #93c5fd;
+  border-radius: 40px;
+  padding: 2.5rem 3rem;
+  max-width: 520px;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow:
+    0 30px 70px rgba(37, 99, 235, 0.2),
+    0 10px 30px rgba(0, 0, 0, 0.08);
+  animation: attention-card-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes attention-card-pop {
+  from { transform: scale(0.8) translateY(30px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);      opacity: 1; }
+}
+
+/* Waving mascot inside the overlay */
+.attention-mascot {
+  width: 180px;
+  height: 200px;
+}
+
+.mascot-waving-svg {
+  width: 100%;
+  height: auto;
+}
+
+/* The waving arm swings back and forth */
+.mascot-wave-arm {
+  transform-origin: 185px 100px;
+  animation: wave-arm 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes wave-arm {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(25deg); }
+}
+
+/* Child's name heading */
+.attention-message h2 {
+  font-size: 2.25rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.4rem;
+}
+
+.attention-message p {
+  font-size: 1.2rem;
+  color: #475569;
+  font-weight: 600;
+  line-height: 1.5;
+  max-width: 380px;
+}
+
+/* Pulsing "look at screen" hint */
+.attention-return-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attention-return-hint small {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.attention-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.attention-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3b82f6;
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+
+.attention-dots span:nth-child(2) { animation-delay: 0.2s; }
+.attention-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.4; }
+  50%       { transform: scale(1.4); opacity: 1; }
+}

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SocialBuddy - Fun Social Skills Practice</title>
   <link rel="stylesheet" href="style.css">
+  <!-- MediaPipe Face Mesh (CDN) for attention detection -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -20,7 +23,10 @@
         <path d="M15 13v2" />
         <path d="M9 13v2" />
       </svg>
-      <h1>SocialBuddy</h1>
+      <div>
+        <h1 id="stage-title">SocialBuddy</h1>
+        <p id="stage-subtitle" style="font-size:0.85rem;color:#64748b;font-weight:600;margin:0;"></p>
+      </div>
     </div>
     
     <button class="btn btn-outline" id="settings-btn" title="System Settings">
@@ -223,6 +229,33 @@
 
   </main>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       ATTENTION RE-ENGAGEMENT OVERLAY
+       Shown when child looks away for > 5 seconds during a scenario.
+       Features: waving mascot + child's name + gentle prompt
+  ════════════════════════════════════════════════════════════ -->
+  <div class="attention-overlay" id="attention-overlay" style="display:none;">
+    <div class="attention-card">
+      <!-- Waving Mascot -->
+      <div class="attention-mascot" id="attention-mascot">
+        <!-- Injected by characters.js -->
+      </div>
+
+      <div class="attention-message">
+        <h2 id="attention-name-display">Hey there! 👋</h2>
+        <p id="attention-prompt-text">It's okay! Come back when you're ready. Buddy is waiting for you!</p>
+      </div>
+
+      <!-- Gentle return indicator -->
+      <div class="attention-return-hint">
+        <div class="attention-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <small>Look at the screen to continue</small>
+      </div>
+    </div>
+  </div>
+
   <!-- Settings Modal Dialog -->
   <div class="modal-overlay" id="settings-modal">
     <div class="modal-content">
@@ -231,6 +264,12 @@
         <button class="btn btn-outline" id="close-settings-btn" style="padding:0.4rem; border-radius:50%;">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Child name for personalised attention alerts -->
+        <div class="setting-row">
+          <label for="child-name-input">Child's Name:</label>
+          <input type="text" id="child-name-input" placeholder="e.g. Arjun" maxlength="20" style="max-width:160px;">
+        </div>
+
         <div class="setting-row">
           <label for="voice-select">Speech Voice (TTS):</label>
           <select id="voice-select">
@@ -255,6 +294,7 @@
   <script src="scenarios.js"></script>
   <script src="characters.js"></script>
   <script src="pipeline.js"></script>
+  <script src="attention.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
