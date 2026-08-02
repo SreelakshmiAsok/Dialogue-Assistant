@@ -1010,3 +1010,98 @@ header {
   0%, 100% { transform: scale(0.8); opacity: 0.4; }
   50%       { transform: scale(1.4); opacity: 1; }
 }
+
+/* Animated Visual AAC Cartoon Hint Cards */
+.visual-hints-card {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.hints-header span {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #475569;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.hints-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.hint-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  border: 3px solid rgba(0,0,0,0.06);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.hint-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.hint-card:active {
+  transform: scale(0.96);
+}
+
+.hint-icon {
+  font-size: 2rem;
+  line-height: 1;
+  animation: float-icon 2s ease-in-out infinite alternate;
+}
+
+.hint-label {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #1e293b;
+}
+
+@keyframes float-icon {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+
+.mic-btn.recording {
+  background: #ef4444 !important;
+  animation: pulse-red 1s infinite alternate;
+  border-color: #f87171 !important;
+}
+
+@keyframes pulse-red {
+  from { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  to { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+}
+
+.speaker-replay-btn {
+  background: hsl(217, 91%, 95%);
+  color: hsl(217, 91%, 45%);
+  border: 2px solid hsl(217, 91%, 80%);
+  border-radius: 12px;
+  padding: 0.25rem 0.65rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.15s ease;
+}
+
+.speaker-replay-btn:hover {
+  transform: scale(1.05);
+  background: hsl(217, 91%, 90%);
+}
+
+

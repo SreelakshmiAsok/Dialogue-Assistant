@@ -152,23 +152,22 @@ window.runFullPipeline = function(scenarioId, userText) {
   let mascotFeedback = "";
 
   // Adjust scores based on ontology results
-  // Politeness
   if (scenarioId === "teacher") {
     const politeCheck = ruleEvaluations.find(r => r.id === "T_POLITE");
     const decorumCheck = ruleEvaluations.find(r => r.id === "T_DECORUM");
     
-    if (politeCheck.status === "PASS") politeScore = 10;
+    if (politeCheck?.status === "PASS") politeScore = 10;
     else politeScore = 5;
 
-    if (decorumCheck.status === "VIOLATION") politeScore = Math.max(2, politeScore - 4);
+    if (decorumCheck?.status === "VIOLATION") politeScore = Math.max(2, politeScore - 4);
   } else if (scenarioId === "parent") {
     const apologyCheck = ruleEvaluations.find(r => r.id === "P_APOLOGY");
-    if (apologyCheck.status === "PASS") politeScore = 10;
+    if (apologyCheck?.status === "PASS") politeScore = 10;
     else politeScore = 6;
   } else if (scenarioId === "friend") {
-    const cooperateCheck = ruleEvaluations.find(r => r.id === "F_COOPERATE");
-    if (cooperateCheck.status === "PASS") politeScore = 10;
-    else if (cooperateCheck.status === "VIOLATION") politeScore = 2;
+    const cooperateCheck = ruleEvaluations.find(r => r.id === "F_COOPERATE" || r.id === "F_TURN");
+    if (cooperateCheck?.status === "PASS") politeScore = 10;
+    else if (cooperateCheck?.status === "VIOLATION") politeScore = 2;
     else politeScore = 6;
   }
 
@@ -178,12 +177,10 @@ window.runFullPipeline = function(scenarioId, userText) {
     const adultCheck = ruleEvaluations.find(r => r.id === "S_ADULT");
     const distanceCheck = ruleEvaluations.find(r => r.id === "S_DISTANCE");
 
-    if (refusalCheck.status === "VIOLATION" || distanceCheck.status === "VIOLATION") {
-      safetyScore = 1; // Extremely dangerous
-    } else if (refusalCheck.status === "PASS" && adultCheck.status === "PASS") {
+    if (refusalCheck?.status === "VIOLATION" || distanceCheck?.status === "VIOLATION") {
+      safetyScore = 1;
+    } else if (refusalCheck?.status === "PASS") {
       safetyScore = 10;
-    } else if (refusalCheck.status === "PASS") {
-      safetyScore = 7; // Good refusal, but forgot to suggest finding mom/dad
     } else {
       safetyScore = 3;
     }
@@ -271,4 +268,36 @@ TASK: Evaluate the safety, politeness, and relevance of the response. Output mas
       mascotFeedback: mascotFeedback
     }
   };
-}
+};
+
+window.runFullPipelineAsync = async function(scenarioId, userText) {
+  // Try connecting to Python FastAPI Ontology Reasoning Server
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1200); // 1.2s timeout
+    
+    const response = await fetch("http://localhost:8000/reason", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scenarioId: scenarioId, userText: userText }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (response.ok) {
+      const liveOntologyData = await response.json();
+      console.log("⚡ [FastAPI Ontology Reasoner Response]:", liveOntologyData);
+      
+      const localResult = window.runFullPipeline(scenarioId, userText);
+      localResult.ontology.pythonBackendActive = true;
+      localResult.ontology.owlFile = liveOntologyData.ontology.ontology_file;
+      localResult.ontology.pythonRules = liveOntologyData.ontology.rules;
+      return localResult;
+    }
+  } catch (err) {
+    console.log("ℹ️ [Ontology Service]: Python FastAPI server offline or timing out, using in-browser rule engine fallback.");
+  }
+  
+  return window.runFullPipeline(scenarioId, userText);
+};
+

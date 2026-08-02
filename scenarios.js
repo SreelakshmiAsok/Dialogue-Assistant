@@ -1,4 +1,4 @@
-// scenarios.js - Configured practice modules, ontology rules, and RAG reference cases
+// scenarios.js - Ultra-Short Questions & Visual Cartoon AAC Hint Cards for Autistic Children
 
 const scenarios = {
   teacher: {
@@ -9,39 +9,47 @@ const scenarios = {
     themeColor: "--accent-teacher",
     bgClass: "scene-classroom",
     initialEmotion: "neutral",
-    introText: "Let's practice talking politely to your teacher in the classroom. Ms. Apple is about to start a spelling test.",
-    question: "Welcome back, class! Before we start our spelling test, does anyone need to use the restroom?",
-    audioPrompt: "Welcome back, class! Before we start our spelling test, does anyone need to use the restroom?",
+    introText: "Practice talking to teacher!",
+    question: "Do you need the bathroom?",
+    audioPrompt: "Do you need the bathroom?",
     
-    // Ontology of Rules for Teacher Interactions
+    visualHints: [
+      {
+        id: "t_hint_bathroom",
+        icon: "🚻",
+        label: "Bathroom Please",
+        fullText: "Excuse me Ms. Apple, may I please go to the bathroom?",
+        color: "#8b5cf6"
+      },
+      {
+        id: "t_hint_ready",
+        icon: "✏️",
+        label: "Ready for Test",
+        fullText: "No thank you, I am ready for the test!",
+        color: "#3b82f6"
+      }
+    ],
+
     ontology: {
       rules: [
         {
           id: "T_POLITE",
-          name: "Polite Request Form",
-          description: "Use polite words like 'please', 'excuse me', or 'may I'.",
-          keywords: ["please", "excuse", "may i", "could you", "thank you", "would you mind"],
+          name: "Polite Words",
+          description: "Use polite words like 'please' or 'excuse me'.",
+          keywords: ["please", "excuse", "may i", "thank you"],
           severity: "high"
         },
         {
           id: "T_PURPOSE",
-          name: "Clear Request Purpose",
-          description: "Clearly state your need (bathroom, toilet, restroom).",
-          keywords: ["bathroom", "restroom", "toilet", "washroom", "pee", "poop", "go"],
+          name: "Clear Need",
+          description: "Say bathroom or ready.",
+          keywords: ["bathroom", "restroom", "toilet", "ready"],
           severity: "high"
-        },
-        {
-          id: "T_DECORUM",
-          name: "Respectful Decorum",
-          description: "Avoid demanding, aggressive, or overly abrupt statements.",
-          negativeKeywords: ["gonna go", "i want", "let me", "have to leave now", "im leaving"],
-          severity: "medium"
         }
       ],
-      description: "School Decorum & Classroom Behavior Standard. Requires polite requests to authority figures, clear statement of bodily needs, and respectful phrasing."
+      description: "Classroom Behavior Standard."
     },
 
-    // RAG Reference DB (Representing vector database semantic examples)
     ragDatabase: [
       {
         utterance: "Excuse me Ms. Apple, may I please go to the bathroom?",
@@ -50,37 +58,7 @@ const scenarios = {
         evaluation: {
           score: 10,
           emotion: "happy",
-          feedback: "Wonderful job! You were very polite, used 'excuse me' and 'please', and clearly stated what you needed."
-        }
-      },
-      {
-        utterance: "Please can I go to the restroom?",
-        intent: "standard_polite",
-        vector: [0.85, 0.88, 0.92, 0.9],
-        evaluation: {
-          score: 9,
-          emotion: "happy",
-          feedback: "Great response! You asked politely using 'please' and made your request clear."
-        }
-      },
-      {
-        utterance: "I need to go to the toilet right now.",
-        intent: "abrupt_request",
-        vector: [0.75, 0.6, 0.5, 0.7],
-        evaluation: {
-          score: 6,
-          emotion: "concerned",
-          feedback: "You stated what you needed clearly, but it sounds a bit demanding. Try adding 'please' or asking 'may I' to make it polite."
-        }
-      },
-      {
-        utterance: "I want to go play outside instead.",
-        intent: "off_topic",
-        vector: [0.3, 0.2, 0.4, 0.1],
-        evaluation: {
-          score: 4,
-          emotion: "concerned",
-          feedback: "The teacher asked about the restroom before the test. Let's focus on answering her question first!"
+          feedback: "Great job! Very polite! 🌟"
         }
       },
       {
@@ -89,8 +67,8 @@ const scenarios = {
         vector: [0.9, 0.95, 0.85, 0.9],
         evaluation: {
           score: 10,
-          emotion: "proud",
-          feedback: "Excellent! You answered the question directly and politely let her know you are ready."
+          emotion: "happy",
+          feedback: "Awesome! Ready for class! ✏️"
         }
       }
     ]
@@ -104,79 +82,84 @@ const scenarios = {
     themeColor: "--accent-parent",
     bgClass: "scene-livingroom",
     initialEmotion: "neutral",
-    introText: "Let's practice telling the truth and apologizing when something goes wrong. Dad is in the living room.",
-    question: "Oh no! Did you drop this toy? It looks like the robot's arm is broken. Can you tell me what happened?",
-    audioPrompt: "Oh no! Did you drop this toy? It looks like the robot's arm is broken. Can you tell me what happened?",
+    introText: "Practice talking to Dad!",
+    question: "Did you drop the toy?",
+    audioPrompt: "Did you drop the toy?",
 
-    // Ontology of Rules for Parent Interactions
+    visualHints: [
+      {
+        id: "p_hint_sorry",
+        icon: "🧸",
+        label: "I dropped it, Sorry!",
+        fullText: "I'm sorry Dad, I accidentally dropped it while playing.",
+        color: "#2563eb"
+      },
+      {
+        id: "p_hint_fix",
+        icon: "🩹",
+        label: "Can we fix it?",
+        fullText: "It broke by accident. Can we fix it together?",
+        color: "#10b981"
+      },
+      {
+        id: "p_hint_cat",
+        icon: "🐾",
+        label: "Cat did it!",
+        fullText: "The cat did it, not me!",
+        color: "#f59e0b"
+      }
+    ],
+
     ontology: {
       rules: [
         {
           id: "P_HONESTY",
-          name: "Honesty & Responsibility",
-          description: "Admit to the accident without blaming others or lying.",
-          keywords: ["i dropped", "i did", "accident", "fell", "it broke", "i was playing", "slipped"],
-          negativeKeywords: ["the cat did it", "not me", "it was already broken", "dog did", "someone else"],
+          name: "Tell Truth",
+          description: "Tell what happened honestly.",
+          keywords: ["dropped", "accident", "broke", "playing", "slipped"],
+          negativeKeywords: ["cat did it", "not me", "dog did"],
           severity: "high"
         },
         {
           id: "P_APOLOGY",
-          name: "Sincere Apology",
-          description: "Express regret for the accident (say sorry).",
-          keywords: ["sorry", "apologize", "didn't mean to", "bad about it"],
+          name: "Say Sorry",
+          description: "Say sorry to Dad.",
+          keywords: ["sorry", "apologize"],
           severity: "high"
-        },
-        {
-          id: "P_RECONCILE",
-          name: "Reconciliation/Fixing",
-          description: "Propose a solution or ask how to fix/repair it.",
-          keywords: ["fix", "glue", "repair", "tape", "help me fix", "buy another", "careful next time"],
-          severity: "medium"
         }
       ],
-      description: "Family Honesty & Accountability Framework. Prioritizes taking responsibility for actions, expressing remorse, and looking for ways to mend situations."
+      description: "Family Honesty Framework."
     },
 
-    // RAG Reference DB
     ragDatabase: [
       {
-        utterance: "I'm sorry Dad, I accidentally dropped it while playing. Can we fix it?",
-        intent: "honest_apology_reconcile",
+        utterance: "I'm sorry Dad, I accidentally dropped it while playing.",
+        intent: "honest_apology",
         vector: [0.96, 0.95, 0.92, 0.98],
         evaluation: {
           score: 10,
           emotion: "proud",
-          feedback: "Perfect! I am so proud of you for telling the truth. It's okay to make mistakes, and asking to fix it together is wonderful!"
+          feedback: "Wonderful! Good job telling the truth! 💖"
         }
       },
       {
-        utterance: "It was an accident, I'm sorry.",
-        intent: "honest_apology",
-        vector: [0.88, 0.9, 0.8, 0.85],
+        utterance: "It broke by accident. Can we fix it together?",
+        intent: "honest_apology_reconcile",
+        vector: [0.9, 0.9, 0.9, 0.9],
         evaluation: {
-          score: 8,
-          emotion: "happy",
-          feedback: "Great job telling the truth and apologizing. It's always best to be honest with Dad."
+          score: 10,
+          emotion: "proud",
+          feedback: "Great job! Let's fix it together! 🛠️"
         }
       },
       {
-        utterance: "I didn't break it! The dog knocked it over!",
+        utterance: "The cat did it, not me!",
         intent: "dishonest_blame",
         vector: [0.4, 0.3, 0.7, 0.3],
         evaluation: {
           score: 3,
           emotion: "concerned",
-          feedback: "It's scary to tell the truth when something breaks, but Dad will be much happier if you take responsibility instead of blaming others."
-        }
-      },
-      {
-        utterance: "It is just a cheap toy anyway, who cares.",
-        intent: "dismissive",
-        vector: [0.5, 0.2, 0.3, 0.2],
-        evaluation: {
-          score: 4,
-          emotion: "concerned",
-          feedback: "Even if you are frustrated, dismissing the broken toy can feel disrespectful. Let's try saying sorry instead."
+          feedback: "Be honest! Dad loves the truth! ❤️"
         }
       }
     ]
@@ -190,79 +173,59 @@ const scenarios = {
     themeColor: "--accent-friend",
     bgClass: "scene-playground",
     initialEmotion: "neutral",
-    introText: "Let's practice sharing and compromise with friends on the playground. Leo has been on the swing for a while.",
-    question: "Hey! I've been playing on this swing for a long time, but now you want a turn. What should we do?",
-    audioPrompt: "Hey! I've been playing on this swing for a long time, but now you want a turn. What should we do?",
+    introText: "Practice sharing!",
+    question: "Want a turn on the swing?",
+    audioPrompt: "Want a turn on the swing?",
 
-    // Ontology of Rules for Friend Interactions
+    visualHints: [
+      {
+        id: "f_hint_timer",
+        icon: "⏱️",
+        label: "Set 2-Min Timer",
+        fullText: "Can we take turns? Set a 2-minute timer!",
+        color: "#ea580c"
+      },
+      {
+        id: "f_hint_slide",
+        icon: "🛝",
+        label: "Play Slide Together",
+        fullText: "Let's play on the slide together!",
+        color: "#06b6d4"
+      }
+    ],
+
     ontology: {
       rules: [
         {
           id: "F_TURN",
-          name: "Turn-Taking Suggestion",
-          description: "Suggest sharing, trading, or setting a timer.",
-          keywords: ["turn", "share", "timer", "minutes", "seconds", "count to", "trade", "next", "after you"],
+          name: "Share Turn",
+          description: "Suggest sharing or setting a timer.",
+          keywords: ["turn", "share", "timer", "minutes", "slide", "together"],
           severity: "high"
-        },
-        {
-          id: "F_COOPERATE",
-          name: "Cooperative Tone",
-          description: "Ask politely rather than commanding or threatening.",
-          keywords: ["can we", "could we", "let's", "would you", "please"],
-          negativeKeywords: ["get off", "my turn now", "give me", "or else", "move"],
-          severity: "high"
-        },
-        {
-          id: "F_FLEXIBILITY",
-          name: "Play Alternatives",
-          description: "Suggest playing together or another activity if the swing is busy.",
-          keywords: ["together", "slide", "sandbox", "ball", "tag", "game", "else"],
-          severity: "low"
         }
       ],
-      description: "Cooperative Peer Play Protocol. Encourages compromise, verbal agreements (timers, counting), polite phrasing, and flexibility in active play."
+      description: "Playground Sharing Protocol."
     },
 
-    // RAG Reference DB
     ragDatabase: [
       {
-        utterance: "Can we take turns? You swing for two more minutes, then it's my turn?",
+        utterance: "Can we take turns? Set a 2-minute timer!",
         intent: "propose_timer_turn",
         vector: [0.94, 0.97, 0.95, 0.92],
         evaluation: {
           score: 10,
           emotion: "happy",
-          feedback: "Awesome sharing! Setting a timer for a couple of minutes is a super fair way to take turns with Leo."
+          feedback: "Awesome! Sharing is super fun! 🎉"
         }
       },
       {
-        utterance: "Let's play together on the slide until you are finished.",
+        utterance: "Let's play on the slide together!",
         intent: "alternative_play",
         vector: [0.85, 0.8, 0.9, 0.88],
         evaluation: {
-          score: 9,
+          score: 10,
           emotion: "happy",
-          feedback: "Great idea! Finding something else to do together while waiting is a very friendly choice."
-        }
-      },
-      {
-        utterance: "Get off the swing! It's my turn and you're being greedy!",
-        intent: "aggressive_demanding",
-        vector: [0.4, 0.5, 0.3, 0.6],
-        evaluation: {
-          score: 4,
-          emotion: "concerned",
-          feedback: "Yelling or calling Leo names might make him angry. Try asking nicely or proposing a game where you take turns."
-        }
-      },
-      {
-        utterance: "Please can I have a turn now?",
-        intent: "polite_ask",
-        vector: [0.9, 0.85, 0.8, 0.82],
-        evaluation: {
-          score: 8,
-          emotion: "happy",
-          feedback: "Very polite asking! Leo will likely respond well to 'please'."
+          feedback: "Yay! Playing together is great! 🎈"
         }
       }
     ]
@@ -274,85 +237,62 @@ const scenarios = {
     characterName: "Mr. Green",
     sceneName: "Sidewalk",
     themeColor: "--accent-stranger",
-    bgClass: "scene-sidewalk",
+    bgClass: "scene-stranger",
     initialEmotion: "neutral",
-    introText: "Let's practice safety rules with strangers. An unknown adult approaches you near the park gate.",
-    question: "Hey kiddo! My cute little puppy is lost in those thick bushes over there. Can you help me search for him? I'll give you a chocolate bar!",
-    audioPrompt: "Hey kiddo! My cute little puppy is lost in those thick bushes over there. Can you help me search for him? I'll give you a chocolate bar!",
+    introText: "Practice safety rules!",
+    question: "Help me find my puppy?",
+    audioPrompt: "Help me find my puppy?",
 
-    // Ontology of Rules for Stranger Danger
+    visualHints: [
+      {
+        id: "s_hint_no",
+        icon: "🛑",
+        label: "NO! Ask Mom!",
+        fullText: "No! I have to ask my Mom first!",
+        color: "#dc2626"
+      },
+      {
+        id: "s_hint_run",
+        icon: "🏃‍♂️",
+        label: "Run to Teacher!",
+        fullText: "No! I am running to find my teacher!",
+        color: "#16a34a"
+      }
+    ],
+
     ontology: {
       rules: [
         {
           id: "S_REFUSAL",
-          name: "Firm Refusal",
-          description: "Say NO clearly and refuse to go with them or take gifts.",
-          keywords: ["no", "cannot", "won't", "don't want to", "leave me alone", "go away", "can't"],
-          negativeKeywords: ["sure", "okay", "let's go", "puppy", "yes", "i will help", "yummy"],
-          severity: "high"
-        },
-        {
-          id: "S_ADULT",
-          name: "Trusted Adult Protocol",
-          description: "State that you will check with or tell your parent, teacher, or guardian.",
-          keywords: ["mom", "dad", "parents", "teacher", "guardian", "police", "adult"],
-          severity: "high"
-        },
-        {
-          id: "S_DISTANCE",
-          name: "Maintain Boundary",
-          description: "Do not accept gifts, food, or agree to move to secondary locations.",
-          negativeKeywords: ["chocolate", "candy", "sweet", "bar", "inside", "car", "bushes"],
+          name: "Say NO",
+          description: "Say NO clearly and tell a trusted adult.",
+          keywords: ["no", "mom", "dad", "teacher", "cannot", "won't"],
+          negativeKeywords: ["sure", "okay", "puppy", "yes", "candy"],
           severity: "high"
         }
       ],
-      description: "Stranger Safety & Child Protection Protocol. Demands absolute refusal of lures (gifts, search requests), immediate boundary enforcement, and routing to a trusted adult."
+      description: "Stranger Safety Rules."
     },
 
-    // RAG Reference DB
     ragDatabase: [
       {
-        utterance: "No thank you, I have to go ask my mom first.",
+        utterance: "No! I have to ask my Mom first!",
         intent: "perfect_safety_refusal",
         vector: [0.98, 0.99, 0.97, 0.96],
         evaluation: {
           score: 10,
-          emotion: "concerned", // Keeps the stranger in a neutral/concerned state because they got blocked
-          characterEmotion: "concerned",
-          feedback: "Brilliant! You said NO firmly, refused to follow him, and said you will tell your Mom. That is exactly what you should do!"
+          emotion: "concerned",
+          feedback: "Brilliant! You said NO and protected yourself! 🛡️"
         }
       },
       {
-        utterance: "Sure! I love puppies and chocolate, let's go find him!",
+        utterance: "Sure! Let's go find the puppy!",
         intent: "dangerous_acceptance",
         vector: [0.3, 0.2, 0.1, 0.2],
         evaluation: {
           score: 1,
-          emotion: "happy", // Stranger gets happy (dangerous!)
-          characterEmotion: "happy",
-          feedback: "Wait! This is very dangerous! Never go with a stranger, even for a cute puppy or candy. Say 'NO' loudly and run to your mom or dad!"
-        }
-      },
-      {
-        utterance: "No, go away! I'm not allowed to talk to you.",
-        intent: "firm_defensive",
-        vector: [0.92, 0.85, 0.9, 0.95],
-        evaluation: {
-          score: 10,
-          emotion: "concerned",
-          characterEmotion: "concerned",
-          feedback: "Excellent safety response! You set a strong boundary and said 'NO' immediately."
-        }
-      },
-      {
-        utterance: "Can I just have the candy?",
-        intent: "lure_acceptance",
-        vector: [0.4, 0.45, 0.3, 0.35],
-        evaluation: {
-          score: 2,
           emotion: "happy",
-          characterEmotion: "happy",
-          feedback: "Oh no! Never take candy, food, or toys from a stranger. It is a trick to get you to go with them. Refuse and run away!"
+          feedback: "Stop! Never go with strangers! Say NO! 🛑"
         }
       }
     ]
@@ -360,4 +300,3 @@ const scenarios = {
 };
 
 window.scenarios = scenarios;
-

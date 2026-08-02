@@ -93,45 +93,68 @@ function initElements() {
 function initSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    console.warn("Speech Recognition API not supported in this browser. Falling back to typing.");
-    if (el.micStatus) el.micStatus.innerText = "Mic unsupported (Type below)";
+    console.warn("Speech Recognition API not supported in this browser.");
+    if (el.micStatus) el.micStatus.innerText = "Mic unsupported. Tap any picture card below! 🎨";
     return;
   }
   
-  state.recognition = new SpeechRecognition();
-  state.recognition.continuous = false;
-  state.recognition.interimResults = false;
-  state.recognition.lang = "en-US";
-  
-  state.recognition.onstart = () => {
-    state.isRecording = true;
-    el.micBtn.classList.add("recording");
-    el.waveform.style.display = "flex";
-    el.micStatus.innerText = "Listening... Speak now!";
-  };
-  
-  state.recognition.onresult = (event) => {
-    const resultText = event.results[0][0].transcript;
-    el.textInput.value = resultText;
-    state.transcriptText = resultText;
-    el.micStatus.innerText = "Speech captured! Click Send to see what Buddy thinks.";
-  };
-  
-  state.recognition.onerror = (event) => {
-    console.error("Speech Recognition Error:", event.error);
-    el.micStatus.innerText = `Microphone error: ${event.error}. Please type.`;
-    stopRecording();
-  };
-  
-  state.recognition.onend = () => {
-    stopRecording();
-  };
+  try {
+    state.recognition = new SpeechRecognition();
+    state.recognition.continuous = false;
+    state.recognition.interimResults = false;
+    state.recognition.lang = "en-US";
+    
+    state.recognition.onstart = () => {
+      state.isRecording = true;
+      el.micBtn.classList.add("recording");
+      el.waveform.style.display = "flex";
+      el.micStatus.innerText = "Listening... Speak to Buddy! 🎤";
+    };
+    
+    state.recognition.onresult = (event) => {
+      const resultText = event.results[0][0].transcript;
+      if (resultText && resultText.trim().length > 0) {
+        el.textInput.value = resultText;
+        state.transcriptText = resultText;
+        if (el.micStatus) {
+          el.micStatus.innerText = `You said: "${resultText}" 🗣️ Sending to Buddy...`;
+        }
+        stopRecording();
+        submitAnswer(resultText);
+      }
+    };
+    
+    state.recognition.onerror = (event) => {
+      console.error("Speech Recognition Error:", event.error);
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        el.micStatus.innerText = "Microphone blocked in browser. Tap any cartoon card below! 🎨";
+      } else {
+        el.micStatus.innerText = "Didn't hear you clearly. Tap a picture card below! 🎨";
+      }
+      stopRecording();
+    };
+    
+    state.recognition.onend = () => {
+      stopRecording();
+    };
+  } catch (e) {
+    console.error("Speech Recognition init error:", e);
+    if (el.micStatus) el.micStatus.innerText = "Tap any picture card below to respond! 🎨";
+  }
 }
 
 function startRecording() {
-  if (state.recognition && !state.isRecording) {
+  if (!state.recognition) {
+    initSpeechRecognition();
+  }
+  
+  if (state.recognition) {
+    if (state.isRecording) {
+      stopRecording();
+      return;
+    }
+
     try {
-      // Stop TTS if speaking
       window.speechSynthesis.cancel();
       state.characterIsTalking = false;
       state.mascotIsTalking = false;
@@ -139,8 +162,16 @@ function startRecording() {
       
       state.recognition.start();
     } catch (err) {
-      console.error(err);
+      console.warn("Speech start warning:", err);
+      try {
+        state.recognition.stop();
+        setTimeout(() => state.recognition.start(), 250);
+      } catch (e) {
+        if (el.micStatus) el.micStatus.innerText = "Mic busy. Tap any cartoon card below! 🎨";
+      }
     }
+  } else {
+    if (el.micStatus) el.micStatus.innerText = "Mic unavailable. Tap any cartoon card below! 🎨";
   }
 }
 
@@ -150,7 +181,7 @@ function stopRecording() {
     if (el.micBtn) el.micBtn.classList.remove("recording");
     if (el.waveform) el.waveform.style.display = "none";
     if (state.recognition) {
-      state.recognition.stop();
+      try { state.recognition.stop(); } catch (e) {}
     }
   }
 }
@@ -235,6 +266,41 @@ function populateVoices() {
 // Navigation & State Machine Transitions
 // ==========================================
 
+function renderVisualHints(currentMod) {
+  const hintsGrid = document.getElementById("visual-hints-grid");
+  if (!hintsGrid || !currentMod || !currentMod.visualHints) return;
+
+  const existingNextBar = document.getElementById("next-action-bar");
+  if (existingNextBar) existingNextBar.remove();
+
+  hintsGrid.innerHTML = "";
+  currentMod.visualHints.forEach(hint => {
+    const card = document.createElement("div");
+    card.className = "hint-card";
+    card.style.borderColor = hint.color || "#3b82f6";
+    card.innerHTML = `
+      <div class="hint-icon">${hint.icon}</div>
+      <div class="hint-label">${hint.label}</div>
+    `;
+
+    card.onclick = () => {
+      card.style.transform = "scale(0.92)";
+      setTimeout(() => { card.style.transform = ""; }, 150);
+      
+      el.textInput.value = hint.fullText;
+      if (el.micStatus) {
+        el.micStatus.innerText = `Hint Idea: "${hint.label}". Speak your answer now! 🎙️`;
+      }
+
+      speakText(`Hint: You can say, ${hint.fullText}`, null, () => {
+        requestMicPermissionAndStart();
+      });
+    };
+
+    hintsGrid.appendChild(card);
+  });
+}
+
 function transitionTo(newState) {
   state.gameState = newState;
   
@@ -252,7 +318,6 @@ function transitionTo(newState) {
       el.stageSubtitle.innerText = "Practice speaking with different friends!";
       state.currentModuleId = null;
       state.currentScenario = null;
-      // Stop attention monitoring when back on home
       if (window.AttentionSystem) window.AttentionSystem.stop();
       hideAttentionAlert();
       break;
@@ -262,10 +327,9 @@ function transitionTo(newState) {
       const mod = scenarios[state.currentModuleId];
       el.loadingText.innerText = `Walking to the ${mod.sceneName}...`;
       
-      // Delay to simulate scene load transition
       setTimeout(() => {
         transitionTo("PLAYING");
-      }, 1500);
+      }, 1200);
       break;
       
     case "PLAYING":
@@ -276,54 +340,36 @@ function transitionTo(newState) {
       el.stageTitle.innerText = `${currentMod.name} Scenario`;
       el.stageSubtitle.innerText = currentMod.introText;
       
-      // Setup backdrop class
       el.practiceScreen.querySelector(".stage").className = `stage ${currentMod.bgClass}`;
       el.dialogueSpeakerName.innerText = currentMod.characterName;
       el.dialogueBubbleText.innerText = "Hello!";
       
-      // Hide mascot guidance bubble initially
+      renderVisualHints(currentMod);
+
       el.mascotBubble.style.display = "none";
       state.showMascotBubble = false;
       
-      // Reset inputs
       el.textInput.value = "";
       state.transcriptText = "";
-      el.micStatus.innerText = "Press the mic to speak, or type below";
+      el.micStatus.innerText = "Tap the Big Mic to Speak! 🎙️";
+      updateSendButtonVisibility();
       
       state.characterEmotion = currentMod.initialEmotion;
       state.mascotEmotion = "neutral";
       
       renderCharacters();
       
-      // Speak the prompt after a slight delay
       setTimeout(() => {
         speakPrompt();
       }, 400);
 
-      // Start attention monitoring (only during active practice)
       if (window.AttentionSystem) {
         window.AttentionSystem.reset();
         window.AttentionSystem.start(
-          showAttentionAlert,   // called when child looks away > 5s
-          hideAttentionAlert    // called when child looks back
+          showAttentionAlert,
+          hideAttentionAlert
         );
       }
-      break;
-      
-    case "EVALUATING":
-      el.practiceScreen.style.display = "grid";
-      
-      // Lock inputs during thinking state
-      el.submitBtn.disabled = true;
-      el.micBtn.style.pointerEvents = "none";
-      el.textInput.disabled = true;
-      
-      runPipelineSequence();
-      break;
-      
-    case "RESULTS":
-      el.practiceScreen.style.display = "grid";
-      renderResultsOverlay();
       break;
   }
 }
@@ -344,33 +390,90 @@ function speakPrompt() {
 }
 
 // ==========================================
-// Kid-Friendly Pipeline Sequence
+// Direct Kid-Friendly Response Processor
 // ==========================================
 
-function runPipelineSequence() {
-  const textVal = el.textInput.value.trim();
-  if (!textVal) {
-    alert("Please type something or speak to Buddy first!");
-    transitionTo("PLAYING");
-    el.submitBtn.disabled = false;
-    el.micBtn.style.pointerEvents = "auto";
-    el.textInput.disabled = false;
-    return;
+async function submitAnswer(textVal) {
+  if (!textVal || !textVal.trim()) return;
+
+  stopRecording();
+
+  try {
+    if (el.submitBtn) el.submitBtn.disabled = true;
+    if (el.micBtn) el.micBtn.style.pointerEvents = "none";
+    
+    el.dialogueBubbleText.innerText = `You said: "${textVal}" 🗣️`;
+    
+    // Calculate results using Python FastAPI Ontology Backend
+    state.pipelineResult = await window.runFullPipelineAsync(state.currentModuleId, textVal);
+    const res = state.pipelineResult;
+    
+    // Show Mascot Guidance Bubble directly on stage
+    state.showMascotBubble = true;
+    el.mascotBubble.style.display = "block";
+    el.mascotBubbleText.innerText = res.llm.mascotFeedback;
+    
+    state.characterEmotion = res.llm.characterEmotion || "happy";
+    state.mascotEmotion = res.llm.scores.safety <= 3 ? "concerned" : "happy";
+    renderCharacters();
+    
+    // Speak Mascot Feedback out loud automatically!
+    speakText(res.llm.mascotFeedback, () => {
+      state.mascotIsTalking = true;
+      renderCharacters();
+    }, () => {
+      state.mascotIsTalking = false;
+      renderCharacters();
+    });
+    
+    // Show Next Friend Action Controls
+    renderNextActionBar();
+  } catch (err) {
+    console.error("submitAnswer error:", err);
+  } finally {
+    if (el.submitBtn) el.submitBtn.disabled = false;
+    if (el.micBtn) el.micBtn.style.pointerEvents = "auto";
+  }
+}
+
+function renderNextActionBar() {
+  const hintsCard = document.querySelector(".visual-hints-card");
+  if (!hintsCard) return;
+  
+  let nextBar = document.getElementById("next-action-bar");
+  if (!nextBar) {
+    nextBar = document.createElement("div");
+    nextBar.id = "next-action-bar";
+    nextBar.className = "next-action-bar";
+    hintsCard.appendChild(nextBar);
   }
   
-  // Calculate results instantly behind the scenes using our mock engine
-  state.pipelineResult = runFullPipeline(state.currentModuleId, textVal);
-  
-  // Show a cute thinking dialogue bubble
-  el.dialogueBubbleText.innerText = "Buddy the Mascot is thinking... 💭";
-  state.mascotEmotion = "neutral";
-  state.characterEmotion = "neutral";
-  renderCharacters();
-  
-  // Wait 1.5 seconds, then display Mascot's guidance
-  setTimeout(() => {
-    triggerMascotFeedback();
-  }, 1500);
+  const moduleKeys = Object.keys(scenarios);
+  const currentIndex = moduleKeys.indexOf(state.currentModuleId);
+  const nextModuleId = moduleKeys[(currentIndex + 1) % moduleKeys.length];
+  const nextMod = scenarios[nextModuleId];
+
+  nextBar.innerHTML = `
+    <button class="btn btn-primary btn-bounce" id="next-friend-btn" style="font-size:1.15rem; padding:0.85rem 1.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+      Next Friend: ${nextMod.name} ➡️
+    </button>
+    <button class="btn btn-outline" id="retry-current-btn" style="font-size:1rem;">
+      Try Again 🔄
+    </button>
+  `;
+
+  document.getElementById("next-friend-btn").onclick = (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    state.currentModuleId = nextModuleId;
+    nextBar.remove();
+    transitionTo("PLAYING");
+  };
+
+  document.getElementById("retry-current-btn").onclick = (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    nextBar.remove();
+    transitionTo("PLAYING");
+  };
 }
 
 function triggerMascotFeedback() {
@@ -514,6 +617,32 @@ function renderResultsOverlay() {
   el.textInput.disabled = false;
 }
 
+function updateSendButtonVisibility() {
+  if (!el.submitBtn || !el.textInput) return;
+  const hasTypedText = el.textInput.value.trim().length > 0;
+  el.submitBtn.style.display = hasTypedText ? "inline-flex" : "none";
+}
+
+async function requestMicPermissionAndStart() {
+  if (state.isRecording) {
+    stopRecording();
+    return;
+  }
+
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.audioStream = stream;
+    } catch (err) {
+      console.warn("Microphone permission denied:", err);
+      if (el.micStatus) el.micStatus.innerText = "Mic blocked! Please click 'Allow' in your URL bar 🎙️";
+      return;
+    }
+  }
+
+  startRecording();
+}
+
 // ==========================================
 // Event Listeners & Initializations
 // ==========================================
@@ -522,31 +651,43 @@ function bindEvents() {
   // Module selection
   document.querySelectorAll(".module-card").forEach(card => {
     card.addEventListener("click", () => {
+      // Unlock browser SpeechSynthesis on user click gesture
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.resume();
+      }
       state.currentModuleId = card.getAttribute("data-module");
       transitionTo("LOADING");
     });
   });
   
-  // Voice Input Events
+  // Voice Input Events with explicit permission prompt
   el.micBtn.addEventListener("click", () => {
-    if (state.isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
+    requestMicPermissionAndStart();
   });
+
+  // Replay Audio Speaker Button
+  const repeatBtn = document.getElementById("repeat-audio-btn");
+  if (repeatBtn) {
+    repeatBtn.addEventListener("click", () => {
+      speakPrompt();
+    });
+  }
   
+  // Send Button visibility (only displays when typed text exists)
+  el.textInput.addEventListener("input", updateSendButtonVisibility);
+  el.textInput.addEventListener("keyup", updateSendButtonVisibility);
+
   // TextInput submission
   el.submitBtn.addEventListener("click", () => {
-    stopRecording();
-    transitionTo("EVALUATING");
+    submitAnswer(el.textInput.value);
+    updateSendButtonVisibility();
   });
   
   // Enter key to submit
   el.textInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      stopRecording();
-      transitionTo("EVALUATING");
+      submitAnswer(el.textInput.value);
+      updateSendButtonVisibility();
     }
   });
   

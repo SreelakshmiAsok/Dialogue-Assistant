@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/dialogue-assistant/social-communication#"
+     xml:base="http://www.semanticweb.org/dialogue-assistant/social-communication"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication">
+        <rdfs:comment>Semantic Dialogue Assistant Ontology for ASD Social Communication Training</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#hasRole">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+        <rdfs:comment>Links a person to their social role (e.g., Teacher, Parent, Peer)</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#inContext">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Context"/>
+        <rdfs:comment>Links a person to their current physical/social context</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#speakingTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+        <rdfs:comment>Identifies the interlocutor the user is interacting with</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#recommendsResponse">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+        <rdfs:comment>Links an input utterance to an inferred safe, appropriate response</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#hasText">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#isSafe">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#politenessLevel">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Teacher">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Parent">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Peer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Stranger">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialRole"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Context"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Classroom">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Context"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Home">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Context"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Playground">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Context"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Greeting">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Question">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Request">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Utterance"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals (Sample Instances)
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#ChildUser">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Person"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#TeacherRole1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Teacher"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#ClassroomEnv">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Classroom"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#SampleGreetingUtterance">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Greeting"/>
+        <hasText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Good morning</hasText>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#PoliteTeacherResponse">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
+        <hasText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Good morning, Teacher! How are you today?</hasText>
+        <isSafe rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isSafe>
+        <politenessLevel rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</politenessLevel>
+    </owl:NamedIndividual>
+
+</rdf:RDF>
