@@ -45,6 +45,13 @@ const scenarios = {
           description: "Say bathroom or ready.",
           keywords: ["bathroom", "restroom", "toilet", "ready"],
           severity: "high"
+        },
+        {
+          id: "T_DECORUM",
+          name: "Formal Respect Check",
+          description: "Avoid informal or disrespectful phrases when talking to an authority figure.",
+          negativeKeywords: ["hey man", "shut up", "gimme", "stupid", "whatever", "dumb"],
+          severity: "high"
         }
       ],
       description: "Classroom Behavior Standard."
@@ -117,7 +124,7 @@ const scenarios = {
           name: "Tell Truth",
           description: "Tell what happened honestly.",
           keywords: ["dropped", "accident", "broke", "playing", "slipped"],
-          negativeKeywords: ["cat did it", "not me", "dog did"],
+          negativeKeywords: ["cat did it", "not me", "dog did", "cat did", "wasn't me", "didn't do", "not my fault", "didn't break", "didn't drop", "never touched"],
           severity: "high"
         },
         {
@@ -202,6 +209,13 @@ const scenarios = {
           description: "Suggest sharing or setting a timer.",
           keywords: ["turn", "share", "timer", "minutes", "slide", "together"],
           severity: "high"
+        },
+        {
+          id: "F_HOSTILE",
+          name: "Friendly Words",
+          description: "Avoid hostile words like 'get lost' or 'shut up'.",
+          negativeKeywords: ["mine", "no way", "get lost", "move", "go away", "shut up"],
+          severity: "high"
         }
       ],
       description: "Playground Sharing Protocol."
@@ -265,9 +279,16 @@ const scenarios = {
         {
           id: "S_REFUSAL",
           name: "Say NO",
-          description: "Say NO clearly and tell a trusted adult.",
-          keywords: ["no", "mom", "dad", "teacher", "cannot", "won't"],
-          negativeKeywords: ["sure", "okay", "puppy", "yes", "candy"],
+          description: "Say NO clearly.",
+          keywords: ["no", "cannot", "won't", "stop", "never", "dont"],
+          negativeKeywords: ["sure", "okay", "puppy", "yes", "candy", "chocolate", "car", "find", "help", "go", "show", "will"],
+          severity: "high"
+        },
+        {
+          id: "S_ADULT",
+          name: "Tell Adult",
+          description: "Invoke a trusted adult.",
+          keywords: ["mom", "dad", "teacher", "parent", "police", "adult", "family", "mother", "father"],
           severity: "high"
         }
       ],
