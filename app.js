@@ -1,220 +1,313 @@
-// app.js - Kid-Friendly Social Skills Practice Application Orchestrator
+// app.js – SocialBuddy | 3-Screen Multimodal Voice Game Orchestrator
 
-// Global Application State
-let state = {
-  gameState: "HOME", // HOME, LOADING, PLAYING, EVALUATING, RESULTS
+// ─────────────────────────────────────────────
+// GLOBAL STATE
+// ─────────────────────────────────────────────
+const state = {
+  screen: "LANDING",        // LANDING | CHARACTER_SELECT | GAMEPLAY | EVALUATING | RESULTS
   currentModuleId: null,
   currentScenario: null,
-  
-  // Audio & Speech API
+
+  // Speech
   recognition: null,
   isRecording: false,
   transcriptText: "",
-  
-  // Character states
+  isMuted: false,
+  voice: null,
+
+  // Character animation
   characterEmotion: "neutral",
   characterIsTalking: false,
-  
-  // Mascot states
   mascotEmotion: "neutral",
   mascotIsTalking: false,
-  showMascotBubble: false,
-  mascotText: "",
-  
-  // Pipeline State
-  pipelineResult: null,
-  
-  // TTS settings
-  voice: null,
-  isMuted: false,
 
-  // Attention System
-  childName: "Friend",          // Default; set by user in settings
+  // Pipeline
+  pipelineResult: null,
+
+  // Attention
+  childName: "Friend",
   attentionAlertActive: false
 };
 
-// Elements cache
+// ─────────────────────────────────────────────
+// ELEMENT CACHE
+// ─────────────────────────────────────────────
 let el = {};
 
 function initElements() {
-  el.homeScreen = document.getElementById("home-screen");
-  el.loadingScreen = document.getElementById("loading-screen");
-  el.practiceScreen = document.getElementById("practice-screen");
-  el.resultsOverlay = document.getElementById("results-overlay");
-  
-  el.loadingText = document.getElementById("loading-text");
-  
-  el.characterContainer = document.getElementById("character-container");
-  el.mascotContainer = document.getElementById("mascot-container");
-  el.dialogueBubbleText = document.getElementById("dialogue-bubble-text");
-  el.dialogueSpeakerName = document.getElementById("dialogue-speaker-name");
-  el.mascotBubble = document.getElementById("mascot-bubble");
-  el.mascotBubbleText = document.getElementById("mascot-bubble-text");
-  
-  el.micBtn = document.getElementById("mic-btn");
-  el.micStatus = document.getElementById("mic-status");
-  el.waveform = document.getElementById("waveform");
-  el.textInput = document.getElementById("text-input");
-  el.submitBtn = document.getElementById("submit-btn");
-  el.skipScenarioBtn = document.getElementById("skip-scenario-btn");
-  el.backToHomeBtn = document.getElementById("back-to-home-btn");
-  
-  el.stageTitle = document.getElementById("stage-title");
-  el.stageSubtitle = document.getElementById("stage-subtitle");
-  
-  // Results Overlay Elements
-  el.starRating = document.getElementById("star-rating");
-  el.evalPoliteness = document.getElementById("eval-politeness");
-  el.evalSafety = document.getElementById("eval-safety");
-  el.evalRelevance = document.getElementById("eval-relevance");
-  el.evalFeedback = document.getElementById("eval-feedback");
-  el.nextScenarioBtn = document.getElementById("next-scenario-btn");
-  el.retryScenarioBtn = document.getElementById("retry-scenario-btn");
-  
-  // Settings Elements
-  el.settingsBtn = document.getElementById("settings-btn");
-  el.settingsModal = document.getElementById("settings-modal");
-  el.closeSettingsBtn = document.getElementById("close-settings-btn");
-  el.voiceSelect = document.getElementById("voice-select");
-  el.muteToggle = document.getElementById("mute-toggle");
+  // Screens
+  el.screenLanding         = document.getElementById("screen-landing");
+  el.screenCharSelect      = document.getElementById("screen-character-select");
+  el.screenGameplay        = document.getElementById("screen-gameplay");
 
-  // Attention Overlay Elements
-  el.attentionOverlay     = document.getElementById("attention-overlay");
-  el.attentionMascot      = document.getElementById("attention-mascot");
-  el.attentionNameDisplay = document.getElementById("attention-name-display");
-  el.attentionPromptText  = document.getElementById("attention-prompt-text");
-  el.childNameInput       = document.getElementById("child-name-input");
+  // Landing tabs
+  el.tabBtns               = document.querySelectorAll(".tab-btn");
+  el.panelStart            = document.getElementById("panel-start");
+  el.panelProgress         = document.getElementById("panel-progress");
+  el.panelDashboard        = document.getElementById("panel-dashboard");
+  el.btnStartSession       = document.getElementById("btn-start-session");
+
+  // Progress panel
+  el.progressOverview      = document.getElementById("progress-overview");
+  el.sessionLog            = document.getElementById("session-log");
+
+  // Settings (dashboard)
+  el.childNameInput        = document.getElementById("child-name-input");
+  el.voiceSelect           = document.getElementById("voice-select");
+  el.muteToggle            = document.getElementById("mute-toggle");
+  el.attentionStatus       = document.getElementById("attention-status");
+
+  // Character select
+  el.btnBackFromSelect     = document.getElementById("btn-back-from-select");
+
+  // Gameplay
+  el.btnBackFromGame       = document.getElementById("btn-back-from-game");
+  el.gameplayTitle         = document.getElementById("gameplay-title");
+  el.gameplaySubtitle      = document.getElementById("gameplay-subtitle");
+  el.sceneLabel            = document.getElementById("scene-label");
+  el.gameplayStage         = document.getElementById("gameplay-stage");
+  el.characterContainer    = document.getElementById("character-container");
+  el.mascotContainer       = document.getElementById("mascot-container");
+
+  // Bilingual dialogue
+  el.dialogueSpeakerName   = document.getElementById("dialogue-speaker-name");
+  el.dialogueTanglish      = document.getElementById("dialogue-tanglish");
+  el.dialogueTamil         = document.getElementById("dialogue-tamil");
+  el.replayBtn             = document.getElementById("replay-btn");
+
+  // Voice input
+  el.micBtn                = document.getElementById("mic-btn");
+  el.micStatus             = document.getElementById("mic-status");
+  el.waveform              = document.getElementById("waveform");
+  el.sttPreviewRow         = document.getElementById("stt-preview-row");
+  el.sttPreviewText        = document.getElementById("stt-preview-text");
+  el.submitBtn             = document.getElementById("submit-btn");
+
+  // Mascot guidance card
+  el.mascotGuidanceCard    = document.getElementById("mascot-guidance-card");
+  el.guidanceMascot        = document.getElementById("guidance-mascot");
+  el.guidanceVerdictBadge  = document.getElementById("guidance-verdict-badge");
+  el.mascotBubbleText      = document.getElementById("mascot-bubble-text");
+  el.guidanceCorrectionCard= document.getElementById("guidance-correction-card");
+  el.correctionReason      = document.getElementById("correction-reason");
+  el.correctionSuggestion  = document.getElementById("correction-suggestion");
+
+  // Results overlay
+  el.resultsOverlay        = document.getElementById("results-overlay");
+  el.resultsTitle          = document.getElementById("results-title");
+  el.starRating            = document.getElementById("star-rating");
+  el.evalPoliteness        = document.getElementById("eval-politeness");
+  el.evalSafety            = document.getElementById("eval-safety");
+  el.evalRelevance         = document.getElementById("eval-relevance");
+  el.nextScenarioBtn       = document.getElementById("next-scenario-btn");
+  el.retryScenarioBtn      = document.getElementById("retry-scenario-btn");
+  el.chooseAnotherBtn      = document.getElementById("choose-another-btn");
+
+  // Attention overlay
+  el.attentionOverlay      = document.getElementById("attention-overlay");
+  el.attentionMascot       = document.getElementById("attention-mascot");
+  el.attentionNameDisplay  = document.getElementById("attention-name-display");
+  el.attentionPromptText   = document.getElementById("attention-prompt-text");
 }
 
-// ==========================================
-// Browser Web Speech API Integration
-// ==========================================
+// ─────────────────────────────────────────────
+// SCREEN TRANSITIONS
+// ─────────────────────────────────────────────
+const SCENES = { teacher: "🏫 Classroom", parent: "🏠 Living Room", friend: "🛝 Playground", stranger: "🏙️ Sidewalk" };
 
-function initSpeechRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    console.warn("Speech Recognition API not supported in this browser. Falling back to typing.");
-    if (el.micStatus) el.micStatus.innerText = "Mic unsupported (Type below)";
-    return;
-  }
-  
-  state.recognition = new SpeechRecognition();
-  state.recognition.continuous = false;
-  state.recognition.interimResults = false;
-  state.recognition.lang = "en-US";
-  
-  state.recognition.onstart = () => {
-    state.isRecording = true;
-    el.micBtn.classList.add("recording");
-    el.waveform.style.display = "flex";
-    el.micStatus.innerText = "Listening... Speak now!";
-  };
-  
-  state.recognition.onresult = (event) => {
-    const resultText = event.results[0][0].transcript;
-    el.textInput.value = resultText;
-    state.transcriptText = resultText;
-    el.micStatus.innerText = "Speech captured! Click Send to see what Buddy thinks.";
-  };
-  
-  state.recognition.onerror = (event) => {
-    console.error("Speech Recognition Error:", event.error);
-    el.micStatus.innerText = `Microphone error: ${event.error}. Please type.`;
-    stopRecording();
-  };
-  
-  state.recognition.onend = () => {
-    stopRecording();
-  };
+function showScreen(name) {
+  el.screenLanding.classList.remove("active-screen");
+  el.screenCharSelect.classList.remove("active-screen");
+  el.screenGameplay.classList.remove("active-screen");
+
+  if (name === "LANDING")          el.screenLanding.classList.add("active-screen");
+  else if (name === "CHAR_SELECT") el.screenCharSelect.classList.add("active-screen");
+  else if (name === "GAMEPLAY")    el.screenGameplay.classList.add("active-screen");
+
+  state.screen = name;
 }
 
-function startRecording() {
-  if (state.recognition && !state.isRecording) {
-    try {
-      // Stop TTS if speaking
-      window.speechSynthesis.cancel();
-      state.characterIsTalking = false;
-      state.mascotIsTalking = false;
-      renderCharacters();
-      
-      state.recognition.start();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-}
-
-function stopRecording() {
-  if (state.isRecording) {
-    state.isRecording = false;
-    if (el.micBtn) el.micBtn.classList.remove("recording");
-    if (el.waveform) el.waveform.style.display = "none";
-    if (state.recognition) {
-      state.recognition.stop();
-    }
-  }
-}
-
-// Text-to-Speech (TTS)
-// options: { rate, pitch } — defaults tuned for a calm, warm delivery
-function speakText(text, onStart, onEnd, options = {}) {
-  if (state.isMuted) {
-    if (onStart) onStart();
-    setTimeout(() => { if (onEnd) onEnd(); }, 1500);
-    return;
-  }
-
+function goToLanding() {
+  // Stop any ongoing activities
   window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-
-  if (state.voice) utterance.voice = state.voice;
-
-  // Calm, unhurried delivery — slightly slower and warmer than browser default
-  utterance.rate  = options.rate  ?? 0.87;   // 1.0 = normal; 0.87 feels gentle
-  utterance.pitch = options.pitch ?? 1.05;   // Slightly raised = warmer/friendlier
-  utterance.volume = 0.95;
-
-  utterance.onstart = () => { if (onStart) onStart(); };
-  utterance.onend   = () => { if (onEnd)   onEnd();   };
-  utterance.onerror = (e) => {
-    console.error("Speech Synthesis Error:", e);
-    if (onEnd) onEnd();
-  };
-
-  window.speechSynthesis.speak(utterance);
+  stopRecording();
+  hideMascotCard();
+  if (window.AttentionSystem) window.AttentionSystem.stop();
+  hideAttentionAlert();
+  state.currentModuleId  = null;
+  state.currentScenario  = null;
+  state.pipelineResult   = null;
+  state.transcriptText   = "";
+  
+  // Reset screen classes when returning to landing
+  el.screenGameplay.className = "screen";
+  
+  showScreen("LANDING");
 }
 
-// Load and populate speech synthesis voices
-// Priority: warm/natural-sounding voices over robotic ones
+function goToCharacterSelect() {
+  window.speechSynthesis.cancel();
+  renderHomeAvatars();
+  
+  // Reset screen classes when going to character select
+  el.screenGameplay.className = "screen";
+  
+  showScreen("CHAR_SELECT");
+}
+
+function startGameplay(moduleId) {
+  state.currentModuleId  = moduleId;
+  state.currentScenario  = window.scenarios[moduleId];
+  const mod = state.currentScenario;
+  if (!mod) { console.error("Scenario not found:", moduleId); return; }
+
+  // Reset state
+  state.characterEmotion = mod.initialEmotion;
+  state.mascotEmotion    = "neutral";
+  state.transcriptText   = "";
+  state.pipelineResult   = null;
+  state.isRecording      = false;
+
+  // Update UI labels
+  el.gameplayTitle.innerText    = `${mod.name} Scenario`;
+  el.gameplaySubtitle.innerText = mod.introText;
+  el.sceneLabel.innerText       = SCENES[moduleId] || mod.sceneName;
+
+  // Set scene background and screen theme colour
+  el.gameplayStage.className = `stage ${mod.bgClass}`;
+  el.screenGameplay.className = `screen active-screen playing-${mod.bgClass.replace('scene-', '')}`;
+
+  // Load bilingual question
+  el.dialogueSpeakerName.innerText = mod.characterName;
+  el.dialogueTanglish.innerText    = mod.tanglishQuestion || mod.question;
+  el.dialogueTamil.innerText       = mod.tamilQuestion    || "";
+
+  // Reset input UI
+  el.sttPreviewRow.style.display = "none";
+  el.sttPreviewText.innerText    = "";
+  el.micStatus.innerText         = "Listen to the question, then tap to speak! 🎙️";
+  el.micBtn.classList.remove("recording");
+  el.waveform.style.display      = "none";
+
+  // Hide results overlay
+  el.resultsOverlay.style.display = "none";
+  hideMascotCard();
+
+  // Render characters
+  renderCharacters();
+
+  showScreen("GAMEPLAY");
+
+  // Speak question immediately within 100ms on entering page
+  setTimeout(() => speakPrompt(), 100);
+
+  // Start attention tracking
+  if (window.AttentionSystem) {
+    window.AttentionSystem.reset();
+    window.AttentionSystem.start(showAttentionAlert, hideAttentionAlert);
+  }
+}
+
+// ─────────────────────────────────────────────
+// LANDING – TAB SWITCHING
+// ─────────────────────────────────────────────
+function initLandingTabs() {
+  el.tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      el.tabBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active-tab"));
+      document.getElementById(`panel-${tab}`).classList.add("active-tab");
+      if (tab === "progress") renderProgressPanel();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS PANEL
+// ─────────────────────────────────────────────
+function renderProgressPanel() {
+  const data = window.progressData;
+  const all  = data ? data.getStats() : null;
+
+  if (!data || !all || all.count === 0) {
+    el.progressOverview.innerHTML = `
+      <div class="progress-empty-state">
+        <div class="empty-icon">🌱</div>
+        <h3>No sessions yet!</h3>
+        <p>Complete a session to begin tracking your child's progress here.</p>
+      </div>`;
+    el.sessionLog.innerHTML = "";
+    return;
+  }
+
+  // Stats cards
+  const totalStars  = all.sessions.reduce((a, s) => a + s.stars, 0);
+  const maxStars    = all.count * 5;
+  const pct         = Math.round((totalStars / maxStars) * 100);
+
+  el.progressOverview.innerHTML = `
+    <div class="progress-stat-grid">
+      <div class="stat-card"><div class="stat-num" style="color:#6366f1">${all.count}</div><div class="stat-label">Sessions Played</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:#f59e0b">${all.avgStars} ★</div><div class="stat-label">Average Stars</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:#10b981">${pct}%</div><div class="stat-label">Overall Score</div></div>
+    </div>`;
+
+  // Session table
+  const rows = all.sessions.slice().reverse().map(s => `
+    <tr>
+      <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
+      <td><strong>${s.characterName}</strong></td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.userText || "—"}</td>
+      <td class="log-stars">${"★".repeat(s.stars)}${"☆".repeat(5 - s.stars)}</td>
+    </tr>`).join("");
+
+  el.sessionLog.innerHTML = `
+    <table class="session-log-table">
+      <thead><tr><th>Time</th><th>Character</th><th>Response</th><th>Stars</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ─────────────────────────────────────────────
+// AVATAR RENDERING
+// ─────────────────────────────────────────────
+function renderHomeAvatars() {
+  ["teacher", "parent", "friend", "stranger"].forEach(id => {
+    const el_ = document.getElementById(`avatar-${id}`);
+    if (el_) el_.innerHTML = getCharacterSVG(id, "happy", false);
+  });
+}
+
+function renderCharacters() {
+  if (state.currentScenario) {
+    el.characterContainer.innerHTML = getCharacterSVG(state.currentScenario.id, state.characterEmotion, state.characterIsTalking);
+  } else {
+    el.characterContainer.innerHTML = "";
+  }
+  el.mascotContainer.innerHTML = getCharacterSVG("mascot", state.mascotEmotion, state.mascotIsTalking);
+}
+
+// ─────────────────────────────────────────────
+// TTS / SPEECH
+// ─────────────────────────────────────────────
 const SOFT_VOICE_PRIORITY = [
-  // Warm, calm, child-friendly voices (ordered by preference)
-  "Samantha",   // macOS/iOS — very natural
-  "Karen",      // macOS/iOS Australian — soft
-  "Moira",      // macOS/iOS Irish — gentle
-  "Tessa",      // macOS/iOS South African
-  "Fiona",      // macOS/iOS Scottish — soft
-  "Google UK English Female",
-  "Microsoft Libby",
-  "Microsoft Aria",
-  "Microsoft Jenny",
-  "Microsoft Zira",
-  "Google US English",
+  "Samantha","Karen","Moira","Tessa","Fiona",
+  "Google UK English Female","Microsoft Libby","Microsoft Aria","Microsoft Jenny","Microsoft Zira","Google US English"
 ];
 
 function populateVoices() {
   if (!window.speechSynthesis) return;
-
   const voices = window.speechSynthesis.getVoices();
+  if (!el.voiceSelect) return;
   el.voiceSelect.innerHTML = "";
 
-  // Find the best soft voice automatically
   if (!state.voice) {
-    for (const preferred of SOFT_VOICE_PRIORITY) {
-      const match = voices.find(v => v.name.includes(preferred) && v.lang.startsWith("en"));
-      if (match) { state.voice = match; break; }
+    for (const pref of SOFT_VOICE_PRIORITY) {
+      const m = voices.find(v => v.name.includes(pref) && v.lang.startsWith("en"));
+      if (m) { state.voice = m; break; }
     }
-    // Fallback: any en-GB or en-AU (tend to be softer than en-US)
     if (!state.voice) {
       state.voice = voices.find(v => v.lang === "en-GB" || v.lang === "en-AU")
                  ?? voices.find(v => v.lang.startsWith("en-"))
@@ -222,393 +315,441 @@ function populateVoices() {
     }
   }
 
-  voices.forEach((voice, i) => {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = `${voice.name} (${voice.lang})`;
-    if (state.voice && voice.name === state.voice.name) option.selected = true;
-    el.voiceSelect.appendChild(option);
+  voices.forEach((v, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = `${v.name} (${v.lang})`;
+    if (state.voice && v.name === state.voice.name) opt.selected = true;
+    el.voiceSelect.appendChild(opt);
   });
 }
 
-// ==========================================
-// Navigation & State Machine Transitions
-// ==========================================
+function getVoiceForCharacter(characterId) {
+  const voices = window.speechSynthesis.getVoices();
 
-function transitionTo(newState) {
-  state.gameState = newState;
-  
-  // Hide all screens initially
-  el.homeScreen.style.display = "none";
-  el.loadingScreen.style.display = "none";
-  el.practiceScreen.style.display = "none";
-  el.resultsOverlay.style.display = "none";
-  
-  switch (newState) {
-    case "HOME":
-      window.speechSynthesis.cancel();
-      el.homeScreen.style.display = "flex";
-      el.stageTitle.innerText = "SocialBuddy";
-      el.stageSubtitle.innerText = "Practice speaking with different friends!";
-      state.currentModuleId = null;
-      state.currentScenario = null;
-      // Stop attention monitoring when back on home
-      if (window.AttentionSystem) window.AttentionSystem.stop();
-      hideAttentionAlert();
-      break;
-      
-    case "LOADING":
-      el.loadingScreen.style.display = "flex";
-      const mod = scenarios[state.currentModuleId];
-      el.loadingText.innerText = `Walking to the ${mod.sceneName}...`;
-      
-      // Delay to simulate scene load transition
-      setTimeout(() => {
-        transitionTo("PLAYING");
-      }, 1500);
-      break;
-      
-    case "PLAYING":
-      el.practiceScreen.style.display = "grid";
-      const currentMod = scenarios[state.currentModuleId];
-      state.currentScenario = currentMod;
-      
-      el.stageTitle.innerText = `${currentMod.name} Scenario`;
-      el.stageSubtitle.innerText = currentMod.introText;
-      
-      // Setup backdrop class
-      el.practiceScreen.querySelector(".stage").className = `stage ${currentMod.bgClass}`;
-      el.dialogueSpeakerName.innerText = currentMod.characterName;
-      el.dialogueBubbleText.innerText = "Hello!";
-      
-      // Hide mascot guidance bubble initially
-      el.mascotBubble.style.display = "none";
-      state.showMascotBubble = false;
-      
-      // Reset inputs
-      el.textInput.value = "";
-      state.transcriptText = "";
-      el.micStatus.innerText = "Press the mic to speak, or type below";
-      
-      state.characterEmotion = currentMod.initialEmotion;
-      state.mascotEmotion = "neutral";
-      
-      renderCharacters();
-      
-      // Speak the prompt after a slight delay
-      setTimeout(() => {
-        speakPrompt();
-      }, 400);
-
-      // Start attention monitoring (only during active practice)
-      if (window.AttentionSystem) {
-        window.AttentionSystem.reset();
-        window.AttentionSystem.start(
-          showAttentionAlert,   // called when child looks away > 5s
-          hideAttentionAlert    // called when child looks back
-        );
-      }
-      break;
-      
-    case "EVALUATING":
-      el.practiceScreen.style.display = "grid";
-      
-      // Lock inputs during thinking state
-      el.submitBtn.disabled = true;
-      el.micBtn.style.pointerEvents = "none";
-      el.textInput.disabled = true;
-      
-      runPipelineSequence();
-      break;
-      
-    case "RESULTS":
-      el.practiceScreen.style.display = "grid";
-      renderResultsOverlay();
-      break;
+  // Find male vs female voices
+  if (characterId === "parent" || characterId === "dad") {
+    // 👨 Dad: Manly Male Voice
+    const maleVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      return name.includes("male") || name.includes("david") || name.includes("george") || name.includes("mark") || name.includes("ravi") || name.includes("prabhat");
+    });
+    return { voice: maleVoice || null, pitch: 0.60, rate: 0.82 };
+  } 
+  else if (characterId === "teacher") {
+    // 👩‍🏫 Teacher: Soft Female Voice
+    const femaleVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      return name.includes("female") || name.includes("zira") || name.includes("hazel") || name.includes("heera") || name.includes("sangeeta");
+    });
+    return { voice: femaleVoice || null, pitch: 1.15, rate: 0.85 };
+  } 
+  else if (characterId === "friend") {
+    // 👦 Friend: Child Voice
+    const childVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      return name.includes("child") || name.includes("kid") || name.includes("boy") || name.includes("samantha") || name.includes("karen");
+    });
+    return { voice: childVoice || null, pitch: 1.45, rate: 0.90 };
+  } 
+  else if (characterId === "stranger") {
+    // 👵 Stranger: Elderly Female Voice
+    const elderVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      return name.includes("female") || name.includes("heera") || name.includes("veena") || name.includes("zira");
+    });
+    return { voice: elderVoice || null, pitch: 0.80, rate: 0.75 };
   }
+
+  return { voice: null, pitch: 1.0, rate: 0.85 };
+}
+
+function speakClauses(clauses, index, onStart, onEnd, opts) {
+  if (index >= clauses.length) {
+    if (onEnd) onEnd();
+    return;
+  }
+
+  const rawClause = clauses[index].trim();
+  if (!rawClause) {
+    speakClauses(clauses, index + 1, onStart, onEnd, opts);
+    return;
+  }
+
+  if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+  }
+
+  const utt = new SpeechSynthesisUtterance(rawClause);
+
+  if (opts.voice) {
+    utt.voice = opts.voice;
+  } else if (state.voice) {
+    utt.voice = state.voice;
+  }
+
+  // Constant fixed speed rate for steady, understandable speech
+  utt.rate   = opts.rate  ?? 0.82;
+  utt.pitch  = opts.pitch ?? 1.0;
+  utt.volume = 1.0;
+
+  if (index === 0 && onStart) onStart();
+
+  utt.onend = () => {
+    // 400ms pause at punctuation marks for natural cadence
+    setTimeout(() => {
+      speakClauses(clauses, index + 1, onStart, onEnd, opts);
+    }, 400);
+  };
+
+  utt.onerror = (e) => {
+    console.error("TTS clause error:", e);
+    if (onEnd) onEnd();
+  };
+
+  window.speechSynthesis.speak(utt);
+}
+
+function speakText(text, onStart, onEnd, opts = {}) {
+  if (state.isMuted) { if (onStart) onStart(); setTimeout(() => { if (onEnd) onEnd(); }, 800); return; }
+  
+  if (window.speechSynthesis) {
+    window.speechSynthesis.resume();
+    window.speechSynthesis.cancel();
+  }
+
+  // Split text by punctuation marks (! ? , . ;) for clean punctuation pauses
+  const clauses = text.split(/(?<=[!?,.;])\s+/) || [text];
+  setTimeout(() => speakClauses(clauses, 0, onStart, onEnd, opts), 60);
 }
 
 function speakPrompt() {
-  el.dialogueBubbleText.innerText = state.currentScenario.question;
+  if (!state.currentScenario) return;
+  const mod = state.currentScenario;
+  const vConfig = getVoiceForCharacter(mod.id);
+
   speakText(
-    state.currentScenario.audioPrompt,
-    () => {
-      state.characterIsTalking = true;
-      renderCharacters();
-    },
-    () => {
-      state.characterIsTalking = false;
-      renderCharacters();
-    }
+    mod.audioPrompt,
+    () => { state.characterIsTalking = true;  renderCharacters(); },
+    () => { state.characterIsTalking = false; renderCharacters(); },
+    { voice: vConfig.voice || state.voice, pitch: vConfig.pitch, rate: vConfig.rate }
   );
 }
 
-// ==========================================
-// Kid-Friendly Pipeline Sequence
-// ==========================================
-
-function runPipelineSequence() {
-  const textVal = el.textInput.value.trim();
-  if (!textVal) {
-    alert("Please type something or speak to Buddy first!");
-    transitionTo("PLAYING");
-    el.submitBtn.disabled = false;
-    el.micBtn.style.pointerEvents = "auto";
-    el.textInput.disabled = false;
+// ─────────────────────────────────────────────
+// SPEECH RECOGNITION (STT)
+// ─────────────────────────────────────────────
+function initSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    console.warn("[STT] Speech Recognition not supported. Showing fallback.");
+    if (el.micStatus) el.micStatus.innerText = "🎙️ Microphone not supported in this browser. Try Chrome!";
     return;
   }
-  
-  // Calculate results instantly behind the scenes using our mock engine
-  state.pipelineResult = runFullPipeline(state.currentModuleId, textVal);
-  
-  // Show a cute thinking dialogue bubble
-  el.dialogueBubbleText.innerText = "Buddy the Mascot is thinking... 💭";
-  state.mascotEmotion = "neutral";
-  state.characterEmotion = "neutral";
-  renderCharacters();
-  
-  // Wait 1.5 seconds, then display Mascot's guidance
-  setTimeout(() => {
-    triggerMascotFeedback();
-  }, 1500);
+  state.recognition = new SR();
+  state.recognition.continuous    = false;
+  state.recognition.interimResults = false;
+  state.recognition.lang           = "ta-IN,en-IN,en-US"; // Tamil + English
+
+  state.recognition.onstart = () => {
+    state.isRecording = true;
+    el.micBtn.classList.add("recording");
+    el.waveform.style.display  = "flex";
+    el.micStatus.innerText     = "🎙️ Listening… Speak now!";
+    el.sttPreviewRow.style.display = "none";
+  };
+
+  state.recognition.onresult = (event) => {
+    const text = event.results[0][0].transcript;
+    state.transcriptText = text;
+    el.sttPreviewText.innerText    = `"${text}"`;
+    el.sttPreviewRow.style.display = "flex";
+    el.micStatus.innerText         = "✅ Got it! Tap Submit to see what Buddy thinks.";
+  };
+
+  state.recognition.onerror = (event) => {
+    console.error("[STT] Error:", event.error);
+    el.micStatus.innerText = `⚠️ Microphone error: ${event.error}. Try again!`;
+    stopRecording();
+  };
+
+  state.recognition.onend = () => stopRecording();
 }
 
-function triggerMascotFeedback() {
-  state.showMascotBubble = true;
-  state.mascotText = state.pipelineResult.llm.mascotFeedback;
-  
-  // Set Mascot emotion based on score safety
-  if (state.pipelineResult.llm.scores.safety <= 3) {
-    state.mascotEmotion = "concerned";
-  } else {
-    state.mascotEmotion = "happy";
+function startRecording() {
+  if (!state.recognition) {
+    // Fallback: show a text prompt for parent to type child's response
+    el.micStatus.innerText = "🎙️ Mic unavailable — parent, type child's response above and press Submit.";
+    el.sttPreviewRow.style.display = "flex";
+    el.sttPreviewText.innerText = "";
+    return;
   }
-  
-  // Character updates emotion based on safety evaluation
-  state.characterEmotion = state.pipelineResult.llm.characterEmotion;
-  
-  // Display mascot bubble
-  el.mascotBubbleText.innerText = state.mascotText;
-  el.mascotBubble.style.display = "block";
-  
-  // Render character emotions
+  if (state.isRecording) return;
+  try {
+    window.speechSynthesis.cancel();
+    state.characterIsTalking = false;
+    state.mascotIsTalking    = false;
+    renderCharacters();
+    state.recognition.start();
+  } catch (e) { console.error(e); }
+}
+
+function stopRecording() {
+  if (!state.isRecording) return;
+  state.isRecording = false;
+  if (el.micBtn) el.micBtn.classList.remove("recording");
+  if (el.waveform) el.waveform.style.display = "none";
+  try { if (state.recognition) state.recognition.stop(); } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
+// PIPELINE & EVALUATION
+// ─────────────────────────────────────────────
+function submitAnswer() {
+  const text = state.transcriptText.trim()
+             || (el.sttPreviewText ? el.sttPreviewText.innerText.replace(/^"|"$/g,"").trim() : "");
+  if (!text) {
+    el.micStatus.innerText = "⚠️ Please tap the mic and say something first!";
+    return;
+  }
+
+  // Disable inputs
+  el.micBtn.style.pointerEvents = "none";
+  el.submitBtn.disabled = true;
+  el.micStatus.innerText = "💭 Buddy is thinking…";
+
+  // Run pipeline
+  state.pipelineResult = window.runFullPipeline(state.currentModuleId, text);
+
+  // Show thinking state for 1.2s, then deliver feedback
+  state.mascotEmotion = "neutral";
   renderCharacters();
-  
-  // Speak mascot feedback
+
+  setTimeout(() => showMascotFeedback(), 1200);
+}
+
+function showMascotFeedback() {
+  const result = state.pipelineResult;
+  if (!result) return;
+
+  const llm = result.llm;
+  const stars = llm.scores.overall;
+
+  // Update character emotion
+  state.characterEmotion = llm.characterEmotion;
+  state.mascotEmotion    = llm.scores.safety <= 3 ? "concerned" : "happy";
+  renderCharacters();
+
+  // Determine verdict type
+  const linguistic = result.linguistic;
+  let verdictClass = "pass";
+  let verdictText  = "✅ Great Answer!";
+  if (linguistic && linguistic.verdict === "FAIL") {
+    verdictClass = "fail";
+    if (linguistic.failType === "DISRESPECT")   verdictText = "❌ Disrespectful Phrase Detected";
+    else if (linguistic.failType === "SLANG")    verdictText = "❌ Too Casual / Slang Detected";
+    else if (linguistic.failType === "BLUNT_VERB") verdictText = "❌ Blunt Command Detected";
+  } else if (linguistic && linguistic.verdict === "WARNING") {
+    verdictClass = "warning";
+    verdictText  = "⚠️ Missing Politeness Marker";
+  } else if (stars <= 2) {
+    verdictClass = "fail";
+    verdictText  = "❌ Needs Improvement";
+  } else if (stars <= 3) {
+    verdictClass = "warning";
+    verdictText  = "⚠️ Almost There!";
+  }
+
+  // Update guidance card
+  el.guidanceVerdictBadge.className = `guidance-verdict-badge ${verdictClass}`;
+  el.guidanceVerdictBadge.innerText = verdictText;
+  el.mascotBubbleText.innerText     = llm.mascotFeedback;
+
+  // Show linguistic correction card if applicable
+  if (linguistic && linguistic.verdict !== "PASS" && linguistic.suggestion) {
+    el.guidanceCorrectionCard.style.display = "block";
+    const reasonMap = {
+      DISRESPECT:       "🚫 Disrespect Shield: A rude/offensive word was detected in your response.",
+      SLANG:            "🚫 Slang Filter: A casual particle that is too informal for this context was detected.",
+      BLUNT_VERB:       "🚫 Blunt Verb Gate: A command verb was used without the polite honorific form.",
+      MISSING_HONORIFIC:"⚠️ Honorific Check: A polite form of address (Sir, nga, please) was missing."
+    };
+    el.correctionReason.innerText     = reasonMap[linguistic.failType] || "A linguistic issue was detected.";
+    el.correctionSuggestion.innerText = linguistic.suggestion;
+  } else {
+    el.guidanceCorrectionCard.style.display = "none";
+  }
+
+  // Render mascot into guidance card
+  el.guidanceMascot.innerHTML = getCharacterSVG("mascot", state.mascotEmotion, true);
+
+  // Slide up guidance card
+  el.mascotGuidanceCard.classList.add("slide-up");
+
+  // Speak feedback
   speakText(
-    state.mascotText,
-    () => {
-      state.mascotIsTalking = true;
-      renderCharacters();
-    },
+    llm.mascotFeedback.replace(/\n/g, " ").substring(0, 280),
+    () => { state.mascotIsTalking = true;  el.guidanceMascot.innerHTML = getCharacterSVG("mascot", state.mascotEmotion, true); },
     () => {
       state.mascotIsTalking = false;
-      renderCharacters();
-      
-      // Show celebration results overlay
-      setTimeout(() => {
-        transitionTo("RESULTS");
-      }, 1500);
+      el.guidanceMascot.innerHTML = getCharacterSVG("mascot", state.mascotEmotion, false);
+      // Show results overlay
+      setTimeout(() => showResultsOverlay(), 800);
     }
   );
 }
 
-// ==========================================
-// Attention Re-engagement
-// ==========================================
+function showResultsOverlay() {
+  const result = state.pipelineResult;
+  if (!result) return;
+  const { scores } = result.llm;
+  const stars = scores.overall;
 
+  el.evalPoliteness.innerText = `${scores.politeness}/10`;
+  el.evalSafety.innerText     = `${scores.safety}/10`;
+  el.evalRelevance.innerText  = `${scores.relevance}/10`;
+
+  // Star display
+  el.starRating.innerHTML = "";
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement("span");
+    s.className = `star ${i <= stars ? "active-star" : ""}`;
+    s.innerText = "★";
+    s.style.animationDelay = `${i * 0.12}s`;
+    el.starRating.appendChild(s);
+  }
+
+  // Show/hide Next Level button
+  el.nextScenarioBtn.style.display = stars >= 4 ? "inline-flex" : "none";
+  el.resultsTitle.innerText = stars >= 4 ? "Fantastic! 🎉" : stars >= 3 ? "Good Effort! 👍" : "Keep Practicing! 💪";
+
+  // Re-enable input controls
+  el.micBtn.style.pointerEvents = "auto";
+  el.submitBtn.disabled = false;
+
+  el.resultsOverlay.style.display = "flex";
+}
+
+function hideMascotCard() {
+  el.mascotGuidanceCard.classList.remove("slide-up");
+}
+
+// ─────────────────────────────────────────────
+// ATTENTION ALERTS
+// ─────────────────────────────────────────────
 function showAttentionAlert() {
   if (state.attentionAlertActive) return;
   state.attentionAlertActive = true;
-
-  // Stop TTS so it doesn't overlap
   window.speechSynthesis.cancel();
-
-  // Render waving Buddy into the overlay
   el.attentionMascot.innerHTML = getCharacterSVG("mascot-waving", "happy", false);
-
-  // Set personalised name greeting
   el.attentionNameDisplay.innerText = `Hey, ${state.childName}! 👋`;
-  el.attentionPromptText.innerText = `It's okay! Take your time. Buddy is right here waiting for you!`;
-
+  el.attentionPromptText.innerText  = `It's okay! Take your time. Buddy is right here waiting for you!`;
   el.attentionOverlay.style.display = "flex";
-
-  // Gentle TTS nudge — extra slow & warm so it doesn't startle the child
-  speakText(
-    `Hey ${state.childName}... come back. Buddy is right here waiting for you.`,
-    null,
-    null,
-    { rate: 0.78, pitch: 1.12 }   // noticeably slower & warmer than normal speech
-  );
+  speakText(`Hey ${state.childName}… come back. Buddy is right here!`, null, null, { rate:.78, pitch:1.12 });
 }
 
 function hideAttentionAlert() {
   if (!state.attentionAlertActive) return;
   state.attentionAlertActive = false;
-
   el.attentionOverlay.style.display = "none";
-
-  // Resume scenario prompt if we're mid-play
-  if (state.gameState === "PLAYING" && state.currentScenario) {
-    setTimeout(() => {
-      speakText(
-        `Welcome back, ${state.childName}! Let's continue.`,
-        null,
-        () => speakPrompt()
-      );
-    }, 400);
+  if (state.screen === "GAMEPLAY" && state.currentScenario) {
+    setTimeout(() => speakText(`Welcome back, ${state.childName}! Let's continue.`, null, () => speakPrompt()), 400);
   }
 }
 
-// ==========================================
-// Rendering Methods
-// ==========================================
-
-function renderCharacters() {
-  if (state.currentScenario) {
-    el.characterContainer.innerHTML = getCharacterSVG(
-      state.currentScenario.id, 
-      state.characterEmotion, 
-      state.characterIsTalking
-    );
-  } else {
-    el.characterContainer.innerHTML = "";
-  }
-  
-  el.mascotContainer.innerHTML = getCharacterSVG(
-    "mascot", 
-    state.mascotEmotion, 
-    state.mascotIsTalking
-  );
-}
-
-function renderResultsOverlay() {
-  el.resultsOverlay.style.display = "flex";
-  
-  const scores = state.pipelineResult.llm.scores;
-  el.evalPoliteness.innerText = `${scores.politeness}/10`;
-  el.evalSafety.innerText = `${scores.safety}/10`;
-  el.evalRelevance.innerText = `${scores.relevance}/10`;
-  el.evalFeedback.innerText = state.pipelineResult.llm.mascotFeedback;
-  
-  // Render Star Ratings
-  el.starRating.innerHTML = "";
-  const totalStars = 5;
-  const earnedStars = scores.overall;
-  
-  for (let i = 1; i <= totalStars; i++) {
-    const star = document.createElement("span");
-    star.className = `star ${i <= earnedStars ? "active-star" : ""}`;
-    star.innerText = "★";
-    
-    // Add staggered slide-in animations for stars
-    star.style.animation = `fade-in 0.3s ease forwards`;
-    star.style.animationDelay = `${i * 0.12}s`;
-    
-    el.starRating.appendChild(star);
-  }
-  
-  // Clean up input fields for retry
-  el.submitBtn.disabled = false;
-  el.micBtn.style.pointerEvents = "auto";
-  el.textInput.disabled = false;
-}
-
-// ==========================================
-// Event Listeners & Initializations
-// ==========================================
-
+// ─────────────────────────────────────────────
+// EVENT BINDINGS
+// ─────────────────────────────────────────────
 function bindEvents() {
-  // Module selection
-  document.querySelectorAll(".module-card").forEach(card => {
+  // Landing tabs
+  initLandingTabs();
+
+  // Start Session button
+  el.btnStartSession.addEventListener("click", goToCharacterSelect);
+
+  // Back buttons
+  el.btnBackFromSelect.addEventListener("click", goToLanding);
+  el.btnBackFromGame.addEventListener("click", () => {
+    window.speechSynthesis.cancel();
+    stopRecording();
+    hideMascotCard();
+    if (window.AttentionSystem) window.AttentionSystem.stop();
+    goToLanding();
+  });
+
+  // Character selection cards
+  document.querySelectorAll(".char-card").forEach(card => {
     card.addEventListener("click", () => {
-      state.currentModuleId = card.getAttribute("data-module");
-      transitionTo("LOADING");
+      // 🔓 User Gesture Audio Unlock for Web Speech API
+      if (window.speechSynthesis) {
+        window.speechSynthesis.resume();
+        try {
+          const dummyUtterance = new SpeechSynthesisUtterance("");
+          dummyUtterance.volume = 0;
+          window.speechSynthesis.speak(dummyUtterance);
+        } catch (e) {}
+      }
+      const moduleId = card.getAttribute("data-module");
+      if (moduleId) startGameplay(moduleId);
     });
   });
-  
-  // Voice Input Events
+
+  // Giant mic button
   el.micBtn.addEventListener("click", () => {
-    if (state.isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
+    if (state.isRecording) stopRecording();
+    else startRecording();
   });
-  
-  // TextInput submission
+
+  // Submit (parent triggers evaluation)
   el.submitBtn.addEventListener("click", () => {
     stopRecording();
-    transitionTo("EVALUATING");
+    submitAnswer();
   });
-  
-  // Enter key to submit
-  el.textInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      stopRecording();
-      transitionTo("EVALUATING");
-    }
+
+  // Replay question button
+  el.replayBtn.addEventListener("click", () => {
+    window.speechSynthesis.cancel();
+    speakPrompt();
   });
-  
-  // Scene controls
-  el.skipScenarioBtn.addEventListener("click", () => {
-    transitionTo("HOME");
-  });
-  
-  el.backToHomeBtn.addEventListener("click", () => {
-    transitionTo("HOME");
-  });
-  
-  el.nextScenarioBtn.addEventListener("click", () => {
-    transitionTo("HOME");
-  });
-  
+
+  // Results overlay actions
   el.retryScenarioBtn.addEventListener("click", () => {
-    transitionTo("PLAYING");
+    el.resultsOverlay.style.display = "none";
+    hideMascotCard();
+    if (state.currentModuleId) startGameplay(state.currentModuleId);
   });
-  
-  // Settings Modal controls
-  el.settingsBtn.addEventListener("click", () => {
-    populateVoices();
-    el.settingsModal.style.display = "flex";
-  });
-  
-  el.closeSettingsBtn.addEventListener("click", () => {
-    el.settingsModal.style.display = "none";
-  });
-  
-  window.addEventListener("click", (e) => {
-    if (e.target === el.settingsModal) {
-      el.settingsModal.style.display = "none";
-    }
-  });
-  
+  el.nextScenarioBtn.addEventListener("click", () => goToCharacterSelect());
+  el.chooseAnotherBtn.addEventListener("click", () => goToCharacterSelect());
+
+  // Settings – voice select
   el.voiceSelect.addEventListener("change", () => {
     const voices = window.speechSynthesis.getVoices();
     state.voice = voices[parseInt(el.voiceSelect.value)];
   });
-  
+  // Settings – mute
   el.muteToggle.addEventListener("change", (e) => {
     state.isMuted = e.target.checked;
-    if (state.isMuted) {
-      window.speechSynthesis.cancel();
-    }
+    if (state.isMuted) window.speechSynthesis.cancel();
+  });
+  // Settings – child name
+  el.childNameInput.addEventListener("input", (e) => {
+    const v = e.target.value.trim();
+    state.childName = v.length > 0 ? v : "Friend";
   });
 
-  // Child name input — personalises attention alert greeting
-  el.childNameInput.addEventListener("input", (e) => {
-    const name = e.target.value.trim();
-    state.childName = name.length > 0 ? name : "Friend";
-  });
+  // Attention overlay click-to-dismiss
+  el.attentionOverlay.addEventListener("click", hideAttentionAlert);
 }
 
-// Window load entry
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", async () => {
   initElements();
   bindEvents();
   initSpeechRecognition();
-  
-  // Load voices for Speech Synthesis
+
+  // Load TTS voices
   if (window.speechSynthesis) {
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
       window.speechSynthesis.onvoiceschanged = populateVoices;
@@ -616,11 +757,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     populateVoices();
   }
 
-  // Initialise attention detection (async, non-blocking)
+  // Init attention detection (non-blocking)
   if (window.AttentionSystem) {
-    await window.AttentionSystem.init();
+    const ok = await window.AttentionSystem.init();
+    if (el.attentionStatus) {
+      el.attentionStatus.className = `attention-status-badge ${ok ? "ok" : "off"}`;
+      el.attentionStatus.innerText = ok ? "✅ Attention detection active" : "⚠️ Camera unavailable — attention detection off";
+    }
   }
-  
-  // Start on Home screen
-  transitionTo("HOME");
+
+  // Start on landing screen
+  showScreen("LANDING");
 });

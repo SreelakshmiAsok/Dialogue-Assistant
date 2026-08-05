@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SocialBuddy - Fun Social Skills Practice</title>
+  <title>SocialBuddy – Social Skills Interactive Cartoon Game</title>
+  <meta name="description" content="SocialBuddy helps autistic children practice Tamil and English social conversations through voice-driven interactive cartoon scenarios.">
   <link rel="stylesheet" href="style.css">
   <!-- MediaPipe Face Mesh (CDN) for attention detection -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
@@ -11,290 +12,354 @@
 </head>
 <body>
 
-  <!-- App Header -->
-  <header>
-    <div class="brand">
-      <!-- Mascot-like Mini Icon -->
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: hsl(217, 91%, 60%);">
-        <path d="M12 8V4H8" />
-        <rect width="16" height="12" x="4" y="8" rx="2" />
-        <path d="M2 14h2" />
-        <path d="M20 14h2" />
-        <path d="M15 13v2" />
-        <path d="M9 13v2" />
-      </svg>
-      <div>
-        <h1 id="stage-title">SocialBuddy</h1>
-        <p id="stage-subtitle" style="font-size:0.85rem;color:#64748b;font-weight:600;margin:0;"></p>
+  <!-- ═══════════════════════════════════════════════════════════
+       SCREEN 1 – MAIN LANDING PAGE (Parent / Caretaker Dashboard)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="screen-landing" class="screen active-screen">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:#6366f1">
+          <path d="M12 8V4H8"/>
+          <rect width="16" height="12" x="4" y="8" rx="2"/>
+          <path d="M2 14h2"/><path d="M20 14h2"/>
+          <path d="M15 13v2"/><path d="M9 13v2"/>
+        </svg>
+        <div>
+          <h1 class="brand-title">SocialBuddy</h1>
+          <p class="brand-sub">Social Skills Interactive Cartoon Game</p>
+        </div>
+      </div>
+      <!-- Caretaker tab nav inside header -->
+      <nav class="landing-tabs" id="landing-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="start" id="tab-start" role="tab">🎮 Start Session</button>
+        <button class="tab-btn" data-tab="progress" id="tab-progress" role="tab">📊 Student's Progress</button>
+        <button class="tab-btn" data-tab="dashboard" id="tab-dashboard" role="tab">👨‍👩‍👧 Parent Dashboard</button>
+      </nav>
+    </header>
+
+    <main class="landing-main">
+
+      <!-- TAB: Start Session -->
+      <div class="tab-panel active-tab" id="panel-start">
+        <div class="hero-section">
+          <div class="hero-badge">🎓 Interactive Speech & Social Skills Platform</div>
+          <h2>Empowering Communication Through Voice-Driven Cartoon Roleplay</h2>
+          <p>Helping neurodivergent children practice real-world social conversations, politeness rules, and turn-taking in Tamil & Tanglish.</p>
+          
+          <div class="hero-actions">
+            <button class="btn-start-session" id="btn-start-session">
+              <span class="start-icon">🎮</span>
+              Start Practice Session
+            </button>
+          </div>
+        </div>
+
+
+
+        <div class="landing-info-cards">
+          <div class="info-card">
+            <div class="info-icon">🎤</div>
+            <h4>Voice-Driven Input</h4>
+            <p>Hands-free speech interaction with real-time browser Speech Recognition</p>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">🗣️</div>
+            <h4>Tamil & Tanglish Support</h4>
+            <p>Bilingual prompts formatted in native Tamil script and Tanglish transliteration</p>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">🤖</div>
+            <h4>Politeness Evaluator</h4>
+            <p>Buddy the Mascot assesses honorifics, keywords, and tone in real time</p>
+          </div>
+          <div class="info-card">
+            <div class="info-icon">👁️</div>
+            <h4>Attention Guardian</h4>
+            <p>MediaPipe face-mesh gaze tracking gently re-engages children when distracted</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Student's Progress -->
+      <div class="tab-panel" id="panel-progress">
+        <h2 class="panel-title">📊 Student's Progress</h2>
+        <div class="progress-overview" id="progress-overview">
+          <!-- Filled dynamically by app.js -->
+          <div class="progress-empty-state">
+            <div class="empty-icon">🌱</div>
+            <h3>No sessions yet!</h3>
+            <p>Start a session to begin tracking your child's progress here.</p>
+          </div>
+        </div>
+        <div class="session-log" id="session-log">
+          <!-- Session history rows filled dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB: Parent Dashboard -->
+      <div class="tab-panel" id="panel-dashboard">
+        <h2 class="panel-title">👨‍👩‍👧 Parent Dashboard</h2>
+        <div class="dashboard-grid">
+
+          <!-- Child settings card -->
+          <div class="dash-card">
+            <h4>👦 Child Settings</h4>
+            <div class="setting-row">
+              <label for="child-name-input">Child's Name</label>
+              <input type="text" id="child-name-input" placeholder="e.g. Arjun" maxlength="20">
+            </div>
+            <div class="setting-row">
+              <label for="voice-select">TTS Voice</label>
+              <select id="voice-select"><option>Loading voices…</option></select>
+            </div>
+            <div class="setting-row">
+              <label for="mute-toggle">Mute Speech</label>
+              <input type="checkbox" id="mute-toggle">
+            </div>
+          </div>
+
+          <!-- How-to guide card -->
+          <div class="dash-card">
+            <h4>📋 How to Facilitate</h4>
+            <div class="guide-steps">
+              <div class="step-item"><span class="step-badge" style="background:#6366f1">1</span><p><strong>Choose a scenario</strong> from "Start Session" that fits today's learning goal.</p></div>
+              <div class="step-item"><span class="step-badge" style="background:#ec4899">2</span><p><strong>Sit beside your child.</strong> Let them watch the character ask the question out loud.</p></div>
+              <div class="step-item"><span class="step-badge" style="background:#f59e0b">3</span><p><strong>Tap the microphone</strong> and encourage your child to respond by speaking naturally.</p></div>
+              <div class="step-item"><span class="step-badge" style="background:#10b981">4</span><p><strong>Review Buddy's feedback</strong> card together and celebrate correct responses!</p></div>
+            </div>
+          </div>
+
+          <!-- Dataset info card -->
+          <div class="dash-card">
+            <h4>🔬 Dataset Sources</h4>
+            <p style="font-size:0.9rem;color:#475569;line-height:1.6">
+              Our linguistic evaluation models are derived from:<br>
+              • <strong>TamilMixSentiment</strong> – code-mixed Tamil-English corpus<br>
+              • <strong>DravidianLangTech 2022</strong> – slang & sentiment tagging<br>
+              • <strong>AI4Bharat IndicCorp V2</strong> – Tamil pragmatics baseline<br><br>
+              Slang, honorific, and verb-form checks are validated against these datasets.
+            </p>
+          </div>
+
+          <!-- Attention system card -->
+          <div class="dash-card">
+            <h4>👁️ Attention Detection</h4>
+            <p style="font-size:0.9rem;color:#475569;line-height:1.6">
+              During gameplay, the app uses the device webcam to detect if the child looks away for more than 5 seconds. Buddy the Mascot will gently call them back!<br><br>
+              <em>Requires camera permission — no video is stored or transmitted.</em>
+            </p>
+            <div id="attention-status" class="attention-status-badge">⚙️ Attention: Initializing…</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCREEN 2 – CHARACTER SELECTION
+  ════════════════════════════════════════════════════════════ -->
+  <div id="screen-character-select" class="screen">
+    <div class="select-header">
+      <button class="btn-back" id="btn-back-from-select">← Back to Menu</button>
+      <div class="select-title-block">
+        <h2>Choose a Character 🎭</h2>
+        <p>Pick who your child will practice speaking with today</p>
       </div>
     </div>
-    
-    <button class="btn btn-outline" id="settings-btn" title="System Settings">
-      <!-- Settings Gear SVG -->
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-      </svg>
-      Settings
-    </button>
-  </header>
+    <div class="character-grid" id="character-grid">
+      <!-- Parent Card -->
+      <div class="char-card parent-card" data-module="parent" id="card-parent">
+        <div class="card-sparkle">💙</div>
+        <div class="char-avatar-ring parent-ring" id="avatar-parent"></div>
+        <h3>Dad (Parent)</h3>
+        <p class="char-context">Honesty &amp; Apologies</p>
+        <p class="char-lang-hint">🗣️ Tamil / Tanglish</p>
+        <div class="char-difficulty easy">⭐ Beginner Friendly</div>
+      </div>
+      <!-- Teacher Card -->
+      <div class="char-card teacher-card" data-module="teacher" id="card-teacher">
+        <div class="card-sparkle">💜</div>
+        <div class="char-avatar-ring teacher-ring" id="avatar-teacher"></div>
+        <h3>Teacher</h3>
+        <p class="char-context">Classroom Decorum</p>
+        <p class="char-lang-hint">🗣️ Tamil / Tanglish</p>
+        <div class="char-difficulty medium">⭐⭐ Intermediate</div>
+      </div>
+      <!-- Friend Card -->
+      <div class="char-card friend-card" data-module="friend" id="card-friend">
+        <div class="card-sparkle">💛</div>
+        <div class="char-avatar-ring friend-ring" id="avatar-friend"></div>
+        <h3>Friend</h3>
+        <p class="char-context">Sharing &amp; Turn-Taking</p>
+        <p class="char-lang-hint">🗣️ Tamil / Tanglish</p>
+        <div class="char-difficulty easy">⭐ Beginner Friendly</div>
+      </div>
+      <!-- Stranger Card -->
+      <div class="char-card stranger-card" data-module="stranger" id="card-stranger">
+        <div class="card-sparkle">💚</div>
+        <div class="char-avatar-ring stranger-ring" id="avatar-stranger"></div>
+        <h3>Stranger</h3>
+        <p class="char-context">Safety Danger Rules</p>
+        <p class="char-lang-hint">🗣️ Tamil / Tanglish</p>
+        <div class="char-difficulty hard">🚨 Safety Critical</div>
+      </div>
+    </div>
+  </div>
 
-  <main class="app-container">
+  <!-- ═══════════════════════════════════════════════════════════
+       SCREEN 3 – ACTIVE GAMEPLAY
+  ════════════════════════════════════════════════════════════ -->
+  <div id="screen-gameplay" class="screen">
 
-    <!-- LEFT PANEL: Kid's Practice Stage & Dialogue Arena -->
-    <section class="left-panel">
-      
-      <!-- Screen 1: Home (Module Selector) -->
-      <div id="home-screen" class="fade-in-slide-up">
-        <div class="hero-section">
-          <h2>Say Hello to <span>SocialBuddy</span>!</h2>
-          <p>Choose a friend to practice speaking with. We'll help you find the best things to say in every situation!</p>
+    <!-- Gameplay header -->
+    <div class="gameplay-header">
+      <button class="btn-back" id="btn-back-from-game">← Back to Menu</button>
+      <div id="gameplay-title-block">
+        <h2 id="gameplay-title">Practice Session</h2>
+        <p id="gameplay-subtitle">Listen carefully and respond by speaking!</p>
+      </div>
+      <div class="gameplay-header-right">
+        <div class="scene-label" id="scene-label">🏫 Classroom</div>
+      </div>
+    </div>
+
+    <!-- Main gameplay area -->
+    <div class="gameplay-arena" id="gameplay-arena">
+
+      <!-- Scene backdrop -->
+      <div class="stage" id="gameplay-stage">
+
+        <!-- Background elements for Living Room -->
+        <div class="livingroom-bg-decorations">
+          <div class="photo-frame">🌸</div>
+          <div class="tv-unit">
+            <div class="tv-body"></div>
+            <div class="tv-stand"></div>
+            <div class="tv-cabinet"></div>
+          </div>
+          <div class="sofa">
+            <div class="sofa-back"></div>
+            <div class="sofa-arm-l"></div>
+            <div class="sofa-arm-r"></div>
+            <div class="sofa-cushion"></div>
+          </div>
         </div>
-        
-        <div class="module-grid">
-          <!-- Teacher Card -->
-          <div class="glass-card module-card teacher-card" data-module="teacher">
-            <div class="module-icon-wrap">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-                <path d="M6 6h10" />
-                <path d="M6 10h10" />
-              </svg>
-            </div>
-            <h3>Teacher</h3>
-            <p>Classroom Decorum</p>
+
+        <!-- Character visual -->
+        <div class="character-box" id="character-container"></div>
+
+        <!-- Mascot helper -->
+        <div class="mascot-box" id="mascot-container"></div>
+
+        <!-- CHARACTER DIALOGUE BUBBLE (bilingual) -->
+        <div class="dialogue-bubble" id="dialogue-bubble">
+          <div class="dialogue-speaker-row">
+            <h4 id="dialogue-speaker-name">Character</h4>
+            <button class="replay-btn" id="replay-btn" title="Play question again">🔊 Replay</button>
           </div>
-          
-          <!-- Parent Card -->
-          <div class="glass-card module-card parent-card" data-module="parent">
-            <div class="module-icon-wrap">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            </div>
-            <h3>Parent</h3>
-            <p>Honesty & Apologies</p>
+          <!-- Tanglish (romanised Tamil + English) -->
+          <p class="dialogue-tanglish" id="dialogue-tanglish">Loading…</p>
+          <!-- Tamil script -->
+          <p class="dialogue-tamil" id="dialogue-tamil">…</p>
+        </div>
+
+        <!-- Results overlay (shown after evaluation) -->
+        <div class="overlay-screen" id="results-overlay" style="display:none;">
+          <h3 class="rating-title" id="results-title">Evaluation Complete! 🎉</h3>
+          <div class="stars-wrap" id="star-rating"></div>
+          <div class="evaluation-summary-card">
+            <div class="summary-score-line"><span>Politeness:</span><strong id="eval-politeness">–</strong></div>
+            <div class="summary-score-line"><span>Safety:</span><strong id="eval-safety">–</strong></div>
+            <div class="summary-score-line"><span>Relevance:</span><strong id="eval-relevance">–</strong></div>
           </div>
-          
-          <!-- Friend Card -->
-          <div class="glass-card module-card friend-card" data-module="friend">
-            <div class="module-icon-wrap">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                <circle cx="12" cy="12" r="10" stroke="none" fill="rgba(255,255,255,0.1)"/>
-                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                <line x1="9" y1="9" x2="9.01" y2="9" />
-                <line x1="15" y1="9" x2="15.01" y2="9" />
-              </svg>
-            </div>
-            <h3>Friend</h3>
-            <p>Sharing & Turn-Taking</p>
+          <div class="action-controls">
+            <button class="btn btn-outline" id="retry-scenario-btn">🔄 Try Again</button>
+            <button class="btn btn-next" id="next-scenario-btn" style="display:none;">Next Level ➡️</button>
+            <button class="btn btn-outline" id="choose-another-btn">Choose Another</button>
           </div>
-          
-          <!-- Stranger Card -->
-          <div class="glass-card module-card stranger-card" data-module="stranger">
-            <div class="module-icon-wrap">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <h3>Stranger</h3>
-            <p>Safety Danger Rules</p>
-          </div>
+        </div>
+
+      </div>
+
+      <!-- ───────────────────────────────────────
+           CHILD VOICE INPUT SECTION
+           (No keyboard — large mic button only)
+      ─────────────────────────────────────────── -->
+      <div class="voice-input-area" id="voice-input-area">
+        <p class="voice-prompt-label" id="mic-status">Listen to the question, then tap to speak! 🎙️</p>
+
+        <!-- Giant child-friendly mic button -->
+        <button class="giant-mic-btn" id="mic-btn" title="Tap to Speak Your Answer">
+          <div class="mic-pulse-ring"></div>
+          <div class="mic-pulse-ring delay1"></div>
+          <svg class="mic-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="22"/>
+          </svg>
+          <span class="mic-label">Tap to Speak!</span>
+        </button>
+
+        <!-- Waveform visualiser -->
+        <div class="waveform-container" id="waveform">
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+
+        <!-- Hidden text captured from STT (shown for parent review) -->
+        <div class="stt-preview-row" id="stt-preview-row" style="display:none;">
+          <p class="stt-preview-label">Buddy heard: <span id="stt-preview-text" class="stt-text"></span></p>
+          <button class="btn btn-send" id="submit-btn">Submit ✓</button>
         </div>
       </div>
 
-      <!-- Screen 2: Scene Loader (Transition Screen) -->
-      <div id="loading-screen" class="glass-card">
-        <div class="loader-animation">
-          <div class="loader-ring"></div>
-          <div class="loader-ring"></div>
-          <div class="loader-ring"></div>
-        </div>
-        <h3 id="loading-text">Walking to the Classroom...</h3>
-      </div>
+    </div>
 
-      <!-- Screen 3: Practice Arena -->
-      <div id="practice-screen" class="fade-in-slide-up">
-        
-        <!-- Game Stage (backdrop) -->
-        <div class="stage scene-classroom">
-          
-          <!-- Character Bubble Dialogue -->
-          <div class="dialogue-bubble" id="dialogue-bubble">
-            <h4 id="dialogue-speaker-name">Teacher</h4>
-            <p id="dialogue-bubble-text">Loading...</p>
+    <!-- ─────────────────────────────────────────────────────────
+         MASCOT GUIDANCE CARD — slides up from footer after eval
+    ──────────────────────────────────────────────────────────── -->
+    <div class="mascot-guidance-card" id="mascot-guidance-card">
+      <div class="guidance-handle"></div>
+      <div class="guidance-inner">
+        <div class="guidance-mascot-wrap" id="guidance-mascot"></div>
+        <div class="guidance-text-block">
+          <div class="guidance-verdict-badge" id="guidance-verdict-badge">Thinking… 💭</div>
+          <p class="guidance-main-text" id="mascot-bubble-text">Buddy is evaluating your answer…</p>
+          <div class="guidance-correction-card" id="guidance-correction-card" style="display:none;">
+            <div class="correction-reason" id="correction-reason"></div>
+            <div class="correction-suggestion" id="correction-suggestion"></div>
           </div>
-          
-          <!-- Mascot Feedback Bubble (Shown dynamically on top) -->
-          <div class="mascot-bubble" id="mascot-bubble">
-            <h4>Buddy Mascot</h4>
-            <p id="mascot-bubble-text">Loading...</p>
-          </div>
-          
-          <!-- Cartoon Character SVGs -->
-          <div class="character-box" id="character-container">
-            <!-- Dynamic SVG injected here -->
-          </div>
-          
-          <!-- Floating Guide Mascot -->
-          <div class="mascot-box" id="mascot-container">
-            <!-- Dynamic SVG injected here -->
-          </div>
-          
-          <!-- Star Feedback Popup Results Screen -->
-          <div class="overlay-screen" id="results-overlay" style="display: none;">
-            <h3 class="rating-title">Evaluation Complete!</h3>
-            <p class="rating-subtitle">Buddy has analyzed your response. Let's see how you did!</p>
-            
-            <div class="stars-wrap" id="star-rating">
-              <!-- Instanced Stars -->
-            </div>
-            
-            <div class="evaluation-summary-card">
-              <div class="summary-score-line">
-                <span>Politeness Metric:</span>
-                <strong id="eval-politeness">10/10</strong>
-              </div>
-              <div class="summary-score-line">
-                <span>Safety Protocol:</span>
-                <strong id="eval-safety">10/10</strong>
-              </div>
-              <div class="summary-score-line">
-                <span>Relevance & Cosine Sim:</span>
-                <strong id="eval-relevance">10/10</strong>
-              </div>
-              <div class="summary-feedback" id="eval-feedback">
-                Outstanding job! You stated your need politely and followed classroom protocols.
-              </div>
-            </div>
-            
-            <div class="action-controls">
-              <button class="btn btn-outline" id="retry-scenario-btn">Try Again</button>
-              <button class="btn btn-primary" id="next-scenario-btn">Next Scenario</button>
-            </div>
-          </div>
-          
         </div>
-        
-        <!-- Bottom Controls & Interactive Recorder -->
-        <div class="glass-card control-bar">
-          <div class="voice-input-section">
-            <div class="mic-btn-wrap">
-              <button class="mic-btn" id="mic-btn" title="Speak to Respond">
-                <!-- Microphone SVG icon -->
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                  <line x1="12" y1="19" x2="12" y2="22" />
-                </svg>
-              </button>
-            </div>
-            
-            <div class="input-instructions">
-              <h4 id="mic-status">Press the mic to speak, or type below</h4>
-              
-              <!-- Waveform visualizer -->
-              <div class="waveform-container" id="waveform">
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-              </div>
-              
-              <div class="text-fallback-wrap">
-                <input type="text" class="text-input" id="text-input" placeholder="Type what you want to say here...">
-                <button class="btn btn-primary" id="submit-btn">
-                  <!-- Send icon -->
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <button class="btn btn-outline" id="skip-scenario-btn">Exit Module</button>
-        </div>
-        
       </div>
-      
-    </section>
+    </div>
 
-  </main>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════
        ATTENTION RE-ENGAGEMENT OVERLAY
-       Shown when child looks away for > 5 seconds during a scenario.
-       Features: waving mascot + child's name + gentle prompt
   ════════════════════════════════════════════════════════════ -->
   <div class="attention-overlay" id="attention-overlay" style="display:none;">
     <div class="attention-card">
-      <!-- Waving Mascot -->
-      <div class="attention-mascot" id="attention-mascot">
-        <!-- Injected by characters.js -->
-      </div>
-
+      <div class="attention-mascot" id="attention-mascot"></div>
       <div class="attention-message">
         <h2 id="attention-name-display">Hey there! 👋</h2>
         <p id="attention-prompt-text">It's okay! Come back when you're ready. Buddy is waiting for you!</p>
       </div>
-
-      <!-- Gentle return indicator -->
       <div class="attention-return-hint">
-        <div class="attention-dots">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="attention-dots"><span></span><span></span><span></span></div>
         <small>Look at the screen to continue</small>
       </div>
     </div>
   </div>
 
-  <!-- Settings Modal Dialog -->
-  <div class="modal-overlay" id="settings-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>System Audio Settings</h3>
-        <button class="btn btn-outline" id="close-settings-btn" style="padding:0.4rem; border-radius:50%;">✕</button>
-      </div>
-      <div class="modal-body">
-        <!-- Child name for personalised attention alerts -->
-        <div class="setting-row">
-          <label for="child-name-input">Child's Name:</label>
-          <input type="text" id="child-name-input" placeholder="e.g. Arjun" maxlength="20" style="max-width:160px;">
-        </div>
-
-        <div class="setting-row">
-          <label for="voice-select">Speech Voice (TTS):</label>
-          <select id="voice-select">
-            <option>Loading voices...</option>
-          </select>
-        </div>
-        
-        <div class="setting-row">
-          <label for="mute-toggle">Mute Speech Synthesis:</label>
-          <input type="checkbox" id="mute-toggle">
-        </div>
-        
-        <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.4;">
-          Note: Buddy uses speech recognition to hear you. If your microphone is not working, you can type your answers in the box!
-        </div>
-      </div>
-      <button class="btn btn-primary" id="back-to-home-btn" style="width:100%; justify-content:center;">Back to Home</button>
-    </div>
-  </div>
-
-  <!-- Main script imports loaded sequentially -->
-  <script src="scenarios.js"></script>
-  <script src="characters.js"></script>
-  <script src="pipeline.js"></script>
-  <script src="attention.js"></script>
-  <script src="app.js"></script>
+  <!-- Scripts loaded sequentially -->
+  <script src="scenarios.js?v=20260805_gestureunlock"></script>
+  <script src="characters.js?v=20260805_gestureunlock"></script>
+  <script src="pipeline.js?v=20260805_gestureunlock"></script>
+  <script src="attention.js?v=20260805_gestureunlock"></script>
+  <script src="app.js?v=20260805_gestureunlock"></script>
 </body>
 </html>
