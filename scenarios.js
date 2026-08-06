@@ -49,6 +49,13 @@ const scenarios = {
           description: "Clearly state your need (bathroom, toilet, restroom, toilet poganum).",
           keywords: ["bathroom", "restroom", "toilet", "washroom", "pee", "poop", "go", "toilet poganum", "bathroom poganum", "கழிவறை", "பாத்ரூம்"],
           severity: "high"
+        },
+        {
+          id: "T_DECORUM",
+          name: "Formal Respect Check",
+          description: "Avoid informal or disrespectful phrases when talking to an authority figure.",
+          negativeKeywords: ["hey man", "shut up", "gimme", "stupid", "whatever", "dumb"],
+          severity: "high"
         }
       ],
       description: "Classroom Behavior Standard."
@@ -133,8 +140,8 @@ const scenarios = {
           id: "P_HONESTY",
           name: "Honesty & Responsibility",
           description: "Admit to the accident without blaming others or lying.",
-          keywords: ["i dropped", "i did", "accident", "fell", "it broke", "i was playing", "slipped", "thavarinjitten", "naan thaan", "naan"],
-          negativeKeywords: ["the cat did it", "not me", "it was already broken", "dog did", "someone else"],
+          keywords: ["i dropped", "i did", "accident", "fell", "it broke", "i was playing", "slipped", "thavarinjitten", "naan thaan", "naan", "dropped", "broke", "playing"],
+          negativeKeywords: ["the cat did it", "not me", "it was already broken", "dog did", "someone else", "cat did it", "cat did", "wasn't me", "didn't do", "not my fault", "didn't break", "didn't drop", "never touched"],
           severity: "high"
         },
         {
@@ -233,6 +240,13 @@ const scenarios = {
           severity: "high"
         },
         {
+          id: "F_HOSTILE",
+          name: "Friendly Words",
+          description: "Avoid hostile words like 'get lost' or 'shut up'.",
+          negativeKeywords: ["mine", "no way", "get lost", "move", "go away", "shut up"],
+          severity: "high"
+        },
+        {
           id: "F_FLEXIBILITY",
           name: "Play Alternatives",
           description: "Suggest playing together or another activity if the swing is busy.",
@@ -307,17 +321,17 @@ const scenarios = {
       rules: [
         {
           id: "S_REFUSAL",
-          name: "Firm Refusal",
+          name: "Firm Refusal (Say NO)",
           description: "Say NO clearly and refuse to go with them or take gifts.",
-          keywords: ["no", "cannot", "won't", "don't want to", "leave me alone", "go away", "can't", "vendam", "போக மாட்டேன்", "வேண்டாம்"],
-          negativeKeywords: ["sure", "okay", "let's go", "kitten", "yes", "i will help", "cookies", "cookie", "climb"],
+          keywords: ["no", "cannot", "won't", "don't want to", "leave me alone", "go away", "can't", "vendam", "போக மாட்டேன்", "வேண்டாம்", "stop", "never", "dont"],
+          negativeKeywords: ["sure", "okay", "let's go", "kitten", "yes", "i will help", "cookies", "cookie", "climb", "puppy", "candy", "chocolate", "car", "find", "help", "go", "show", "will"],
           severity: "high"
         },
         {
           id: "S_ADULT",
           name: "Trusted Adult Protocol",
           description: "State that you will check with or tell your parent, teacher, or guardian.",
-          keywords: ["mom", "dad", "parents", "teacher", "guardian", "police", "adult", "amma", "appa", "ஆசிரியர்", "அம்மா", "அப்பா"],
+          keywords: ["mom", "dad", "parents", "parent", "teacher", "guardian", "police", "adult", "family", "mother", "father", "amma", "appa", "ஆசிரியர்", "அம்மா", "அப்பா"],
           severity: "high"
         },
         {
