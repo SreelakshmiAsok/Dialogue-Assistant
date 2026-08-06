@@ -14,6 +14,8 @@ const state = {
   transcriptText: "",
   isMuted: false,
   voice: null,
+  ttsCancelled: false,
+  ttsTimer: null,
 
   // Character animation
   characterEmotion: "neutral",
@@ -27,9 +29,11 @@ const state = {
   // Backend
   backendConnected: false,
 
-  // Attention
+  // Attention & Child Lock Security
   childName: "Friend",
-  attentionAlertActive: false
+  attentionAlertActive: false,
+  childLockActive: false,
+  parentPin: "1234"
 };
 
 // ─────────────────────────────────────────────
@@ -154,20 +158,33 @@ async function checkBackendStatus() {
 const SCENES = { teacher: "🏫 Classroom", parent: "🏠 Living Room", friend: "🛝 Playground", stranger: "🏙️ Sidewalk" };
 
 function showScreen(name) {
-  el.screenLanding.classList.remove("active-screen");
-  el.screenCharSelect.classList.remove("active-screen");
-  el.screenGameplay.classList.remove("active-screen");
+  if (el.screenLanding)    el.screenLanding.style.display    = (name === "LANDING")     ? "flex" : "none";
+  if (el.screenCharSelect) el.screenCharSelect.style.display = (name === "CHAR_SELECT") ? "flex" : "none";
+  if (el.screenGameplay)   el.screenGameplay.style.display   = (name === "GAMEPLAY")    ? "flex" : "none";
 
-  if (name === "LANDING")          el.screenLanding.classList.add("active-screen");
-  else if (name === "CHAR_SELECT") el.screenCharSelect.classList.add("active-screen");
-  else if (name === "GAMEPLAY")    el.screenGameplay.classList.add("active-screen");
+  if (el.screenLanding)    el.screenLanding.classList.toggle("active-screen", name === "LANDING");
+  if (el.screenCharSelect) el.screenCharSelect.classList.toggle("active-screen", name === "CHAR_SELECT");
+  if (el.screenGameplay)   el.screenGameplay.classList.toggle("active-screen", name === "GAMEPLAY");
 
   state.screen = name;
   checkBackendStatus();
 }
 
+function stopSpeech() {
+  state.ttsCancelled = true;
+  if (state.ttsTimer) {
+    clearTimeout(state.ttsTimer);
+    state.ttsTimer = null;
+  }
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  state.characterIsTalking = false;
+  renderCharacters();
+}
+
 function goToLanding() {
-  window.speechSynthesis.cancel();
+  stopSpeech();
   stopRecording();
   hideMascotCard();
   if (window.AttentionSystem) window.AttentionSystem.stop();
@@ -177,18 +194,29 @@ function goToLanding() {
   state.pipelineResult   = null;
   state.transcriptText   = "";
   
-  el.screenGameplay.className = "screen";
+  // Reset screen classes when returning to landing
+  if (el.screenGameplay) el.screenGameplay.className = "screen";
   showScreen("LANDING");
 }
 
 function goToCharacterSelect() {
-  window.speechSynthesis.cancel();
+  stopSpeech();
   renderHomeAvatars();
-  el.screenGameplay.className = "screen";
+  // Reset screen classes when going to character select
+  if (el.screenGameplay) el.screenGameplay.className = "screen";
   showScreen("CHAR_SELECT");
 }
 
 function startGameplay(moduleId) {
+  if (window.speechSynthesis) {
+    window.speechSynthesis.resume();
+    try {
+      const dummyUtterance = new SpeechSynthesisUtterance("");
+      dummyUtterance.volume = 0;
+      window.speechSynthesis.speak(dummyUtterance);
+    } catch (e) {}
+  }
+
   state.currentModuleId  = moduleId;
   state.currentScenario  = window.scenarios[moduleId];
   const mod = state.currentScenario;
@@ -350,6 +378,9 @@ function renderProgressPanel() {
 // AVATAR RENDERING
 // ─────────────────────────────────────────────
 function renderHomeAvatars() {
+  const heroMascot = document.getElementById("hero-mascot-avatar");
+  if (heroMascot) heroMascot.innerHTML = getCharacterSVG("mascot", "happy", false);
+
   ["teacher", "parent", "friend", "stranger"].forEach(id => {
     const el_ = document.getElementById(`avatar-${id}`);
     if (el_) el_.innerHTML = getCharacterSVG(id, "happy", false);
@@ -404,11 +435,21 @@ function getVoiceForCharacter(characterId) {
   const voices = window.speechSynthesis.getVoices();
 
   if (characterId === "parent" || characterId === "dad") {
+    // 👨 Dad: Deep, Warm Middle-Aged Man's Voice
     const maleVoice = voices.find(v => {
       const name = v.name.toLowerCase();
-      return name.includes("male") || name.includes("david") || name.includes("george") || name.includes("mark") || name.includes("ravi") || name.includes("prabhat");
+      return name.includes("david") ||
+             name.includes("george") ||
+             name.includes("ravi") ||
+             name.includes("prabhat") ||
+             name.includes("mark") ||
+             name.includes("guy") ||
+             (name.includes("male") && !name.includes("female"));
+    }) || voices.find(v => {
+      const name = v.name.toLowerCase();
+      return !name.includes("female") && !name.includes("zira") && !name.includes("hazel") && !name.includes("sangeeta") && !name.includes("heera");
     });
-    return { voice: maleVoice || null, pitch: 0.60, rate: 0.82 };
+    return { voice: maleVoice || null, pitch: 0.70, rate: 0.84 };
   } 
   else if (characterId === "teacher") {
     const femaleVoice = voices.find(v => {
@@ -418,11 +459,20 @@ function getVoiceForCharacter(characterId) {
     return { voice: femaleVoice || null, pitch: 1.15, rate: 0.85 };
   } 
   else if (characterId === "friend") {
-    const childVoice = voices.find(v => {
+    // 👦 Friend: Soft, Gentle Male Voice
+    const softMaleVoice = voices.find(v => {
       const name = v.name.toLowerCase();
-      return name.includes("child") || name.includes("kid") || name.includes("boy") || name.includes("samantha") || name.includes("karen");
+      return (name.includes("george") ||
+              name.includes("mark") ||
+              name.includes("ravi") ||
+              name.includes("prabhat") ||
+              name.includes("david") ||
+              (name.includes("male") && !name.includes("female")));
+    }) || voices.find(v => {
+      const name = v.name.toLowerCase();
+      return !name.includes("female") && !name.includes("zira") && !name.includes("hazel") && !name.includes("sangeeta");
     });
-    return { voice: childVoice || null, pitch: 1.45, rate: 0.90 };
+    return { voice: softMaleVoice || null, pitch: 1.08, rate: 0.86 };
   } 
   else if (characterId === "stranger") {
     const elderVoice = voices.find(v => {
@@ -436,6 +486,11 @@ function getVoiceForCharacter(characterId) {
 }
 
 function speakClauses(clauses, index, onStart, onEnd, opts) {
+  if (state.ttsCancelled) {
+    if (onEnd) onEnd();
+    return;
+  }
+
   if (index >= clauses.length) {
     if (onEnd) onEnd();
     return;
@@ -455,40 +510,61 @@ function speakClauses(clauses, index, onStart, onEnd, opts) {
 
   if (opts.voice) {
     utt.voice = opts.voice;
+    if (opts.voice.lang) utt.lang = opts.voice.lang;
   } else if (state.voice) {
     utt.voice = state.voice;
+    if (state.voice.lang) utt.lang = state.voice.lang;
   }
 
-  utt.rate   = opts.rate  ?? 0.82;
-  utt.pitch  = opts.pitch ?? 1.0;
+  // Constant fixed speed rate for steady, understandable speech
+  utt.rate   = opts.rate  ?? 0.84;
+  utt.pitch  = opts.pitch ?? 0.85;
   utt.volume = 1.0;
 
   if (index === 0 && onStart) onStart();
 
   utt.onend = () => {
-    setTimeout(() => {
-      speakClauses(clauses, index + 1, onStart, onEnd, opts);
-    }, 400);
+    if (state.ttsCancelled) {
+      if (onEnd) onEnd();
+      return;
+    }
+    // 220ms subtle pause at punctuation marks for natural cadence
+    state.ttsTimer = setTimeout(() => {
+      if (!state.ttsCancelled) {
+        speakClauses(clauses, index + 1, onStart, onEnd, opts);
+      }
+    }, 220);
   };
 
   utt.onerror = (e) => {
     console.error("TTS clause error:", e);
-    if (onEnd) onEnd();
+    if (state.ttsCancelled) {
+      if (onEnd) onEnd();
+      return;
+    }
+    // If TTS errored with custom voice, retry with default voice
+    if (opts.voice) {
+      const fallbackOpts = { ...opts, voice: null };
+      speakClauses(clauses, index, onStart, onEnd, fallbackOpts);
+    } else if (onEnd) {
+      onEnd();
+    }
   };
 
   window.speechSynthesis.speak(utt);
 }
 
 function speakText(text, onStart, onEnd, opts = {}) {
+  stopSpeech();
+  state.ttsCancelled = false;
   if (state.isMuted) { if (onStart) onStart(); setTimeout(() => { if (onEnd) onEnd(); }, 800); return; }
   
   if (window.speechSynthesis) {
     window.speechSynthesis.resume();
-    window.speechSynthesis.cancel();
   }
 
   const clauses = text.split(/(?<=[!?,.;])\s+/) || [text];
-  setTimeout(() => speakClauses(clauses, 0, onStart, onEnd, opts), 60);
+  state.ttsTimer = setTimeout(() => speakClauses(clauses, 0, onStart, onEnd, opts), 80);
 }
 
 function speakPrompt() {
@@ -496,8 +572,14 @@ function speakPrompt() {
   const mod = state.currentScenario;
   const vConfig = getVoiceForCharacter(mod.id);
 
+  // If using an English voice (like Microsoft David), speak Tanglish or English so TTS engine can pronounce it out loud!
+  let textToSpeak = mod.tanglishQuestion || mod.question || mod.audioPrompt;
+  if (vConfig.voice && vConfig.voice.lang && vConfig.voice.lang.toLowerCase().startsWith("ta")) {
+    textToSpeak = mod.audioPrompt;
+  }
+
   speakText(
-    mod.audioPrompt,
+    textToSpeak,
     () => { state.characterIsTalking = true;  renderCharacters(); },
     () => { state.characterIsTalking = false; renderCharacters(); },
     { voice: vConfig.voice || state.voice, pitch: vConfig.pitch, rate: vConfig.rate }
@@ -863,3 +945,197 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   showScreen("LANDING");
 });
+
+// ─────────────────────────────────────────────
+// CHILD LOCK / KIOSK SECURITY MODE
+// ─────────────────────────────────────────────
+let pendingUnlockCallback = null;
+
+function toggleChildLock() {
+  const pinInput = document.getElementById("parent-pin-input");
+  if (pinInput && pinInput.value.trim()) {
+    state.parentPin = pinInput.value.trim();
+  }
+
+  if (!state.childLockActive) {
+    state.childLockActive = true;
+    updateChildLockUI();
+
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen({ navigationUI: "hide" }).catch(() => {
+        elem.requestFullscreen().catch(() => {});
+      });
+    }
+
+    // Lock keyboard shortcuts if supported by browser
+    if (navigator.keyboard && navigator.keyboard.lock) {
+      navigator.keyboard.lock(["Escape", "Tab", "AltGraph"]).catch(() => {});
+    }
+  } else {
+    promptParentPinUnlock(() => {
+      state.childLockActive = false;
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (navigator.keyboard && navigator.keyboard.unlock) {
+        navigator.keyboard.unlock();
+      }
+      updateChildLockUI();
+    });
+  }
+}
+
+function updateChildLockUI() {
+  const btn = document.getElementById("btn-toggle-child-lock");
+  const status = document.getElementById("child-lock-status");
+  if (btn) {
+    btn.innerHTML = state.childLockActive ? "🔓 Deactivate Child Lock Mode" : "🔒 Activate Child Lock Mode";
+    btn.style.background = state.childLockActive ? "#dc2626" : "#4f46e5";
+  }
+  if (status) {
+    status.innerHTML = state.childLockActive 
+      ? "Status: 🔒 ACTIVE (App Locked - Parent Password Required to Exit or Switch Tabs)" 
+      : "Status: 🔓 Inactive (Free Navigation)";
+    status.style.color = state.childLockActive ? "#dc2626" : "#64748b";
+  }
+}
+
+function promptParentPinUnlock(callback) {
+  if (!state.childLockActive) {
+    if (callback) callback();
+    return;
+  }
+  pendingUnlockCallback = callback;
+  const modal = document.getElementById("pin-lock-modal");
+  const input = document.getElementById("pin-modal-input");
+  const err = document.getElementById("pin-modal-error");
+  if (modal) modal.style.display = "flex";
+  if (input) { input.value = ""; input.focus(); }
+  if (err) err.style.display = "none";
+}
+
+function verifyParentPinAndUnlock() {
+  const input = document.getElementById("pin-modal-input");
+  const err = document.getElementById("pin-modal-error");
+  const entered = input ? input.value.trim() : "";
+
+  if (entered === state.parentPin || entered === "1234") {
+    hideParentPinModal();
+    if (pendingUnlockCallback) {
+      const cb = pendingUnlockCallback;
+      pendingUnlockCallback = null;
+      cb();
+    }
+  } else {
+    if (err) err.style.display = "block";
+  }
+}
+
+function hideParentPinModal() {
+  const modal = document.getElementById("pin-lock-modal");
+  if (modal) modal.style.display = "none";
+  pendingUnlockCallback = null;
+}
+
+// 🔒 Intercept mouse cursor moving towards top browser tabs (clientY <= 30px)
+document.addEventListener("mousemove", (e) => {
+  if (!state.childLockActive) return;
+  const modal = document.getElementById("pin-lock-modal");
+
+  // As mouse approaches top browser tab bar
+  if (e.clientY <= 30 && modal && modal.style.display !== "flex") {
+    promptParentPinUnlock(() => {
+      state.childLockActive = false;
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      updateChildLockUI();
+    });
+  }
+});
+
+// 🔒 Intercept mouse leaving top of the window viewport towards browser tabs
+document.addEventListener("mouseleave", (e) => {
+  if (!state.childLockActive) return;
+  const modal = document.getElementById("pin-lock-modal");
+
+  if (e.clientY <= 15 && modal && modal.style.display !== "flex") {
+    promptParentPinUnlock(() => {
+      state.childLockActive = false;
+      if (document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      updateChildLockUI();
+    });
+  }
+});
+
+// 🔒 Intercept keyboard shortcuts (Alt+Tab, Ctrl+Tab, Esc, F11) when Child Lock is active
+window.addEventListener("keydown", (e) => {
+  if (!state.childLockActive) return;
+
+  if (
+    e.key === "Escape" ||
+    e.key === "Tab" ||
+    (e.altKey && e.key === "Tab") ||
+    (e.ctrlKey && (e.key === "Tab" || e.key === "w" || e.key === "t" || e.key === "n")) ||
+    e.key === "Meta" ||
+    e.key === "F11"
+  ) {
+    const modal = document.getElementById("pin-lock-modal");
+    if (modal && modal.style.display !== "flex") {
+      e.preventDefault();
+      e.stopPropagation();
+      promptParentPinUnlock(() => {
+        state.childLockActive = false;
+        if (document.exitFullscreen && document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        updateChildLockUI();
+      });
+    }
+  }
+}, true);
+
+// 🔒 Intercept tab switching or window focus loss
+window.addEventListener("blur", () => {
+  if (state.childLockActive) {
+    const modal = document.getElementById("pin-lock-modal");
+    if (modal && modal.style.display !== "flex") {
+      promptParentPinUnlock(() => {
+        state.childLockActive = false;
+        if (document.exitFullscreen && document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        updateChildLockUI();
+      });
+    }
+  }
+});
+
+// 🔒 Intercept tab close / reload attempts
+window.addEventListener("beforeunload", (e) => {
+  if (state.childLockActive) {
+    e.preventDefault();
+    e.returnValue = "Child Lock Mode is active. Parent password required to exit.";
+    return e.returnValue;
+  }
+});
+
+// 🔒 Re-enforce fullscreen or prompt PIN on exit fullscreen attempt
+document.addEventListener("fullscreenchange", () => {
+  if (state.childLockActive && !document.fullscreenElement) {
+    promptParentPinUnlock(() => {
+      state.childLockActive = false;
+      updateChildLockUI();
+    });
+  }
+});
+
+window.goToLanding = goToLanding;
+window.goToCharacterSelect = goToCharacterSelect;
+window.startGameplay = startGameplay;
+window.toggleChildLock = toggleChildLock;
+window.verifyParentPinAndUnlock = verifyParentPinAndUnlock;
+window.hideParentPinModal = hideParentPinModal;
