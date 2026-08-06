@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SocialBuddy – Social Skills Interactive Cartoon Game</title>
   <meta name="description" content="SocialBuddy helps autistic children practice Tamil and English social conversations through voice-driven interactive cartoon scenarios.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260805_v120">
   <!-- MediaPipe Face Mesh (CDN) for attention detection -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
@@ -43,35 +43,72 @@
 
       <!-- TAB: Start Session -->
       <div class="tab-panel active-tab" id="panel-start">
-        <div class="hero-section">
-          <div class="hero-badge">🎓 Interactive Speech & Social Skills Platform</div>
-          <h2>Empowering Communication Through Voice-Driven Cartoon Roleplay</h2>
-          <p>Helping neurodivergent children practice real-world social conversations, politeness rules, and turn-taking in Tamil & Tanglish.</p>
-          
-          <div class="hero-actions">
-            <button class="btn-start-session" id="btn-start-session">
-              <span class="start-icon">🎮</span>
-              Start Practice Session
-            </button>
+        
+        <!-- Central Mascot Guidance Banner -->
+        <div class="hero-guidance-card">
+          <div class="hero-mascot-wrapper">
+            <div class="hero-mascot-avatar" id="hero-mascot-avatar"></div>
+          </div>
+          <div class="hero-speech-bubble">
+            <div class="speech-tag">GENTLE LEARNING COMPANION</div>
+            <h2>Welcome to <span class="brand-highlight">SocialBuddy</span> 👋</h2>
+            <p>A safe, structured, and low-stimulation dialogue assistant designed for autistic children, parents, and teachers.</p>
           </div>
         </div>
 
+        <!-- THREE LARGE MAIN OPTION CARDS -->
+        <div class="main-options-grid">
+          
+          <!-- Option 1: Start Session -->
+          <div class="main-option-card card-start" id="card-option-start" onclick="document.getElementById('tab-start').click(); goToCharacterSelect();">
+            <div class="option-badge badge-start">🎮 Practice Session</div>
+            <div class="option-icon">🚀</div>
+            <h3>Start Session</h3>
+            <p>Begin an interactive voice-driven practice session with friendly cartoon mentors in familiar Indian scenarios.</p>
+            <button class="option-btn btn-start-action">
+              <span>▶ Start Practice</span>
+            </button>
+          </div>
 
+          <!-- Option 2: Student Progress -->
+          <div class="main-option-card card-progress" id="card-option-progress" onclick="document.getElementById('tab-progress').click();">
+            <div class="option-badge badge-progress">📊 Learning Insights</div>
+            <div class="option-icon">⭐</div>
+            <h3>Student's Progress</h3>
+            <p>View session stars, speech history, politeness milestones, and turn-taking progress over time.</p>
+            <button class="option-btn btn-progress-action">
+              <span>📈 View Progress</span>
+            </button>
+          </div>
 
+          <!-- Option 3: Parent Dashboard -->
+          <div class="main-option-card card-dashboard" id="card-option-dashboard" onclick="document.getElementById('tab-dashboard').click();">
+            <div class="option-badge badge-dashboard">👨‍👩‍👧 Caretaker Controls</div>
+            <div class="option-icon">⚙️</div>
+            <h3>Parent Dashboard</h3>
+            <p>Customize child settings, TTS speech voice preferences, research datasets, and facilitator guides.</p>
+            <button class="option-btn btn-dashboard-action">
+              <span>🛠️ Open Dashboard</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Reassuring Low-Stimulation Feature Strip -->
         <div class="landing-info-cards">
           <div class="info-card">
             <div class="info-icon">🎤</div>
             <h4>Voice-Driven Input</h4>
-            <p>Hands-free speech interaction with real-time browser Speech Recognition</p>
+            <p>Child responds naturally by speaking out loud — no keyboard required</p>
           </div>
           <div class="info-card">
             <div class="info-icon">🗣️</div>
             <h4>Tamil & Tanglish Support</h4>
-            <p>Bilingual prompts formatted in native Tamil script and Tanglish transliteration</p>
+            <p>Bilingual prompts formatted in native Tamil script & Tanglish transliteration</p>
           </div>
           <div class="info-card">
             <div class="info-icon">🤖</div>
-            <h4>Politeness Evaluator</h4>
+            <h4>Politeness Guidance</h4>
             <p>Buddy the Mascot assesses honorifics, keywords, and tone in real time</p>
           </div>
           <div class="info-card">
@@ -84,7 +121,10 @@
 
       <!-- TAB: Student's Progress -->
       <div class="tab-panel" id="panel-progress">
-        <h2 class="panel-title">📊 Student's Progress</h2>
+        <div class="panel-header-row" style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
+          <button class="btn-back" onclick="document.getElementById('tab-start').click(); goToLanding();">← Back to Menu</button>
+          <h2 class="panel-title" style="margin:0;">📊 Student's Progress</h2>
+        </div>
         <div class="progress-overview" id="progress-overview">
           <!-- Filled dynamically by app.js -->
           <div class="progress-empty-state">
@@ -100,7 +140,10 @@
 
       <!-- TAB: Parent Dashboard -->
       <div class="tab-panel" id="panel-dashboard">
-        <h2 class="panel-title">👨‍👩‍👧 Parent Dashboard</h2>
+        <div class="panel-header-row" style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
+          <button class="btn-back" onclick="document.getElementById('tab-start').click(); goToLanding();">← Back to Menu</button>
+          <h2 class="panel-title" style="margin:0;">👨‍👩‍👧 Parent Dashboard</h2>
+        </div>
         <div class="dashboard-grid">
 
           <!-- Child settings card -->
@@ -152,6 +195,29 @@
             </p>
             <div id="attention-status" class="attention-status-badge">⚙️ Attention: Initializing…</div>
           </div>
+
+          <!-- Child Lock / Kiosk Mode Card -->
+          <div class="dash-card" style="border:2px solid #6366f1;background:#f5f3ff;grid-column:1 / -1;">
+            <h4>🔒 Child Lock & Kiosk Mode</h4>
+            <p style="font-size:0.88rem;color:#475569;margin-bottom:1rem;line-height:1.5;">
+              Prevent children from leaving the app, switching tabs, or exiting practice sessions. Requiring a parent password to exit.
+            </p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:end;">
+              <div class="setting-row" style="margin:0;">
+                <label for="parent-pin-input">Parent Exit Password / PIN</label>
+                <input type="password" id="parent-pin-input" value="1234" placeholder="Enter PIN (default: 1234)" maxlength="20" style="font-weight:bold;letter-spacing:2px;">
+              </div>
+              <div class="setting-row" style="margin:0;">
+                <button class="btn btn-next" id="btn-toggle-child-lock" onclick="toggleChildLock()" style="width:100%;padding:0.75rem 1rem;font-size:0.95rem;background:#4f46e5;color:white;border-radius:30px;border:none;cursor:pointer;font-weight:900;box-shadow:0 4px 12px rgba(79,70,229,0.3);">
+                  🔒 Activate Child Lock Mode
+                </button>
+              </div>
+            </div>
+            <div id="child-lock-status" style="margin-top:0.75rem;font-size:0.85rem;font-weight:800;color:#64748b;text-align:center;">
+              Status: 🔓 Inactive (Free Navigation)
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -163,7 +229,7 @@
   ════════════════════════════════════════════════════════════ -->
   <div id="screen-character-select" class="screen">
     <div class="select-header">
-      <button class="btn-back" id="btn-back-from-select">← Back to Menu</button>
+      <button class="btn-back" id="btn-back-from-select" onclick="goToLanding()">← Back to Menu</button>
       <div class="select-title-block">
         <h2>Choose a Character 🎭</h2>
         <p>Pick who your child will practice speaking with today</p>
@@ -171,7 +237,7 @@
     </div>
     <div class="character-grid" id="character-grid">
       <!-- Parent Card -->
-      <div class="char-card parent-card" data-module="parent" id="card-parent">
+      <div class="char-card parent-card" data-module="parent" id="card-parent" onclick="startGameplay('parent')">
         <div class="card-sparkle">💙</div>
         <div class="char-avatar-ring parent-ring" id="avatar-parent"></div>
         <h3>Dad (Parent)</h3>
@@ -180,7 +246,7 @@
         <div class="char-difficulty easy">⭐ Beginner Friendly</div>
       </div>
       <!-- Teacher Card -->
-      <div class="char-card teacher-card" data-module="teacher" id="card-teacher">
+      <div class="char-card teacher-card" data-module="teacher" id="card-teacher" onclick="startGameplay('teacher')">
         <div class="card-sparkle">💜</div>
         <div class="char-avatar-ring teacher-ring" id="avatar-teacher"></div>
         <h3>Teacher</h3>
@@ -189,7 +255,7 @@
         <div class="char-difficulty medium">⭐⭐ Intermediate</div>
       </div>
       <!-- Friend Card -->
-      <div class="char-card friend-card" data-module="friend" id="card-friend">
+      <div class="char-card friend-card" data-module="friend" id="card-friend" onclick="startGameplay('friend')">
         <div class="card-sparkle">💛</div>
         <div class="char-avatar-ring friend-ring" id="avatar-friend"></div>
         <h3>Friend</h3>
@@ -198,7 +264,7 @@
         <div class="char-difficulty easy">⭐ Beginner Friendly</div>
       </div>
       <!-- Stranger Card -->
-      <div class="char-card stranger-card" data-module="stranger" id="card-stranger">
+      <div class="char-card stranger-card" data-module="stranger" id="card-stranger" onclick="startGameplay('stranger')">
         <div class="card-sparkle">💚</div>
         <div class="char-avatar-ring stranger-ring" id="avatar-stranger"></div>
         <h3>Stranger</h3>
@@ -216,7 +282,7 @@
 
     <!-- Gameplay header -->
     <div class="gameplay-header">
-      <button class="btn-back" id="btn-back-from-game">← Back to Menu</button>
+      <button class="btn-back" id="btn-back-from-game" onclick="goToLanding()">← Back to Menu</button>
       <div id="gameplay-title-block">
         <h2 id="gameplay-title">Practice Session</h2>
         <p id="gameplay-subtitle">Listen carefully and respond by speaking!</p>
@@ -279,6 +345,7 @@
             <button class="btn btn-outline" id="retry-scenario-btn">🔄 Try Again</button>
             <button class="btn btn-next" id="next-scenario-btn" style="display:none;">Next Level ➡️</button>
             <button class="btn btn-outline" id="choose-another-btn">Choose Another</button>
+            <button class="btn btn-outline" onclick="goToLanding()">🏠 Back to Menu</button>
           </div>
         </div>
 
@@ -355,11 +422,34 @@
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       PARENT PIN UNLOCK MODAL (Child Lock Security Screen)
+  ════════════════════════════════════════════════════════════ -->
+  <div class="pin-lock-modal" id="pin-lock-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.85);backdrop-filter:blur(14px);z-index:200;align-items:center;justify-content:center;padding:1.5rem;">
+    <div class="pin-lock-card" style="background:white;border-radius:28px;padding:2.2rem 2rem;max-width:420px;width:100%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.3);border:4px solid #6366f1;">
+      <div style="font-size:3rem;margin-bottom:0.5rem;">🔒</div>
+      <h2 style="font-size:1.6rem;font-weight:900;color:#1e1b4b;margin-bottom:0.4rem;">Parent Password Required</h2>
+      <p style="font-size:0.92rem;color:#475569;font-weight:700;margin-bottom:1.5rem;line-height:1.5;">
+        Child Lock Mode is currently active. Enter your parent password to exit or change settings.
+      </p>
+      <div style="margin-bottom:1.2rem;">
+        <input type="password" id="pin-modal-input" placeholder="Enter Parent Password" style="width:100%;padding:0.8rem 1.2rem;border:3px solid #cbd5e1;border-radius:18px;font-size:1.2rem;font-weight:900;text-align:center;letter-spacing:3px;outline:none;" onkeyup="if(event.key==='Enter')verifyParentPinAndUnlock()">
+      </div>
+      <div id="pin-modal-error" style="display:none;color:#dc2626;font-weight:800;font-size:0.88rem;margin-bottom:1rem;">
+        ❌ Incorrect password! Please try again.
+      </div>
+      <div style="display:flex;gap:0.75rem;justify-content:center;">
+        <button onclick="hideParentPinModal()" class="btn btn-outline" style="flex:1;padding:0.7rem;font-weight:800;border-radius:20px;border:2px solid #cbd5e1;background:#f8fafc;color:#475569;cursor:pointer;">Cancel</button>
+        <button onclick="verifyParentPinAndUnlock()" class="btn" style="flex:1;padding:0.7rem;font-weight:900;border-radius:20px;border:none;background:#6366f1;color:white;cursor:pointer;box-shadow:0 4px 12px rgba(99,102,241,0.3);">Unlock ✓</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts loaded sequentially -->
-  <script src="scenarios.js?v=20260805_gestureunlock"></script>
-  <script src="characters.js?v=20260805_gestureunlock"></script>
-  <script src="pipeline.js?v=20260805_gestureunlock"></script>
-  <script src="attention.js?v=20260805_gestureunlock"></script>
-  <script src="app.js?v=20260805_gestureunlock"></script>
+  <script src="scenarios.js?v=20260806_v230"></script>
+  <script src="characters.js?v=20260806_v230"></script>
+  <script src="pipeline.js?v=20260806_v230"></script>
+  <script src="attention.js?v=20260806_v230"></script>
+  <script src="app.js?v=20260806_v230"></script>
 </body>
 </html>
