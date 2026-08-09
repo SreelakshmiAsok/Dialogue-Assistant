@@ -66,6 +66,7 @@ function initElements() {
   el.voiceSelect           = document.getElementById("voice-select");
   el.muteToggle            = document.getElementById("mute-toggle");
   el.attentionStatus       = document.getElementById("attention-status");
+  el.liveAttentionBadge    = document.getElementById("live-attention-badge");
 
   // Character select
   el.btnBackFromSelect     = document.getElementById("btn-back-from-select");
@@ -207,7 +208,7 @@ function goToCharacterSelect() {
   showScreen("CHAR_SELECT");
 }
 
-function startGameplay(moduleId) {
+function startGameplay(moduleId = "parent") {
   if (window.speechSynthesis) {
     window.speechSynthesis.resume();
     try {
@@ -217,10 +218,22 @@ function startGameplay(moduleId) {
     } catch (e) {}
   }
 
-  state.currentModuleId  = moduleId;
-  state.currentScenario  = window.scenarios[moduleId];
+  // Force Parent module as the primary focused scenario
+  const targetId = moduleId || "parent";
+  state.currentModuleId  = targetId;
+  state.currentScenario  = window.scenarios[targetId] || window.scenarios["parent"];
   const mod = state.currentScenario;
-  if (!mod) { console.error("Scenario not found:", moduleId); return; }
+  if (!mod) { console.error("Scenario not found:", targetId); return; }
+
+  // Clear any existing hint timer & countdown
+  if (state.hintTimer) {
+    clearTimeout(state.hintTimer);
+    state.hintTimer = null;
+  }
+  if (state.countdownInterval) {
+    clearInterval(state.countdownInterval);
+    state.countdownInterval = null;
+  }
 
   // Reset state
   state.characterEmotion = mod.initialEmotion;
@@ -230,27 +243,28 @@ function startGameplay(moduleId) {
   state.isRecording      = false;
 
   // Update UI labels
-  el.gameplayTitle.innerText    = `${mod.name} Scenario`;
+  el.gameplayTitle.innerText    = `${mod.name} Scenario (Parent & Child)`;
   el.gameplaySubtitle.innerText = mod.introText;
-  el.sceneLabel.innerText       = SCENES[moduleId] || mod.sceneName;
+  el.sceneLabel.innerText       = SCENES[targetId] || mod.sceneName;
 
   // Set scene background and screen theme colour
   el.gameplayStage.className = `stage ${mod.bgClass}`;
   el.screenGameplay.className = `screen active-screen playing-${mod.bgClass.replace('scene-', '')}`;
 
-  // Load bilingual question
+  // Load small concise question
   el.dialogueSpeakerName.innerText = mod.characterName;
   el.dialogueTanglish.innerText    = mod.tanglishQuestion || mod.question;
   el.dialogueTamil.innerText       = mod.tamilQuestion    || "";
 
-  // Render AAC Picture Hints
+  // Hide Cartoon Visual Hints initially (will show after waiting 6 seconds if kid doesn't answer)
+  if (el.visualHintsCard) el.visualHintsCard.style.display = "none";
   renderVisualHints(mod);
 
-  // Reset input UI
+  // Reset input UI for automatic voice input
   el.sttPreviewRow.style.display = "none";
   el.sttPreviewText.innerText    = "";
   if (el.textInput) el.textInput.value = "";
-  el.micStatus.innerText         = "Listen to the question, then tap to speak or pick a card! 🎙️";
+  el.micStatus.innerText         = "Listen to Dad speaking... Microphone will start automatically! 🎙️";
   el.micBtn.classList.remove("recording");
   el.waveform.style.display      = "none";
 
@@ -263,56 +277,137 @@ function startGameplay(moduleId) {
 
   showScreen("GAMEPLAY");
 
-  // Speak question immediately within 100ms on entering page
+  // Speak prompt immediately, then microphone automatically starts listening!
   setTimeout(() => speakPrompt(), 100);
+
+  // Countdown timer: Show live countdown, then show hint card if kid hasn't answered
+  if (state.countdownInterval) clearInterval(state.countdownInterval);
+  let secondsLeft = 8;
+  const updateCountdown = () => {
+    if (state.screen !== "GAMEPLAY" || state.pipelineResult || state.isRecording) {
+      clearInterval(state.countdownInterval);
+      return;
+    }
+    if (secondsLeft > 0) {
+      if (el.micStatus) el.micStatus.innerText = `🎙️ Speak your answer! (${secondsLeft}s)  — Listening for your voice…`;
+      secondsLeft--;
+    } else {
+      clearInterval(state.countdownInterval);
+      if (state.screen === "GAMEPLAY" && !state.pipelineResult) {
+        if (el.visualHintsCard) el.visualHintsCard.style.display = "block";
+        if (el.micStatus) el.micStatus.innerText = "💡 Need help? Tap a picture card below or speak your answer!";
+        // Mascot speaks a gentle hint prompt
+        speakText(
+          "It's okay! Take your time. Check the picture cards for help!",
+          () => { state.mascotIsTalking = true; renderCharacters(); },
+          () => { state.mascotIsTalking = false; renderCharacters(); },
+          { rate: 0.80, pitch: 1.1 }
+        );
+      }
+    }
+  };
+  // Start countdown after the prompt finishes speaking (~3s delay)
+  state.hintTimer = setTimeout(() => {
+    state.countdownInterval = setInterval(updateCountdown, 1000);
+  }, 3000);
 
   // Start attention tracking
   if (window.AttentionSystem) {
     window.AttentionSystem.reset();
-    window.AttentionSystem.start(showAttentionAlert, hideAttentionAlert);
+    window.AttentionSystem.start(showAttentionAlert, hideAttentionAlert, updateAttentionStatus);
   }
 }
 
 // ─────────────────────────────────────────────
-// AAC VISUAL CARTOON HINT CARDS
+// AAC VISUAL CARTOON HINT CARDS — Fully Emoji/Audio, No Reading Required
 // ─────────────────────────────────────────────
 function renderVisualHints(currentMod) {
   if (!el.visualHintsGrid || !currentMod) return;
   el.visualHintsGrid.innerHTML = "";
 
-  if (!currentMod.visualHints || currentMod.visualHints.length === 0) {
+  const hintsList = currentMod.cartoonHints || currentMod.visualHints || [];
+  if (hintsList.length === 0) {
     if (el.visualHintsCard) el.visualHintsCard.style.display = "none";
     return;
   }
 
-  if (el.visualHintsCard) el.visualHintsCard.style.display = "block";
-
-  currentMod.visualHints.forEach(hint => {
+  hintsList.forEach((hint, idx) => {
     const card = document.createElement("div");
-    card.className = "hint-card";
-    card.style.borderColor = hint.color || "#3b82f6";
-    card.innerHTML = `
-      <div class="hint-icon">${hint.icon}</div>
-      <div class="hint-label">${hint.label}</div>
+    card.className = "hint-card cartoon-aac-card";
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", hint.title || hint.label);
+    card.style.cssText = `
+      background: linear-gradient(145deg, ${hint.color || "#2563eb"}22, ${hint.color || "#2563eb"}08);
+      border: 4px solid ${hint.color || "#2563eb"};
+      border-radius: 24px;
+      cursor: pointer;
+      padding: 1.2rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.18s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 6px 20px ${hint.color || "#2563eb"}33;
+      animation: cardBounceIn 0.4s cubic-bezier(.34,1.56,.64,1) ${idx * 0.1}s both;
+      position: relative;
+      overflow: hidden;
+      min-width: 130px;
     `;
 
-    card.onclick = () => {
-      card.style.transform = "scale(0.92)";
-      setTimeout(() => { card.style.transform = ""; }, 150);
-      
-      if (el.textInput) el.textInput.value = hint.fullText;
-      state.transcriptText = hint.fullText;
-      
+    // Big emoji icon + tap-to-hear speaker icon
+    card.innerHTML = `
+      <div style="font-size: 3.8rem; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); animation: iconBob 2s ease-in-out infinite ${idx * 0.3}s;">
+        ${hint.icon}
+      </div>
+      <div style="font-size: 2rem; opacity: 0.7;">🔊</div>
+      <div style="
+        font-size: 0.78rem;
+        font-weight: 900;
+        color: ${hint.color || "#1d4ed8"};
+        text-align: center;
+        line-height: 1.3;
+        max-width: 120px;
+        word-break: break-word;
+      ">${hint.title || hint.label}</div>
+    `;
+
+    // Hover effects
+    card.onmouseenter = () => { card.style.transform = "scale(1.08) translateY(-4px)"; };
+    card.onmouseleave = () => { card.style.transform = ""; };
+
+    const handleCardActivation = () => {
+      card.style.transform = "scale(0.93)";
+      setTimeout(() => { card.style.transform = ""; }, 160);
+
+      const textToUse = hint.fullText || hint.tanglishText;
+      const labelToSpeak = hint.title || hint.label;
+
       if (el.micStatus) {
-        el.micStatus.innerText = `Selected: "${hint.label}". Sending answer... 🚀`;
+        el.micStatus.innerText = `🎙️ "${labelToSpeak}" — Sending to Dad...`;
       }
 
-      submitAnswer(hint.fullText);
+      // Speak the label FIRST so the kid hears it (no reading needed!)
+      speakText(
+        labelToSpeak,
+        null,
+        () => {
+          // After speaking label, submit the answer
+          if (el.textInput) el.textInput.value = textToUse;
+          state.transcriptText = textToUse;
+          submitAnswer(textToUse);
+        },
+        { rate: 0.78, pitch: 1.15 }
+      );
     };
+
+    card.onclick = handleCardActivation;
+    card.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") handleCardActivation(); };
 
     el.visualHintsGrid.appendChild(card);
   });
 }
+
 
 // ─────────────────────────────────────────────
 // LANDING – TAB SWITCHING
@@ -581,9 +676,58 @@ function speakPrompt() {
   speakText(
     textToSpeak,
     () => { state.characterIsTalking = true;  renderCharacters(); },
-    () => { state.characterIsTalking = false; renderCharacters(); },
+    () => { 
+      state.characterIsTalking = false; 
+      renderCharacters();
+      // Automatically start speech recognition listening as soon as Dad finishes asking the question!
+      setTimeout(() => {
+        if (el.micStatus) el.micStatus.innerText = "🎙️ Listening automatically... Speak your answer to Dad now!";
+        startRecording();
+      }, 400);
+    },
     { voice: vConfig.voice || state.voice, pitch: vConfig.pitch, rate: vConfig.rate }
   );
+}
+
+function replayQuestion() {
+  // Stop any ongoing recording first
+  stopRecording();
+  // Cancel any ongoing TTS
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.resume();
+  }
+  // Clear cancelled flag so new speech will play
+  state.ttsCancelled = false;
+  state.characterIsTalking = false;
+  renderCharacters();
+
+  if (!state.currentScenario) return;
+  const mod = state.currentScenario;
+  const vConfig = getVoiceForCharacter(mod.id);
+
+  let textToSpeak = mod.tanglishQuestion || mod.question || mod.audioPrompt;
+  if (vConfig.voice && vConfig.voice.lang && vConfig.voice.lang.toLowerCase().startsWith("ta")) {
+    textToSpeak = mod.audioPrompt;
+  }
+
+  // Small delay to let cancel() settle before speaking
+  setTimeout(() => {
+    if (state.ttsCancelled) return;
+    const clauses = textToSpeak.split(/(?<=[!?,.;])\s+/) || [textToSpeak];
+    const opts = { voice: vConfig.voice || state.voice, pitch: vConfig.pitch, rate: vConfig.rate };
+    speakClauses(
+      clauses, 0,
+      () => { state.characterIsTalking = true; renderCharacters(); },
+      () => {
+        state.characterIsTalking = false;
+        renderCharacters();
+        if (el.micStatus) el.micStatus.innerText = "🎙️ Listening... Speak your answer now!";
+        setTimeout(() => startRecording(), 300);
+      },
+      opts
+    );
+  }, 200);
 }
 
 // ─────────────────────────────────────────────
@@ -592,8 +736,8 @@ function speakPrompt() {
 function initSpeechRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
-    console.warn("[STT] Speech Recognition not supported. Showing fallback.");
-    if (el.micStatus) el.micStatus.innerText = "🎙️ Mic unsupported. Tap an AAC picture card or type your answer!";
+    console.warn("[STT] Native Speech Recognition not supported. Voice prompt fallback enabled.");
+    if (el.micStatus) el.micStatus.innerText = "🎙️ Tap the Mic button to speak your answer!";
     return;
   }
   state.recognition = new SR();
@@ -605,7 +749,7 @@ function initSpeechRecognition() {
     state.isRecording = true;
     el.micBtn.classList.add("recording");
     el.waveform.style.display  = "flex";
-    el.micStatus.innerText     = "🎙️ Listening… Speak to Buddy now!";
+    el.micStatus.innerText     = "🎙️ Listening automatically… Speak to Dad now!";
     el.sttPreviewRow.style.display = "none";
   };
 
@@ -614,32 +758,70 @@ function initSpeechRecognition() {
     state.transcriptText = text;
     el.sttPreviewText.innerText    = `"${text}"`;
     el.sttPreviewRow.style.display = "flex";
-    el.micStatus.innerText         = "✅ Got it! Tap Submit to see what Buddy thinks.";
+    el.micStatus.innerText         = "✅ Got your voice answer! Evaluating with Dad... 🚀";
+    stopRecording();
+    // Automatic submission - no button click needed!
+    setTimeout(() => submitAnswer(text), 500);
   };
 
   state.recognition.onerror = (event) => {
-    console.error("[STT] Error:", event.error);
-    el.micStatus.innerText = `⚠️ Microphone error: ${event.error}. Try again or tap an AAC card!`;
+    console.warn("[STT] Error event:", event.error);
     stopRecording();
+    if (el.micStatus) {
+      el.micStatus.innerText = "🎙️ Tap the Mic button or speak your answer to Dad!";
+    }
   };
 
   state.recognition.onend = () => stopRecording();
 }
 
+function requestMicPermission() {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        stream.getTracks().forEach(t => t.stop());
+        if (el.micStatus) el.micStatus.innerText = "🎙️ Microphone ready! Tap to speak or listen to Dad.";
+      })
+      .catch(err => {
+        console.warn("Mic permission request:", err.message);
+      });
+  }
+}
+
 function startRecording() {
+  requestMicPermission();
+
   if (!state.recognition) {
-    el.micStatus.innerText = "🎙️ Mic unavailable — type your response or tap an AAC card below.";
-    el.sttPreviewRow.style.display = "flex";
+    initSpeechRecognition();
+  }
+
+  if (state.isRecording) {
+    stopRecording();
     return;
   }
-  if (state.isRecording) return;
+
   try {
     window.speechSynthesis.cancel();
     state.characterIsTalking = false;
     state.mascotIsTalking    = false;
     renderCharacters();
-    state.recognition.start();
-  } catch (e) { console.error(e); }
+
+    if (state.recognition) {
+      state.recognition.start();
+    } else {
+      const userResp = prompt("Microphone Voice Input:\nSpeak or type your answer to Dad below:", "Sorry Appa, naan thaan keezha pottutten.");
+      if (userResp && userResp.trim()) {
+        submitAnswer(userResp.trim());
+      }
+    }
+  } catch (e) {
+    console.warn("[STT] Start error:", e);
+    try { if (state.recognition) state.recognition.stop(); } catch(err){}
+    const userResp = prompt("Microphone Voice Input:\nSpeak or type your answer to Dad below:", "Sorry Appa, naan thaan keezha pottutten.");
+    if (userResp && userResp.trim()) {
+      submitAnswer(userResp.trim());
+    }
+  }
 }
 
 function stopRecording() {
@@ -648,6 +830,121 @@ function stopRecording() {
   if (el.micBtn) el.micBtn.classList.remove("recording");
   if (el.waveform) el.waveform.style.display = "none";
   try { if (state.recognition) state.recognition.stop(); } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
+// CELEBRATION BALLOONS & VICTORY CHIME
+// ─────────────────────────────────────────────
+function playVictoryChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+      gain.gain.setValueAtTime(0.35, ctx.currentTime + idx * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + idx * 0.12 + 0.55);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.start(ctx.currentTime + idx * 0.12);
+      osc.stop(ctx.currentTime + idx * 0.12 + 0.55);
+    });
+  } catch (e) { console.warn(e); }
+}
+
+function triggerBalloonCelebration() {
+  playVictoryChime();
+  let container = document.getElementById("balloon-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "balloon-container";
+    container.className = "balloon-container";
+    document.body.appendChild(container);
+  }
+  container.innerHTML = "";
+
+  const balloonIcons = ["🎈", "🎉", "⭐", "💖", "✨", "🎊", "🏆", "🥳", "🎈", "🎈", "🌟"];
+  
+  for (let i = 0; i < 30; i++) {
+    const b = document.createElement("div");
+    b.className = "balloon-item";
+    b.innerText = balloonIcons[Math.floor(Math.random() * balloonIcons.length)];
+    b.style.left = `${Math.random() * 92 + 2}%`;
+    b.style.animationDelay = `${Math.random() * 1.5}s`;
+    b.style.animationDuration = `${3.5 + Math.random() * 2}s`;
+    b.style.fontSize = `${2.5 + Math.random() * 1.8}rem`;
+    container.appendChild(b);
+  }
+
+  setTimeout(() => {
+    if (container) container.innerHTML = "";
+  }, 6000);
+}
+
+// ─────────────────────────────────────────────
+// WRONG ANSWER ANIMATED BANNER
+// ─────────────────────────────────────────────
+function showWrongAnswerBanner() {
+  // Remove any existing banner
+  const existing = document.getElementById("wrong-answer-banner");
+  if (existing) existing.remove();
+
+  const banner = document.createElement("div");
+  banner.id = "wrong-answer-banner";
+  banner.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      color: white;
+      font-size: 2.2rem;
+      font-weight: 900;
+      padding: 1.5rem 3rem;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(220,38,38,0.5);
+      z-index: 9999;
+      text-align: center;
+      animation: wrongBannerPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      pointer-events: none;
+      letter-spacing: 1px;
+    ">
+      ❌ That is Wrong!<br>
+      <span style="font-size:1.1rem;font-weight:700;opacity:0.9;">Check the picture cards for a hint! 💡</span>
+    </div>
+  `;
+  document.body.appendChild(banner);
+
+  // Add animation keyframes if not already present
+  if (!document.getElementById("wrong-banner-style")) {
+    const style = document.createElement("style");
+    style.id = "wrong-banner-style";
+    style.textContent = `
+      @keyframes wrongBannerPop {
+        0% { transform: translate(-50%, -50%) scale(0) rotate(-5deg); opacity: 0; }
+        60% { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Auto-remove banner after 2.5s
+  setTimeout(() => {
+    if (banner && banner.parentNode) {
+      banner.style.transition = "opacity 0.4s";
+      banner.style.opacity = "0";
+      setTimeout(() => banner.remove(), 400);
+    }
+  }, 2500);
 }
 
 // ─────────────────────────────────────────────
@@ -664,24 +961,39 @@ async function submitAnswer(overrideText) {
     return;
   }
 
-  // Disable inputs
+  // Temporarily disable inputs during pipeline processing
   el.micBtn.style.pointerEvents = "none";
   if (el.submitBtn) el.submitBtn.disabled = true;
   if (el.textSubmitBtn) el.textSubmitBtn.disabled = true;
   el.micStatus.innerText = "💭 Buddy is processing your response...";
 
-  // Run pipeline (asynchronously with Python FastAPI OWL backend if connected)
-  state.pipelineResult = await window.runFullPipelineAsync(state.currentModuleId, text);
+  try {
+    // Run pipeline (asynchronously with Python FastAPI OWL backend if connected)
+    state.pipelineResult = await window.runFullPipelineAsync(state.currentModuleId, text);
+  } catch (err) {
+    console.error("Pipeline submission error:", err);
+  } finally {
+    // Always re-enable input buttons so user can submit again cleanly!
+    el.micBtn.style.pointerEvents = "auto";
+    if (el.submitBtn) el.submitBtn.disabled = false;
+    if (el.textSubmitBtn) el.textSubmitBtn.disabled = false;
+  }
 
-  // Show thinking state for 800ms, then deliver feedback
+  // Show thinking state for 600ms, then deliver feedback
   state.mascotEmotion = "neutral";
   renderCharacters();
 
-  setTimeout(() => showMascotFeedback(), 800);
+  setTimeout(() => showMascotFeedback(), 600);
 }
 
 function showMascotFeedback() {
   const result = state.pipelineResult;
+
+  // Always re-enable mic and submit buttons
+  el.micBtn.style.pointerEvents = "auto";
+  if (el.submitBtn) el.submitBtn.disabled = false;
+  if (el.textSubmitBtn) el.textSubmitBtn.disabled = false;
+
   if (!result) return;
 
   const llm = result.llm;
@@ -696,6 +1008,7 @@ function showMascotFeedback() {
   const linguistic = result.linguistic;
   let verdictClass = "pass";
   let verdictText  = "✅ Great Answer!";
+  let isWrongAnswer = false;
 
   if (result.ontology && result.ontology.pythonBackendActive) {
     verdictText += " ⚡ [OWL Ontology]";
@@ -703,24 +1016,68 @@ function showMascotFeedback() {
 
   if (linguistic && linguistic.verdict === "FAIL") {
     verdictClass = "fail";
-    if (linguistic.failType === "DISRESPECT")   verdictText = "❌ Disrespectful Phrase Detected";
-    else if (linguistic.failType === "SLANG")    verdictText = "❌ Too Casual / Slang Detected";
-    else if (linguistic.failType === "BLUNT_VERB") verdictText = "❌ Blunt Command Detected";
+    isWrongAnswer = true;
+    if (linguistic.failType === "DISRESPECT") {
+      verdictText = "❌ Oops! Not a nice word!";
+    } else if (linguistic.failType === "SLANG") {
+      verdictText = `❌ Too casual! Don't say "${linguistic.triggeredWord}" to Dad!`;
+    } else if (linguistic.failType === "BLUNT_VERB") {
+      verdictText = "❌ Too blunt! Use polite words!";
+    }
   } else if (linguistic && linguistic.verdict === "WARNING") {
     verdictClass = "warning";
-    verdictText  = "⚠️ Missing Politeness Marker";
+    verdictText  = "⚠️ Almost! Try adding 'Appa' or 'thank you'!";
+  } else if (result.ontology && result.ontology.hasViolations) {
+    verdictClass = "fail";
+    isWrongAnswer = true;
+    verdictText  = "❌ Oops! That was not respectful!";
   } else if (stars <= 2) {
     verdictClass = "fail";
-    verdictText  = "❌ Needs Improvement";
+    isWrongAnswer = true;
+    verdictText  = "❌ Let's try again!";
   } else if (stars <= 3) {
     verdictClass = "warning";
-    verdictText  = "⚠️ Almost There!";
+    verdictText  = "⚠️ Almost There! Good try!";
+  } else {
+    // 🎈 Appropriate / Respectful Answer to Dad: Trigger Balloon Celebration!
+    verdictText = "🎉 Super Answer! 🎈";
+    triggerBalloonCelebration();
   }
+
+  // If wrong answer: show banner, speak aloud, show hint cards immediately
+  if (isWrongAnswer) {
+    if (el.visualHintsCard) el.visualHintsCard.style.display = "block";
+    if (el.micStatus) el.micStatus.innerText = "❌ Oops! Tap a picture card below to hear the right answer!";
+    // Show animated WRONG banner
+    showWrongAnswerBanner();
+
+    // Build a child-friendly spoken message based on WHY it was wrong
+    let spokenWrongMsg = "Oops! That is wrong. ";
+    if (linguistic && linguistic.failType === "SLANG" && linguistic.triggeredWord) {
+      spokenWrongMsg += `Saying "${linguistic.triggeredWord}" to Dad is not respectful! `;
+    } else if (linguistic && linguistic.failType === "DISRESPECT") {
+      spokenWrongMsg += "That word is not a nice word to use with Dad! ";
+    }
+    spokenWrongMsg += "Tap a picture card to hear the right answer!";
+
+    speakText(
+      spokenWrongMsg,
+      () => { state.mascotIsTalking = true; renderCharacters(); },
+      () => { state.mascotIsTalking = false; renderCharacters(); },
+      { rate: 0.80, pitch: 1.1 }
+    );
+  }
+
 
   // Update guidance card
   el.guidanceVerdictBadge.className = `guidance-verdict-badge ${verdictClass}`;
   el.guidanceVerdictBadge.innerText = verdictText;
-  el.mascotBubbleText.innerText     = llm.mascotFeedback;
+  el.mascotBubbleText.innerText = isWrongAnswer
+    ? `❌ That is wrong! ${llm.mascotFeedback}`
+    : llm.mascotFeedback;
+
+  // Show Next Scenario button on results overlay and guidance card
+  if (el.nextScenarioBtn) el.nextScenarioBtn.style.display = "inline-block";
 
   // Show linguistic or ontology correction card if applicable
   if (linguistic && linguistic.verdict !== "PASS" && linguistic.suggestion) {
@@ -796,23 +1153,92 @@ function hideMascotCard() {
 }
 
 // ─────────────────────────────────────────────
-// ATTENTION ALERTS
+// ATTENTION ALERTS & CAMERA FEED CONTROLS
 // ─────────────────────────────────────────────
+function updateAttentionStatus(stateStr, messageStr, remainingSec) {
+  const badgeClass = stateStr === "ATTENTIVE" ? "ok" : (stateStr === "DISTRACTED" ? "alert" : "warn");
+  
+  if (el.liveAttentionBadge) {
+    el.liveAttentionBadge.innerText = messageStr;
+    el.liveAttentionBadge.className = `attention-status-badge ${badgeClass}`;
+  }
+  if (el.attentionStatus) {
+    el.attentionStatus.innerText = messageStr;
+    el.attentionStatus.className = `attention-status-badge ${badgeClass}`;
+  }
+}
+
+function toggleCameraFeedVisibility() {
+  const box = document.getElementById("camera-feed-box");
+  const btn = document.getElementById("btn-toggle-cam");
+  if (!box || !btn) return;
+  
+  const isHidden = box.classList.toggle("hidden-feed");
+  btn.innerText = isHidden ? "👁️ Show Feed" : "👁️ Hide Feed";
+}
+
+function playAudioChime() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc1.type = "sine";
+    osc2.type = "triangle";
+
+    osc1.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+    osc2.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+
+    osc1.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.3); // G5
+
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc1.start();
+    osc2.start();
+    osc1.stop(ctx.currentTime + 0.6);
+    osc2.stop(ctx.currentTime + 0.6);
+  } catch (e) { console.warn("Audio chime error:", e); }
+}
+
+function testAttentionAlert() {
+  showAttentionAlert();
+  setTimeout(() => {
+    hideAttentionAlert();
+  }, 5000);
+}
+
 function showAttentionAlert() {
   if (state.attentionAlertActive) return;
   state.attentionAlertActive = true;
-  window.speechSynthesis.cancel();
-  el.attentionMascot.innerHTML = getCharacterSVG("mascot-waving", "happy", false);
-  el.attentionNameDisplay.innerText = `Hey, ${state.childName}! 👋`;
-  el.attentionPromptText.innerText  = `It's okay! Take your time. Buddy is right here waiting for you!`;
-  el.attentionOverlay.style.display = "flex";
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+  // 🔔 Play Web Audio chime sound alert
+  playAudioChime();
+
+  if (el.attentionMascot) el.attentionMascot.innerHTML = getCharacterSVG("mascot-waving", "happy", false);
+  if (el.attentionNameDisplay) el.attentionNameDisplay.innerText = `Hey, ${state.childName}! 👋`;
+  if (el.attentionPromptText) el.attentionPromptText.innerText  = `It's okay! Take your time. Buddy is right here waiting for you!`;
+  if (el.attentionOverlay) el.attentionOverlay.style.display = "flex";
+  
+  updateAttentionStatus("DISTRACTED", "🔴 Distracted — Alert Active");
   speakText(`Hey ${state.childName}… come back. Buddy is right here!`, null, null, { rate:.78, pitch:1.12 });
 }
 
 function hideAttentionAlert() {
   if (!state.attentionAlertActive) return;
   state.attentionAlertActive = false;
-  el.attentionOverlay.style.display = "none";
+  if (el.attentionOverlay) el.attentionOverlay.style.display = "none";
+  
+  updateAttentionStatus("ATTENTIVE", "🟢 Focused & Engaged");
   if (state.screen === "GAMEPLAY" && state.currentScenario) {
     setTimeout(() => speakText(`Welcome back, ${state.childName}! Let's continue.`, null, () => speakPrompt()), 400);
   }
@@ -880,11 +1306,7 @@ function bindEvents() {
     });
   }
 
-  // Replay question button
-  el.replayBtn.addEventListener("click", () => {
-    window.speechSynthesis.cancel();
-    speakPrompt();
-  });
+  // Replay button binding handled via onclick="replayQuestion()" in HTML
 
   // Results overlay actions
   el.retryScenarioBtn.addEventListener("click", () => {

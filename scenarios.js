@@ -103,34 +103,31 @@ const scenarios = {
     themeColor: "--accent-parent",
     bgClass: "scene-livingroom",
     initialEmotion: "neutral",
-    introText: "Let's practice telling the truth and apologizing when something goes wrong. Dad is in the living room.",
-    question: "Oh no! Did you drop this toy? It looks like the robot's arm is broken. Can you tell me what happened?",
-    audioPrompt: "ஐயோ! நீ தான் இதை தவறித்தியா? ரோபோட்டோட கையை பாரு, உடைஞ்சிருக்கு! என்ன ஆச்சு னு சொல்லு.",
+    introText: "Practice answering Dad in Tamil when he asks 'Did you eat?' – Listen carefully and reply respectfully!",
+    question: "Did you eat?",
+    audioPrompt: "நீ சாப்பிட்டியா?",
 
-    tanglishQuestion: "Ayyo! Nee thaan ithai thavarttiya? Robot-oda kaiyai paaru, udainjirukkku! Enna aachi nu sollu.",
-    tamilQuestion: "ஐயோ! நீ தான் இதை தவறித்தியா? ரோபோட்டோட கையை பாரு, உடைஞ்சிருக்கு! என்ன ஆச்சு னு சொல்லு.",
+    tanglishQuestion: "Nee saapattiya? (Did you eat?)",
+    tamilQuestion: "நீ சாப்பிட்டியா?",
 
-    visualHints: [
+    cartoonHints: [
       {
-        id: "p_hint_sorry",
-        icon: "🧸",
-        label: "I dropped it, Sorry!",
-        fullText: "I'm sorry Dad, I accidentally dropped it while playing.",
+        id: "p_hint_ate_respectful",
+        icon: "🍱",
+        title: "Ate Food Respectfully",
+        label: "Yes Dad, I ate!",
+        fullText: "Yes Dad, I ate! Thank you.",
+        tanglishText: "Saapttean Appa, thank you!",
         color: "#2563eb"
       },
       {
-        id: "p_hint_fix",
-        icon: "🩹",
-        label: "Can we fix it?",
-        fullText: "It broke by accident. Can we fix it together?",
+        id: "p_hint_ask_food",
+        icon: "🥣",
+        title: "Polite Food Request",
+        label: "Not yet Dad, can I have food?",
+        fullText: "Not yet Dad, can you give me food please?",
+        tanglishText: "Innum illa Appa, saappadu tharingala?",
         color: "#10b981"
-      },
-      {
-        id: "p_hint_cat",
-        icon: "🐾",
-        label: "Cat did it!",
-        fullText: "The cat did it, not me!",
-        color: "#f59e0b"
       }
     ],
 
@@ -138,54 +135,48 @@ const scenarios = {
       rules: [
         {
           id: "P_HONESTY",
-          name: "Honesty & Responsibility",
-          description: "Admit to the accident without blaming others or lying.",
-          keywords: ["i dropped", "i did", "accident", "fell", "it broke", "i was playing", "slipped", "thavarinjitten", "naan thaan", "naan", "dropped", "broke", "playing"],
-          negativeKeywords: ["the cat did it", "not me", "it was already broken", "dog did", "someone else", "cat did it", "cat did", "wasn't me", "didn't do", "not my fault", "didn't break", "didn't drop", "never touched"],
+          name: "Parent Respectful Answering",
+          description: "Answer Dad respectfully about eating.",
+          keywords: ["saapttean", "saapaten", "saapattu", "ate", "i ate", "yes dad", "yes appa", "innum illa", "not yet"],
+          negativeKeywords: ["poda", "podi", "da", "di", "shut up", "get lost", "whatever"],
           severity: "high"
         },
         {
-          id: "P_APOLOGY",
-          name: "Sincere Apology",
-          description: "Express regret for the accident (say sorry).",
-          keywords: ["sorry", "apologize", "didn't mean to", "bad about it", "mannippu", "mannichuko", "மன்னிப்பு", "மன்னிச்சுக்கோ"],
+          id: "P_RESPECT",
+          name: "Respectful Address to Father",
+          description: "Speak respectfully to Dad, avoiding rude words (poda, da, shut up).",
+          keywords: ["dad", "appa", "father", "daddy", "thank you", "please"],
+          negativeKeywords: ["poda", "podi", "da", "di", "shut up", "get lost", "stupid", "mental", "dumb", "whatever"],
           severity: "high"
-        },
-        {
-          id: "P_RECONCILE",
-          name: "Reconciliation/Fixing",
-          description: "Propose a solution or ask how to fix/repair it.",
-          keywords: ["fix", "glue", "repair", "tape", "help me fix", "buy another", "careful next time", "seriya pannalama", "திருத்தலாமா"],
-          severity: "medium"
         }
       ],
-      description: "Family Honesty Framework."
+      description: "Parent-Child Respectful Communication Standard."
     },
 
     ragDatabase: [
       {
-        utterance: "I'm sorry Dad, I accidentally dropped it while playing.",
-        intent: "honest_apology",
+        utterance: "Saapttean Appa, thank you!",
+        intent: "tanglish_respectful_ate",
         vector: [0.96, 0.95, 0.92, 0.98],
-        evaluation: { score: 10, emotion: "proud", feedback: "Perfect! I am so proud of you for telling the truth. It's okay to make mistakes, and asking to fix it together is wonderful!" }
+        evaluation: { score: 10, emotion: "proud", feedback: "Super! Appa-kitta polite-ah 'Saapttean Appa' nu sonnathu romba nalla irukku!" }
       },
       {
-        utterance: "Sorry Appa, naan thaan thavarttinen. Naan fix panlama?",
-        intent: "tanglish_honest_apology",
-        vector: [0.94, 0.93, 0.9, 0.96],
-        evaluation: { score: 10, emotion: "proud", feedback: "Appadiye romba nalla sonna! Appava truth solrathum, fix pandrom nu kekarathum – ivvolo maturity oru child-la paakka nalla irukku!" }
+        utterance: "Yes Dad, I ate! Thank you.",
+        intent: "english_respectful_ate",
+        vector: [0.95, 0.94, 0.93, 0.97],
+        evaluation: { score: 10, emotion: "proud", feedback: "Wonderful! You answered Dad very politely and expressed gratitude." }
       },
       {
-        utterance: "It was an accident, I'm sorry.",
-        intent: "honest_apology",
-        vector: [0.88, 0.9, 0.8, 0.85],
-        evaluation: { score: 8, emotion: "happy", feedback: "Great job telling the truth and apologizing. It's always best to be honest with Dad." }
+        utterance: "Innum illa Appa, saappadu tharingala?",
+        intent: "tanglish_polite_request",
+        vector: [0.90, 0.92, 0.88, 0.93],
+        evaluation: { score: 10, emotion: "happy", feedback: "Great respectful answer! Asking Dad politely for food is wonderful." }
       },
       {
-        utterance: "The cat did it, not me!",
-        intent: "dishonest_blame",
-        vector: [0.4, 0.3, 0.7, 0.3],
-        evaluation: { score: 3, emotion: "concerned", feedback: "It's scary to tell the truth when something breaks, but Dad will be much happier if you take responsibility instead of blaming others." }
+        utterance: "Poda, enaku vendam!",
+        intent: "disrespectful_denial",
+        vector: [0.2, 0.2, 0.8, 0.2],
+        evaluation: { score: 1, emotion: "concerned", feedback: "⚠️ Remember to be respectful to Dad! Don't use words like 'shut up' or 'da'. Try saying: 'Sorry Appa, I accidentally dropped it.'" }
       }
     ]
   },

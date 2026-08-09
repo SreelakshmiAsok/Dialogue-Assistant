@@ -37,7 +37,30 @@ body {
 @keyframes next-glow  { to{box-shadow:0 6px 0 #065f46,0 0 28px rgba(16,185,129,.7)} }
 @keyframes cloud-drift{ to{transform:translateX(18px)} }
 @keyframes sun-rays   { to{transform:rotate(360deg)} }
-@keyframes grass-wave { 0%,100%{transform:scaleX(1) scaleY(1)} 50%{transform:scaleX(1.02) scaleY(1.04)} }
+@keyframes floatUpAndFade {
+  0% { transform: translateY(105vh) rotate(0deg) scale(0.6); opacity: 1; }
+  50% { transform: translateY(50vh) rotate(15deg) scale(1.15); opacity: 0.95; }
+  100% { transform: translateY(-20vh) rotate(-15deg) scale(1.3); opacity: 0; }
+}
+
+.balloon-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+.balloon-item {
+  position: absolute;
+  bottom: -60px;
+  font-size: 3.5rem;
+  animation: floatUpAndFade 4.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+}
 
 /* ═══════════════════════════════════════
    SCREEN SWITCH
@@ -705,10 +728,10 @@ body {
 /* ── Characters ── */
 .character-box {
   width: 270px;
-  height: 310px;
+  height: 340px;
   flex-shrink: 0;
   z-index: 5;
-  margin-bottom: -72px;
+  margin-bottom: -20px;
   align-self: flex-end;
   filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
   transition: filter .3s, width .3s, height .3s, margin .3s;
@@ -994,60 +1017,84 @@ body {
 
 /* Animated Visual AAC Cartoon Hint Cards */
 .visual-hints-card {
-  margin-top: 1rem;
-  padding: 1rem 1.25rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem 1.2rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 0 0 3px rgba(99,102,241,0.12);
+  border: 3px solid rgba(99,102,241,0.18);
 }
 
 .hints-header span {
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #475569;
-  display: block;
-  margin-bottom: 0.75rem;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
 }
 
 .hints-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
+/* Base hint-card — overridden by inline style in JS for cartoon-aac-card */
 .hint-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 16px;
-  border: 3px solid rgba(0,0,0,0.06);
-  background: #ffffff;
+  gap: 0.5rem;
+  padding: 1.2rem 0.8rem;
+  border-radius: 24px;
+  border: 4px solid #6366f1;
+  background: #f5f3ff;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(99,102,241,0.25);
+  min-width: 130px;
 }
 
 .hint-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 12px 30px rgba(99,102,241,0.35);
 }
 
 .hint-card:active {
-  transform: scale(0.96);
+  transform: scale(0.93);
 }
 
 .hint-icon {
-  font-size: 2rem;
+  font-size: 3.5rem;
   line-height: 1;
-  animation: float-icon 2s ease-in-out infinite alternate;
+  animation: iconBob 2s ease-in-out infinite alternate;
 }
 
 .hint-label {
-  font-weight: 800;
-  font-size: 1rem;
-  color: #1e293b;
+  font-weight: 900;
+  font-size: 0.82rem;
+  color: #4f46e5;
+  text-align: center;
+  line-height: 1.3;
 }
+
+/* Card bounce-in animation */
+@keyframes cardBounceIn {
+  0% { transform: scale(0) rotate(-8deg); opacity: 0; }
+  70% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Icon bobbing animation */
+@keyframes iconBob {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
+}
+
 
 @keyframes float-icon {
   from { transform: translateY(0); }
@@ -1084,6 +1131,116 @@ body {
   transform: scale(1.05);
   background: hsl(217, 91%, 90%);
 }
+
+/* ═══════════════════════════════════════
+   LIVE CAMERA VIDEO FEED & ATTENTION WIDGET
+═══════════════════════════════════════ */
+.live-camera-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  z-index: 60;
+}
+
+.camera-feed-box {
+  position: relative;
+  width: 140px;
+  height: 105px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 3px solid #6366f1;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.camera-feed-box.hidden-feed {
+  width: 0px !important;
+  height: 0px !important;
+  opacity: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+#attention-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror camera feed for user comfort */
+  display: block;
+}
+
+#attention-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: scaleX(-1); /* Mirror overlay canvas to match mirrored video */
+}
+
+.camera-live-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #4ade80;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  letter-spacing: 0.5px;
+}
+
+.camera-controls-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cam-toggle-btn {
+  background: #ffffff;
+  color: #475569;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.cam-toggle-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  transform: translateY(-1px);
+}
+
+.attention-status-badge.warn {
+  background: #fef9c3 !important;
+  color: #854d0e !important;
+  border: 1px solid #fde047 !important;
+}
+
+.attention-status-badge.alert {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #f87171 !important;
+  animation: pulse-alert-badge 1s infinite alternate;
+}
+
+@keyframes pulse-alert-badge {
+  from { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  to { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+}
+
 
 /* ── Backend Status Badge ── */
 .backend-status-badge {

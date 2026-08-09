@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SocialBuddy – Social Skills Interactive Cartoon Game</title>
   <meta name="description" content="SocialBuddy helps autistic children practice Tamil and English social conversations through voice-driven interactive cartoon scenarios and semantic reasoning.">
-  <link rel="stylesheet" href="style.css?v=20260805_v120">
+  <link rel="stylesheet" href="style.css?v=20260809_v310">
   <!-- MediaPipe Face Mesh (CDN) for attention detection -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
@@ -192,12 +192,15 @@
 
           <!-- Attention system card -->
           <div class="dash-card">
-            <h4>👁️ Attention Detection</h4>
+            <h4>👁️ Live Attention Detection & Video Feed</h4>
             <p style="font-size:0.9rem;color:#475569;line-height:1.6">
-              During gameplay, the app uses the device webcam to detect if the child looks away for more than 5 seconds. Buddy the Mascot will gently call them back!<br><br>
-              <em>Requires camera permission — no video is stored or transmitted.</em>
+              During gameplay, the app monitors facial landmarks &amp; head pose in real time. If the child looks away or turns off-camera for &gt; 5 seconds, Buddy will gently call them back!<br><br>
+              <em>Requires camera permission — processed entirely on-device. No video data is recorded or sent.</em>
             </p>
-            <div id="attention-status" class="attention-status-badge">⚙️ Attention: Initializing…</div>
+            <div style="display:flex; align-items:center; gap:0.8rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <div id="attention-status" class="attention-status-badge">⚙️ Attention: Initializing…</div>
+              <button class="btn btn-outline" style="padding:0.4rem 0.85rem; font-size:0.82rem; border-radius:15px; background:#ffffff; border:2px solid #cbd5e1; font-weight:800; cursor:pointer;" onclick="testAttentionAlert()">🧪 Test Distraction Alert</button>
+            </div>
           </div>
 
           <!-- Child Lock / Kiosk Mode Card -->
@@ -291,7 +294,19 @@
         <h2 id="gameplay-title">Practice Session</h2>
         <p id="gameplay-subtitle">Listen carefully and respond by speaking or tapping picture cards!</p>
       </div>
-      <div class="gameplay-header-right">
+      <div class="gameplay-header-right" style="display:flex; align-items:center; gap:0.75rem;">
+        <!-- Live Attention Video Feed Widget -->
+        <div class="live-camera-widget" id="live-camera-widget">
+          <div class="camera-feed-box" id="camera-feed-box">
+            <video id="attention-video" autoplay playsinline muted></video>
+            <canvas id="attention-canvas" width="160" height="120"></canvas>
+            <div class="camera-live-badge" id="camera-live-dot">● LIVE</div>
+          </div>
+          <div class="camera-controls-strip">
+            <div id="live-attention-badge" class="attention-status-badge ok">🟢 Focused</div>
+            <button class="cam-toggle-btn" id="btn-toggle-cam" onclick="toggleCameraFeedVisibility()" title="Toggle Camera Feed Preview">👁️ Hide Feed</button>
+          </div>
+        </div>
         <div class="scene-label" id="scene-label">🏫 Classroom</div>
       </div>
     </div>
@@ -328,7 +343,7 @@
         <div class="dialogue-bubble" id="dialogue-bubble">
           <div class="dialogue-speaker-row">
             <h4 id="dialogue-speaker-name">Character</h4>
-            <button class="replay-btn" id="replay-btn" title="Play question again">🔊 Replay</button>
+            <button class="replay-btn" id="replay-btn" onclick="replayQuestion()" title="Play question again">🔊 Replay</button>
           </div>
           <!-- Tanglish (romanised Tamil + English) -->
           <p class="dialogue-tanglish" id="dialogue-tanglish">Loading…</p>
@@ -360,7 +375,7 @@
       ──────────────────────────────────────────────────────────── -->
       <div class="visual-hints-card glass-card" id="visual-hints-card">
         <div class="hints-header">
-          <span>💡 Cartoon Picture AAC Cards (Tap a card to answer!):</span>
+          <span>🖼️ &nbsp; TAP A CARD TO HEAR THE ANSWER! &nbsp; 👆🔊</span>
         </div>
         <div class="hints-grid" id="visual-hints-grid">
           <!-- Dynamic cartoon AAC choice cards rendered here -->
@@ -470,10 +485,10 @@
   </div>
 
   <!-- Scripts loaded sequentially -->
-  <script src="scenarios.js?v=20260806_v230"></script>
-  <script src="characters.js?v=20260806_v230"></script>
-  <script src="pipeline.js?v=20260806_v230"></script>
-  <script src="attention.js?v=20260806_v230"></script>
-  <script src="app.js?v=20260806_v230"></script>
+  <script src="scenarios.js?v=20260809_v310"></script>
+  <script src="characters.js?v=20260809_v310"></script>
+  <script src="pipeline.js?v=20260809_v310"></script>
+  <script src="attention.js?v=20260809_v310"></script>
+  <script src="app.js?v=20260809_v310"></script>
 </body>
 </html>

@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#"
+     xml:base="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish">
+        <rdfs:comment>Code-Mixed Tanglish (Tamil + English) Semantic Dialogue Assistant Ontology for ASD Social Communication</rdfs:comment>
+    </owl:Ontology>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#hasRole">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+        <rdfs:comment>Links a person to their social role (e.g., Teacher, Parent, Peer, Stranger)</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#inContext">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+        <rdfs:comment>Links a person to their current physical/social environment</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#speakingTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+        <rdfs:comment>Identifies the interlocutor the child is communicating with</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#containsPragmaticMarker">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishUtterance"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Associates a Tanglish utterance with identified Tamil code-mixed pragmatic markers</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#recommendsResponse">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+        <rdfs:comment>Links an input utterance to an inferred safe, polite response</rdfs:comment>
+    </owl:ObjectProperty>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#hasText">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#hasTanglishText">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Romanized Tamil + English code-mixed text string</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#hasTamilScriptText">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment>Tamil script Unicode text representation</rdfs:comment>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#isSafe">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#politenessLevel">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Teacher">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Parent">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Peer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Stranger">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialRole"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Classroom">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Home">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Playground">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Sidewalk">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Context"/>
+    </owl:Class>
+
+    <!-- Pragmatic Marker Classes -->
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+    
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#RespectMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Honorifics &amp; respectful speech markers: vaanga, poonga, ma'am, teacher, ji</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#RefusalMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Firm refusal markers: vendam, venam, maatten, vara maatten</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#ApologyMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Apology &amp; honesty markers: sorry dad, mannikkanum, thappa pochug</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SharingMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Peer turn-taking &amp; sharing markers: kooda aadalaama, maari maari, timer vakkalaama</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DisrespectMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TamilPragmaticMarker"/>
+        <rdfs:comment>Informal or disrespectful markers used with authority: da, di, poda, podi</rdfs:comment>
+    </owl:Class>
+
+    <!-- Dataset Alignment Classes (Mapped from the 4 Open Access Datasets) -->
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DatasetSource"/>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#ProsocialDialogRule">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DatasetSource"/>
+        <rdfs:comment>Rules derived from ProsocialDialog (allenai/prosocial-dialog) for politeness, decorum, and safety interventions.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SocialIQAReasoning">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DatasetSource"/>
+        <rdfs:comment>Reasoning contexts derived from SocialIQA (allenai/social_i_qa) for social intentions and cause-effect actions.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DravidianPragmaticMarker">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DatasetSource"/>
+        <rdfs:comment>Pragmatics derived from DravidianCodeMix (IsaacRodgz/DravidianCodeMix-Dataset) for Tamil-English code-mixed speech.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MMASDInterventionProtocol">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DatasetSource"/>
+        <rdfs:comment>ASD therapy protocols derived from MMASD (Li-Jicheng/MMASD) for turn-taking and stranger safety boundaries.</rdfs:comment>
+    </owl:Class>
+
+    <!-- Utterance Classes -->
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+    
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishUtterance">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Utterance"/>
+        <rdfs:comment>Code-mixed Tamil-English utterance string</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+    
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishPoliteResponse">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishSafetyRefusalResponse">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishHonestResponse">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishCooperativeResponse">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Response"/>
+    </owl:Class>
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals (Sample Tanglish Code-Mixed Instances)
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#ChildUser">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Person"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TeacherMsApple">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Teacher"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#DadParent">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Parent"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#FriendLeo">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Peer"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#StrangerLady">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#Stranger"/>
+    </owl:NamedIndividual>
+
+    <!-- Pragmatic Marker Instances -->
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MarkerVaanga">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#RespectMarker"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MarkerVendam">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#RefusalMarker"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MarkerMannikkanum">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#ApologyMarker"/>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MarkerAadalaama">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#SharingMarker"/>
+    </owl:NamedIndividual>
+
+    <!-- Sample Tanglish Utterances -->
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#UtteranceBathroomTanglish">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishUtterance"/>
+        <hasTanglishText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sari Ms. Apple, naan bathroom poganum, please?</hasTanglishText>
+        <hasTamilScriptText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">சரி டீச்சர், நான் பாத்ரூம் போகணும், ப்ளீஸ்?</hasTamilScriptText>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#UtteranceSafetyRefusalTanglish">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishUtterance"/>
+        <hasTanglishText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">No, vendam! Naan unga kooda vara maatten, Amma kitta kekkanum!</hasTanglishText>
+        <hasTamilScriptText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">வேண்டாம்! நான் உங்க கூட வர மாட்டேன், அம்மா கிட்ட கேட்கணும்!</hasTamilScriptText>
+        <containsPragmaticMarker rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#MarkerVendam"/>
+    </owl:NamedIndividual>
+
+    <!-- Sample Inferred Responses -->
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#PoliteTanglishTeacherResponse">
+        <rdf:type rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication-tanglish#TanglishPoliteResponse"/>
+        <hasTanglishText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sari, pona bathroom poyittu seekaram vaanga!</hasTanglishText>
+        <isSafe rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isSafe>
+        <politenessLevel rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</politenessLevel>
+    </owl:NamedIndividual>
+
+</rdf:RDF>

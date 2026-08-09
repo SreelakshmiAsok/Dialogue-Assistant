@@ -122,6 +122,24 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#Response"/>
 
+    <!-- Dataset Alignment Classes (Mapped from the 4 Open Access Datasets) -->
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#DatasetSource"/>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#ProsocialDialogRule">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#DatasetSource"/>
+        <rdfs:comment>Rules derived from ProsocialDialog (allenai/prosocial-dialog) for politeness and safety interventions.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#SocialIQAReasoning">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#DatasetSource"/>
+        <rdfs:comment>Reasoning contexts derived from SocialIQA (allenai/social_i_qa) for social intentions.</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://www.semanticweb.org/dialogue-assistant/social-communication#MMASDInterventionProtocol">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/dialogue-assistant/social-communication#DatasetSource"/>
+        <rdfs:comment>ASD therapy protocols derived from MMASD (Li-Jicheng/MMASD) for turn-taking and stranger safety boundaries.</rdfs:comment>
+    </owl:Class>
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //

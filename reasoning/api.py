@@ -24,14 +24,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize reasoner
-reasoner = SocialOntologyReasoner()
+# Initialize reasoners for both Pure English and Tanglish ontologies
+english_reasoner = SocialOntologyReasoner(use_tanglish=False)
+tanglish_reasoner = SocialOntologyReasoner(use_tanglish=True)
 
 class ReasoningRequest(BaseModel):
     scenarioId: str
     userText: str
     role: Optional[str] = "Teacher"
     context: Optional[str] = "Classroom"
+    use_tanglish: Optional[bool] = True
 
 class ReasoningResponse(BaseModel):
     status: str
@@ -43,7 +45,30 @@ def read_root():
     return {
         "status": "online",
         "service": "Dialogue Assistant Semantic Reasoning Backend",
-        "ontology_file": "social_communication.owl"
+        "available_ontologies": {
+            "english": "social_communication.owl",
+            "english_mixed_tamil": "social_communication_tanglish.owl"
+        },
+        "default": "social_communication_tanglish.owl"
+    }
+
+@app.get("/ontologies")
+def list_ontologies():
+    return {
+        "ontologies": [
+            {
+                "id": "english",
+                "filename": "social_communication.owl",
+                "language": "Pure English",
+                "description": "Formal OWL ontology for ASD social communication training using standard English pragmatics and rules."
+            },
+            {
+                "id": "english_mixed_tamil",
+                "filename": "social_communication_tanglish.owl",
+                "language": "English + Tamil (Tanglish)",
+                "description": "Code-mixed Tanglish OWL ontology supporting Romanized Tamil, Tamil script, and bilingual pragmatic markers (e.g., vaanga, vendam, mannikkanum)."
+            }
+        ]
     }
 
 @app.get("/health")
@@ -65,7 +90,9 @@ def reason_endpoint(req: ReasoningRequest):
     elif req.scenarioId == "stranger":
         role = "Stranger"
 
-    evaluation = reasoner.evaluate_utterance(
+    active_reasoner = tanglish_reasoner if req.use_tanglish else english_reasoner
+
+    evaluation = active_reasoner.evaluate_utterance(
         role=role,
         context=req.context or "General",
         utterance_text=req.userText

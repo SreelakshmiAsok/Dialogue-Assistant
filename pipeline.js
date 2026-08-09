@@ -203,9 +203,9 @@ function computeScoresAndFeedback(ruleEvaluations, scenarioId, userText, bestMat
       // Unrelated answer or gibberish
       characterEmotion = "concerned";
       if (scenarioId === "teacher") {
-        mascotFeedback = "Hmm, Ms. Apple asked if anyone needs to go to the restroom before the spelling test. Let's try asking politely to use the restroom, or say 'No thank you, I am ready!'";
+        mascotFeedback = "Hmm, Ms. Apple asked if anyone needs to go to the restroom before the spelling test. Let's try asking politely, or say 'No thank you, I am ready!'";
       } else if (scenarioId === "parent") {
-        mascotFeedback = "Dad wants to know what happened to the robot toy. Let's try being honest and telling him you accidentally dropped it and are sorry.";
+        mascotFeedback = "Dad asked 'Did you eat?' Answer respectfully! Say 'Saapttean Appa, thank you!' or 'Not yet Appa, can you give me food please?'";
       } else if (scenarioId === "friend") {
         mascotFeedback = "Leo is waiting on the swing! Try asking to share the swing, set a timer, or suggest playing a different game together.";
       }
@@ -233,82 +233,121 @@ function computeScoresAndFeedback(ruleEvaluations, scenarioId, userText, bestMat
   };
 }
 
-window.runFullPipeline = function(scenarioId, userText) {
-  const scenario = window.scenarios[scenarioId];
-  if (!scenario) {
-    throw new Error(`Scenario ${scenarioId} not found`);
->>>>>>> origin/Pragna_semantic-rules-sync
-  }
+// ─────────────────────────────────────────────
+// LINGUISTIC GATE — Word lists & constraint checker
+// ─────────────────────────────────────────────
 
-  // ── DISRESPECT SHIELD: Catch outright disrespectful words first ───────────
+// Outright rude / offensive words (all scenarios)
+const DISRESPECT_WORDS = [
+  "shut up", "idiot", "stupid", "dumb", "loser", "hate", "dummy", "ugly",
+  "poda", "podi", "thevdiya", "loosu", "pottai", "pakka", "naaye"
+];
+
+// Informal Tamil slang particles — rude when used with parents/teachers/elders
+// "da"/"di" at end of sentence is disrespectful to adults
+const SLANG_PARTICLES = ["da", "di", "machi", "dei"];
+
+// Blunt command verbs without respectful form (e.g. "va" instead of "vaanga")
+const BLUNT_VERBS = ["va", "வா", "po", "போ", "sollu", "சோல்லு", "kudu", "குடு"];
+
+// Suffixes that make speech polite / honorific
+const HONORIFIC_SUFFIXES = [
+  "nga", "nga.", "ங்க", "vaanga", "வாங்க", "ponga", "sir", "madam",
+  "appa", "amma", "dad", "mom", "ma", "pa"
+];
+
+// Polite discourse markers in English / Tamil
+const HONORIFIC_MARKERS = [
+  "please", "thank you", "thanks", "excuse me", "sorry", "may i", "could you",
+  "saapttean", "saapaten", "saapattu", "saapiteyn", "saapitaen",
+  "nan saapitaen", "nan saaptaen", "naan saapitaen"
+];
+
+function getCharacterTitle(scenarioId) {
+  const titles = { teacher: "your Teacher", parent: "Dad", stranger: "a Stranger", friend: "your Friend" };
+  return titles[scenarioId] || "this person";
+}
+
+/**
+ * Checks whether a user's text respects the social rules of the scenario.
+ * Looks for disrespectful words, informal slang particles (da/di), and missing honorifics.
+ * Returns: { verdict: 'PASS'|'FAIL'|'WARNING', failType, triggeredWord, suggestion }
+ */
+function checkLinguisticConstraints(scenarioId, userText) {
+  const text = userText.toLowerCase().trim();
+
+  // Only apply strict slang checks when speaking to parents, teachers, or strangers (not friends)
+  const strictScenarios = ["parent", "teacher", "stranger"];
+  const isStrict = strictScenarios.includes(scenarioId);
+
+  // ── DISRESPECT SHIELD: Hard block for clearly rude words ────────────────
   for (const word of DISRESPECT_WORDS) {
-    const lw = word.toLowerCase();
-    const regex = new RegExp(`(^|\\s|[^a-zа-я])${lw}($|\\s|[^a-zа-я])`, "i");
-    if (regex.test(text) || text.includes(lw)) {
+    if (text.includes(word.toLowerCase())) {
       return {
         verdict: "FAIL",
         failType: "DISRESPECT",
         triggeredWord: word,
-        suggestion: `💡 "${word}" is a rude word to use with ${getCharacterTitle(scenarioId)}. Instead, be kind and polite!`
+        suggestion: `💡 "${word}" is not a nice word to use with ${getCharacterTitle(scenarioId)}. Be kind and polite!`
       };
     }
   }
 
-  // ── SLANG PARTICLE CHECK: Informal "da/di" with elder/stranger ────────────
-  for (const particle of SLANG_PARTICLES) {
-    const lp = particle.toLowerCase();
-    const regex = new RegExp(`(^|\\s)${lp}($|\\s|[!?.,])`, "i");
-    if (regex.test(text + " ")) {
-      return {
-        verdict: "FAIL",
-        failType: "SLANG",
-        triggeredWord: particle,
-        suggestion: `💡 Saying "${particle}" is too casual with ${getCharacterTitle(scenarioId)}. Remove it or use respectful words like "Sir", "Madam", or "nga" to show respect!`
-      };
-    }
-  }
-
-  // ── BLUNT VERB GATE: Imperative verbs without honorific upgrade ────────────
-  for (const verb of BLUNT_VERBS) {
-    const lv = verb.toLowerCase();
-    const verbRegex = new RegExp(`(^|\\s)${lv}($|\\s|[!?.,])`, "i");
-    if (verbRegex.test(text + " ")) {
-      const hasHonorific = HONORIFIC_SUFFIXES.some(h => text.includes(h.toLowerCase()));
-      if (!hasHonorific) {
+  // ── SLANG PARTICLE CHECK: Informal 'da'/'di' at end of sentence ────────
+  // Only apply to strict scenarios (not friend-to-friend where da/dei is normal)
+  if (isStrict) {
+    for (const particle of SLANG_PARTICLES) {
+      // Match particle at end of text, or followed by punctuation/space
+      const regex = new RegExp(`(^|\\s)${particle}([\\s!?.,]|$)`, "i");
+      if (regex.test(text + " ")) {
         return {
           verdict: "FAIL",
-          failType: "BLUNT_VERB",
-          triggeredWord: verb,
-          suggestion: `💡 Instead of saying "${verb}", say "${verb === "va" || verb === "வா" ? "vaanga / வாங்க" : "ponga / போங்க"}" to speak politely to ${getCharacterTitle(scenarioId)}!`
+          failType: "SLANG",
+          triggeredWord: particle,
+          suggestion: `💡 Saying "${particle}" sounds too casual with ${getCharacterTitle(scenarioId)}! Use "Appa", "thank you", or respectful words instead.`
         };
       }
     }
   }
 
-  // ── HONORIFIC CHECK: Soft warning if speaking to adult without markers ────
-  const hasAnyHonorific = [
-    ...HONORIFIC_SUFFIXES,
-    ...HONORIFIC_MARKERS,
-    "please", "excuse me", "may i", "could you", "thank you",
-    "sorry", "mannichuko", "mannippu"
-  ].some(h => text.includes(h.toLowerCase()));
+  // ── BLUNT VERB GATE: Command verbs without polite form ─────────────
+  if (isStrict) {
+    for (const verb of BLUNT_VERBS) {
+      const verbRegex = new RegExp(`(^|\\s)${verb.toLowerCase()}([\\s!?.,]|$)`, "i");
+      if (verbRegex.test(text + " ")) {
+        const hasHonorific = HONORIFIC_SUFFIXES.some(h => text.includes(h.toLowerCase()));
+        if (!hasHonorific) {
+          return {
+            verdict: "FAIL",
+            failType: "BLUNT_VERB",
+            triggeredWord: verb,
+            suggestion: `💡 Instead of "${verb}", say "vaanga" or "ponga" to be polite to ${getCharacterTitle(scenarioId)}!`
+          };
+        }
+      }
+    }
+  }
 
-  if (!hasAnyHonorific) {
-    return {
-      verdict: "WARNING",
-      failType: "MISSING_HONORIFIC",
-      triggeredWord: null,
-      suggestion: `💡 Try adding a polite word like "please", "Sir", "nga", or "vaanga" to show respect to ${getCharacterTitle(scenarioId)}!`
-    };
+  // ── HONORIFIC CHECK: Soft warning if no polite markers at all ────────
+  // For parent scenario: a simple honest answer like "saapitaen" is fine
+  if (isStrict && scenarioId !== "friend") {
+    const allPolitenessMarkers = [...HONORIFIC_SUFFIXES, ...HONORIFIC_MARKERS];
+    const hasAnyPolite = allPolitenessMarkers.some(h => text.includes(h.toLowerCase()));
+    // For parent: allow if they answered the eating question directly
+    const parentEatingAnswers = ["saap", "saapt", "ate", "eat", "innum", "not yet", "yes", "no", "illa", "aama"];
+    const hasEatingAnswer = scenarioId === "parent" && parentEatingAnswers.some(w => text.includes(w));
+    if (!hasAnyPolite && !hasEatingAnswer) {
+      return {
+        verdict: "WARNING",
+        failType: "MISSING_HONORIFIC",
+        triggeredWord: null,
+        suggestion: `💡 Try adding "Appa", "thank you", or "please" to be more respectful to ${getCharacterTitle(scenarioId)}!`
+      };
+    }
   }
 
   return { verdict: "PASS", failType: null, suggestion: null };
 }
 
-function getCharacterTitle(scenarioId) {
-  const titles = { teacher: "your Teacher", parent: "Dad", stranger: "a Stranger" };
-  return titles[scenarioId] || "this person";
-}
 
 // ─────────────────────────────────────────────
 // MAIN PIPELINE SYNCHRONOUS FALLBACK
@@ -364,7 +403,6 @@ window.runFullPipeline = function(scenarioId, userText) {
     }
     if (item.intent === "polite_request" && ((hasPolite && hasBathroom) || inputWords.has("vaanga") || inputWords.has("poganum"))) {
       baseSim = Math.max(baseSim, 0.97);
-    }
     }
 
     const finalSimilarity = baseSim > 0.05
@@ -519,7 +557,6 @@ window.runFullPipelineAsync = async function(scenarioId, userText) {
         localResult.llm.scores = evalResult.scores;
         localResult.llm.characterEmotion = evalResult.characterEmotion;
         localResult.llm.mascotFeedback = evalResult.mascotFeedback;
-      }
       }
       return localResult;
     }
