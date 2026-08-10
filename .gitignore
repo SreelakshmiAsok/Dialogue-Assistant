@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+static/audio/*.mp3
+SemanticDialogueAssistant_datasets/static/audio/*.mp3

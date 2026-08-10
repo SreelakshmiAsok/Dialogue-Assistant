@@ -1,0 +1,10 @@
+Flask
+flask-cors
+indic-transliteration
+gTTS
+transformers
+sentence-transformers
+SpeechRecognition
+torch
+scikit-learn
+numpy

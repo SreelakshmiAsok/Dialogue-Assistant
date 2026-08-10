@@ -1,0 +1,18 @@
+scenario_id,character,lesson,question,expected_answer,incorrect_answer,error_type,suggestion,respect_required,stars
+1,Parent,Shopping,En kooda kadaiki variya?,Varen appa,Po da,Disrespectful Slang,Please speak respectfully to your parent.,True,1
+1,Parent,Shopping,En kooda kadaiki variya?,Varen appa,Varen appa,Correct,None,True,1
+1,Parent,Shopping,En kooda kadaiki variya?,Varen appa,Varaen appa,Correct,None,True,1
+1,Parent,Shopping,En kooda kadaiki variya?,Varen appa,Varen,Acceptable,Try to include a respectful response.,True,1
+2,Parent,Home,Saaptiya?,Aama appa,Poda,Disrespectful Slang,Please speak respectfully to your parent.,True,1
+2,Parent,Home,Saaptiya?,Aama appa,Aama appa,Correct,None,True,1
+2,Parent,Home,Saaptiya?,Aama appa,Aama,Acceptable,Try to answer politely.,True,1
+3,Teacher,Classroom,Homework mudichacha?,Seri teacher,Poda,Disrespectful Slang,Please speak respectfully to your teacher.,True,1
+3,Teacher,Classroom,Homework mudichacha?,Seri teacher,Seri teacher,Correct,None,True,1
+3,Teacher,Classroom,Homework mudichacha?,Seri teacher,Aama teacher,Acceptable,Good response. Try to answer clearly.,True,1
+4,Friend,Playtime,Cricket vilayaadalaama?,Va da,Poda,Disrespectful Slang,Try to use a friendly response.,False,1
+4,Friend,Playtime,Cricket vilayaadalaama?,Va da,Va da,Correct,None,False,1
+4,Friend,Playtime,Cricket vilayaadalaama?,Va da,Vaa da,Correct,None,False,1
+4,Friend,Playtime,Cricket vilayaadalaama?,Va da,Seri da,Acceptable,Good friendly response.,False,1
+5,Stranger,Road,Post office enga iruku?,Theriyadhu sir,Po da,Disrespectful Slang,Please speak politely to the person.,True,1
+5,Stranger,Road,Post office enga iruku?,Theriyadhu sir,Theriyadhu sir,Correct,None,True,1
+5,Stranger,Road,Post office enga iruku?,Theriyadhu sir,Theriyadhu,Acceptable,Try to respond politely and safely.,True,1
