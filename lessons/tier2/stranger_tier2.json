@@ -1,0 +1,89 @@
+{
+  "_id": "t2_stranger_01",
+  "id": "t2_stranger_01",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Stranger Lure Refusal & Seeking a Trusted Adult",
+  "learning_objective": "Child recognizes an unsafe lure, gives a firm refusal, and states they are going to an adult.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower",
+    "module": "Safety & Refusal Skills",
+    "target_rules": [
+      "Do not accept gifts from strangers",
+      "Give a clear, firm NO",
+      "State intention to find a parent/teacher and leave"
+    ]
+  },
+  "scenario": "A stranger approaches you at the park and offers you some candy.",
+  "initial_prompt": {
+    "tanglish": "Thambi, indha chocolate vachiko. En kuda vandha innum tharen.",
+    "tamil": "தம்பி, இந்த சாக்லேட் வச்சுக்கோ. என் கூட வந்தா இன்னும் தாரேன்.",
+    "english": "Little boy, take this chocolate. Come with me and I'll give you more."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Thambi, indha chocolate vachiko. En kuda vandha innum tharen.",
+        "tamil": "தம்பி, இந்த சாக்லேட் வச்சுக்கோ. என் கூட வந்தா இன்னும் தாரேன்."
+      },
+      "target_intent": "RefusalAndEscape",
+      "required_features": ["FirmNo", "MentionAdult"],
+      "expected_responses": [
+        "Venaam! Naan enga amma kitta poren",
+        "No! Enaku venam. Appa kitta poren",
+        "Venaam, naan amma va kupduven",
+        "No thanks, amma theduvanga",
+        "Venaam"
+      ],
+      "model_answer": "Venaam! Naan enga amma kitta poren",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Say NO firmly and tell them you are going to your parents!",
+        "gentle_correction": "Be safe! Say: 'Venaam! Naan enga amma kitta poren' (No! I'm going to my mom)"
+      },
+      "next_character_reply": {
+        "tanglish": "Paravala, onnum aagathu, vaa.",
+        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Paravala, onnum aagathu, vaa.",
+        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா."
+      },
+      "target_intent": "FirmRefusal",
+      "required_features": ["FirmNo"],
+      "expected_responses": [
+        "No! Naan vara maten!",
+        "Venaam poidunga!",
+        "Amma! Appa!",
+        "Help! Naan vara maten",
+        "No"
+      ],
+      "model_answer": "No! Naan vara maten!",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "They are insisting. Be very loud and say NO, you won't go!",
+        "gentle_correction": "Say it loud: 'No! Naan vara maten!'"
+      },
+      "next_character_reply": {
+        "tanglish": "Seri seri, naan poren.",
+        "tamil": "சரி சரி, நான் போறேன்."
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Stay Safe! 🛡️",
+    "success_message": "Brave job! You said NO to a stranger and went to a trusted adult.",
+    "stars": 3
+  }
+}

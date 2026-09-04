@@ -1,0 +1,94 @@
+{
+  "_id": "t2_teacher_01",
+  "id": "t2_teacher_01",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Asking Permission & Requesting Help Politely",
+  "learning_objective": "Child catches teacher's eye, uses honorific, and asks to use the restroom appropriately.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Classroom Decorum & Self-Advocacy",
+    "target_rules": [
+      "Use the teacher's name or title (Miss/Teacher)",
+      "Wait to be acknowledged before speaking",
+      "State the request clearly and politely"
+    ]
+  },
+  "scenario": "You are in class and need to use the restroom. The teacher is at the board.",
+  "initial_prompt": {
+    "tanglish": "Yes, kanna? Ennaku edhavathu help venuma?",
+    "tamil": "எஸ், கண்ணா? எனக்கு ஏதாவது ஹெல்ப் வேணுமா?",
+    "english": "Yes, dear? Do you need some help?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Yes, kanna? Ennaku edhavathu help venuma?",
+        "tamil": "எஸ், கண்ணா? எனக்கு ஏதாவது ஹெல்ப் வேணுமா?"
+      },
+      "target_intent": "RequestPermission",
+      "required_features": ["Honorific", "RestroomIntent"],
+      "expected_responses": [
+        "Miss, naan restroom pogalama?",
+        "Teacher, restroom poyitu varen",
+        "Miss, bathroom pogalama?",
+        "Can I go to the restroom miss?",
+        "Restroom poganum miss",
+        "Mam, can I go to the restroom?",
+        "Teacher, can I use the restroom?",
+        "Mam, restroom pogalama?",
+        "Mam bathroom pogalama?",
+        "Can I go to bathroom mam?"
+      ],
+      "model_answer": "Miss, naan restroom pogalama?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask your teacher politely if you can go to the restroom. Remember to say 'Miss' or 'Teacher'!",
+        "gentle_correction": "Try asking: 'Miss, naan restroom pogalama?'"
+      },
+      "next_character_reply": {
+        "tanglish": "Kandippa pogalam. Seekiram poitu va.",
+        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Kandippa pogalam. Seekiram poitu va.",
+        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா."
+      },
+      "target_intent": "AcknowledgePermission",
+      "required_features": ["ThankYou"],
+      "expected_responses": [
+        "Thank you miss",
+        "Ok miss, thank you",
+        "Nandri teacher",
+        "Seri miss, nandri",
+        "Thanks miss"
+      ],
+      "model_answer": "Thank you miss",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Always thank your teacher when she gives permission!",
+        "gentle_correction": "A polite reply is: 'Thank you miss!'"
+      },
+      "next_character_reply": {
+        "tanglish": "You're welcome!",
+        "tamil": "யு ஆர் வெல்கம்!"
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Good Manners! 🏫",
+    "success_message": "Excellent! You asked the teacher respectfully and remembered your manners.",
+    "stars": 3
+  }
+}

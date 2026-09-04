@@ -5,12 +5,13 @@ const scenarios = {
   teacher: {
     id: "teacher",
     name: "Teacher",
-    characterName: "Ms. Apple",
+    characterName: "Ms. Priya",
+    gender: "female",
     sceneName: "Classroom",
     themeColor: "--accent-teacher",
     bgClass: "scene-classroom",
     initialEmotion: "neutral",
-    introText: "Let's practice talking politely to your teacher in the classroom. Ms. Apple is about to start a spelling test.",
+    introText: "Let's practice talking politely to your teacher in the classroom. Ms. Priya is about to start a spelling test.",
     question: "Welcome back, class! Before we start our spelling test, does anyone need to use the restroom?",
     audioPrompt: "சரி கிளாஸ்! ஸ்பெல்லிங் டெஸ்ட் ஸ்டார்ட் பண்றதுக்கு முன்னாடி, யாரோவது பாத்ரூம் போகணுமா?",
 
@@ -22,7 +23,7 @@ const scenarios = {
         id: "t_hint_bathroom",
         icon: "🚻",
         label: "Bathroom Please",
-        fullText: "Excuse me Ms. Apple, may I please go to the bathroom?",
+        fullText: "Excuse me Ms. Priya, may I please go to the bathroom?",
         color: "#8b5cf6"
       },
       {
@@ -56,7 +57,7 @@ const scenarios = {
 
     ragDatabase: [
       {
-        utterance: "Excuse me Ms. Apple, may I please go to the bathroom?",
+        utterance: "Excuse me Ms. Priya, may I please go to the bathroom?",
         intent: "polite_request",
         vector: [0.95, 0.9, 0.99, 0.98],
         evaluation: { score: 10, emotion: "happy", feedback: "Wonderful job! You were very polite, used 'excuse me' and 'please', and clearly stated what you needed." }
@@ -68,7 +69,7 @@ const scenarios = {
         evaluation: { score: 9, emotion: "happy", feedback: "Great response! You asked politely using 'please' and made your request clear." }
       },
       {
-        utterance: "Ms. Apple, bathroom poganuma? Please vaanga.",
+        utterance: "Ms. Priya, bathroom poganuma? Please vaanga.",
         intent: "tanglish_polite_request",
         vector: [0.92, 0.9, 0.95, 0.93],
         evaluation: { score: 10, emotion: "happy", feedback: "Super! Tamil-la politely ketathu romba nalla irukku! 'Please vaanga' sonna teacher kku romba happy aagum!" }
@@ -92,6 +93,7 @@ const scenarios = {
     id: "parent",
     name: "Dad (Parent)",
     characterName: "Dad",
+    gender: "male",
     sceneName: "Living Room",
     themeColor: "--accent-parent",
     bgClass: "scene-livingroom",
@@ -186,12 +188,13 @@ const scenarios = {
   friend: {
     id: "friend",
     name: "Friend",
-    characterName: "Leo",
+    characterName: "Arun",
+    gender: "male",
     sceneName: "Playground",
     themeColor: "--accent-friend",
     bgClass: "scene-playground",
     initialEmotion: "neutral",
-    introText: "Let's practice sharing and compromise with friends on the playground. Leo has been on the swing for a while.",
+    introText: "Let's practice sharing and compromise with friends on the playground. Arun has been on the swing for a while.",
     question: "Hey! I've been playing on this swing for a long time, but now you want a turn. What should we do?",
     audioPrompt: "டேய்! நான் ரொம்ப நேரம் ஸ்விங்ல ஆடினேன் டா, இப்போ நீ ஆடணும்னு சொன்னே. நாம என்ன பண்ணலாம் டா?",
 
@@ -248,13 +251,13 @@ const scenarios = {
         utterance: "Can we take turns? Set a 2-minute timer!",
         intent: "propose_timer_turn",
         vector: [0.94, 0.97, 0.95, 0.92],
-        evaluation: { score: 10, emotion: "happy", feedback: "Awesome sharing! Setting a timer for a couple of minutes is a super fair way to take turns with Leo." }
+        evaluation: { score: 10, emotion: "happy", feedback: "Awesome sharing! Setting a timer for a couple of minutes is a super fair way to take turns with Arun." }
       },
       {
         utterance: "Dei, naama maari maari aadalaama da? Nee two minutes aadinaa, aprom naan aaduren da.",
         intent: "tanglish_propose_turn",
         vector: [0.93, 0.95, 0.93, 0.91],
-        evaluation: { score: 10, emotion: "happy", feedback: "Appadiye! Nalla aalu maari share sonna da! Leo kku romba happy aagum!" }
+        evaluation: { score: 10, emotion: "happy", feedback: "Appadiye! Nalla aalu maari share sonna da! Arun kku romba happy aagum!" }
       },
       {
         utterance: "Let's play on the slide together!",
@@ -266,7 +269,7 @@ const scenarios = {
         utterance: "Get off the swing! It's my turn and you're being greedy!",
         intent: "aggressive_demanding",
         vector: [0.4, 0.5, 0.3, 0.6],
-        evaluation: { score: 4, emotion: "concerned", feedback: "Yelling or calling Leo names might make him angry. Try asking nicely or proposing a game where you take turns." }
+        evaluation: { score: 4, emotion: "concerned", feedback: "Yelling or calling Arun names might make him angry. Try asking nicely or proposing a game where you take turns." }
       }
     ]
   },
@@ -274,7 +277,8 @@ const scenarios = {
   stranger: {
     id: "stranger",
     name: "Stranger",
-    characterName: "Mrs. Gable",
+    characterName: "Mrs. Maya",
+    gender: "female",
     sceneName: "Sidewalk",
     themeColor: "--accent-stranger",
     bgClass: "scene-stranger",
@@ -365,7 +369,7 @@ window.scenarios = scenarios;
 // Progress data store (persisted across session in-memory)
 window.progressData = {
   sessions: [],
-  addSession: function(scenarioId, scores, userText) {
+  addSession: function (scenarioId, scores, userText) {
     this.sessions.push({
       scenarioId,
       characterName: scenarios[scenarioId]?.characterName || scenarioId,
@@ -375,7 +379,7 @@ window.progressData = {
       stars: scores.overall
     });
   },
-  getStats: function(scenarioId) {
+  getStats: function (scenarioId) {
     const relevant = scenarioId ? this.sessions.filter(s => s.scenarioId === scenarioId) : this.sessions;
     if (relevant.length === 0) return null;
     const totalStars = relevant.reduce((a, s) => a + s.stars, 0);

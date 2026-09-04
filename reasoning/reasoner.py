@@ -134,5 +134,5 @@ class SocialOntologyReasoner:
 
 if __name__ == "__main__":
     reasoner = SocialOntologyReasoner()
-    res = reasoner.evaluate_utterance("Teacher", "Classroom", "Good morning Ms. Apple!")
+    res = reasoner.evaluate_utterance("Teacher", "Classroom", "Good morning Ms. Priya!")
     print("Test Evaluation:", res)

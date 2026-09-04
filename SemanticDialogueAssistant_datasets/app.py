@@ -6,7 +6,9 @@
 from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import os
-from gtts import gTTS
+import subprocess
+from db import get_tier2_lessons_for_character, get_tier2_lesson_by_id
+from tier2_engine import evaluate_tier2_turn
 
 from questions import (
     get_all_characters,
@@ -84,6 +86,7 @@ def api_audio(question_id):
         return jsonify({"error": "Question not found"}), 404
 
     text = question["question_tamil"]
+    character = question["character"]
     
     # We will save the audio files in a cache folder
     audio_dir = "static/audio"
@@ -93,8 +96,11 @@ def api_audio(question_id):
     
     # Generate if not exists
     if not os.path.exists(filepath):
-        tts = gTTS(text=text, lang='ta')
-        tts.save(filepath)
+        voice = "ta-IN-PallaviNeural"  # Default female
+        if character in ["Father", "Stranger", "Friend"]:
+            voice = "ta-IN-ValluvarNeural"
+        
+        subprocess.run(["edge-tts", "--voice", voice, "--text", text, "--write-media", filepath])
         
     return send_file(filepath, mimetype="audio/mpeg")
 
@@ -292,6 +298,60 @@ def api_progress():
         "accuracy": round((correct / total * 100) if total > 0 else 0, 1)
     })
 
+
+# ============================================================
+# TIER 2 API ENDPOINTS
+# ============================================================
+
+@app.route("/api/tier2/lessons/<character>", methods=["GET"])
+def api_tier2_lessons(character):
+    lessons = get_tier2_lessons_for_character(character)
+    # Strip turns for the list view
+    summary = []
+    for l in lessons:
+        summary.append({
+            "id": l["id"],
+            "character": l["character"],
+            "skill": l["skill"],
+            "learning_objective": l["learning_objective"],
+            "difficulty": l["difficulty"],
+            "initial_prompt": l.get("initial_prompt")
+        })
+    return jsonify({"lessons": summary})
+
+@app.route("/api/tier2/lesson/<lesson_id>", methods=["GET"])
+def api_tier2_lesson(lesson_id):
+    lesson = get_tier2_lesson_by_id(lesson_id)
+    if not lesson:
+        return jsonify({"error": "Lesson not found"}), 404
+    return jsonify({"lesson": lesson})
+
+@app.route("/api/tier2/evaluate-turn", methods=["POST"])
+def api_tier2_evaluate_turn():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+        
+    lesson_id = data.get("lesson_id")
+    turn_id = data.get("turn_id")
+    response = data.get("response", "").strip()
+    retry_count = data.get("retry_count", 0)
+    
+    lesson = get_tier2_lesson_by_id(lesson_id)
+    if not lesson:
+        return jsonify({"error": "Lesson not found"}), 404
+        
+    # Find the turn
+    turn = next((t for t in lesson["turns"] if t["turn_id"] == turn_id), None)
+    if not turn:
+        return jsonify({"error": "Turn not found"}), 404
+        
+    if has_tamil(response):
+        response = to_tanglish(response)
+        
+    # Evaluate
+    result = evaluate_tier2_turn(lesson, turn, response, retry_count)
+    return jsonify(result)
 
 # ============================================================
 # RUN

@@ -26,12 +26,12 @@ function calculateCosineSimilarity(setA, setB) {
 // LINGUISTIC GATE
 // Models constraints from TamilMixSentiment, DravidianLangTech, AI4Bharat IndicCorp V2
 // ─────────────────────────────────────────────
-const SLANG_PARTICLES   = ["da", "di", "டா", "டி"];
-const DISRESPECT_WORDS  = ["poda", "vada", "போடா", "வடா", "podaa", "vadaa"];
-const BLUNT_VERBS       = ["va", "po", "வா", "போ"];
-const HONORIFIC_SUFFIXES= ["vaanga", "ponga", "வாங்க", "போங்க"];
+const SLANG_PARTICLES = ["da", "di", "டா", "டி"];
+const DISRESPECT_WORDS = ["poda", "vada", "போடா", "வடா", "podaa", "vadaa"];
+const BLUNT_VERBS = ["va", "po", "வா", "போ"];
+const HONORIFIC_SUFFIXES = ["vaanga", "ponga", "வாங்க", "போங்க"];
 const HONORIFIC_MARKERS = ["nga", "neenga", "sir", "madam", "anna", "akka", "ங்க", "நீங்க", "சார்", "மேடம்", "அண்ணா", "அக்கா"];
-const FRIEND_PEER_ID    = "friend";
+const FRIEND_PEER_ID = "friend";
 
 /**
  * Checks user text for Tamil/Tanglish linguistic politeness constraints.
@@ -118,12 +118,12 @@ function getCharacterTitle(scenarioId) {
 // ─────────────────────────────────────────────
 // MAIN PIPELINE SYNCHRONOUS FALLBACK
 // ─────────────────────────────────────────────
-window.runFullPipeline = function(scenarioId, userText) {
+window.runFullPipeline = function (scenarioId, userText) {
   const scenario = window.scenarios[scenarioId];
   if (!scenario) throw new Error(`Scenario ${scenarioId} not found`);
 
   const cleanedInput = userText.trim();
-  const inputWords   = getBagOfWords(cleanedInput);
+  const inputWords = getBagOfWords(cleanedInput);
 
   // ── STAGE 0: Linguistic Gate (Tamil/Tanglish pragmatics) ──────────────────
   const linguisticResult = checkLinguisticConstraints(scenarioId, cleanedInput);
@@ -135,40 +135,40 @@ window.runFullPipeline = function(scenarioId, userText) {
   // ── STAGE 2: RAG Vector Similarity Search ────────────────────────────────
   const ragResults = scenario.ragDatabase.map(item => {
     const refWords = getBagOfWords(item.utterance);
-    let baseSim    = calculateCosineSimilarity(inputWords, refWords);
+    let baseSim = calculateCosineSimilarity(inputWords, refWords);
     let overlapCount = 0;
     refWords.forEach(w => { if (inputWords.has(w)) overlapCount++; });
 
     // Semantic trigger boosts
     if (item.intent === "perfect_safety_refusal" &&
-        (inputWords.has("no") || inputWords.has("dont") || inputWords.has("cant") ||
-         inputWords.has("vendam") || inputWords.has("வேண்டாம்")) &&
-        (inputWords.has("mom") || inputWords.has("dad") || inputWords.has("amma") || inputWords.has("appa"))) {
+      (inputWords.has("no") || inputWords.has("dont") || inputWords.has("cant") ||
+        inputWords.has("vendam") || inputWords.has("வேண்டாம்")) &&
+      (inputWords.has("mom") || inputWords.has("dad") || inputWords.has("amma") || inputWords.has("appa"))) {
       baseSim = Math.max(baseSim, 0.95);
     }
     if (item.intent === "tanglish_safety_refusal" &&
-        (inputWords.has("vendam") || inputWords.has("வேண்டாம்")) &&
-        (inputWords.has("amma") || inputWords.has("appa"))) {
+      (inputWords.has("vendam") || inputWords.has("வேண்டாம்")) &&
+      (inputWords.has("amma") || inputWords.has("appa"))) {
       baseSim = Math.max(baseSim, 0.97);
     }
     if (item.intent === "dangerous_acceptance" &&
-        (inputWords.has("sure") || inputWords.has("okay") || inputWords.has("yes") ||
-         inputWords.has("kitten") || inputWords.has("cookies") || inputWords.has("cookie") || inputWords.has("climb"))) {
+      (inputWords.has("sure") || inputWords.has("okay") || inputWords.has("yes") ||
+        inputWords.has("kitten") || inputWords.has("cookies") || inputWords.has("cookie") || inputWords.has("climb"))) {
       baseSim = Math.max(baseSim, 0.88);
     }
     if (item.intent === "honest_apology_reconcile" &&
-        (inputWords.has("sorry") || inputWords.has("accident") || inputWords.has("mannichuko")) &&
-        (inputWords.has("fix") || inputWords.has("help") || inputWords.has("pannalama"))) {
+      (inputWords.has("sorry") || inputWords.has("accident") || inputWords.has("mannichuko")) &&
+      (inputWords.has("fix") || inputWords.has("help") || inputWords.has("pannalama"))) {
       baseSim = Math.max(baseSim, 0.94);
     }
     if (item.intent === "propose_timer_turn" &&
-        (inputWords.has("turn") || inputWords.has("share") || inputWords.has("timer") ||
-         inputWords.has("maari") || inputWords.has("aadalaama"))) {
+      (inputWords.has("turn") || inputWords.has("share") || inputWords.has("timer") ||
+        inputWords.has("maari") || inputWords.has("aadalaama"))) {
       baseSim = Math.max(baseSim, 0.93);
     }
     if (item.intent === "polite_request" &&
-        (inputWords.has("please") || inputWords.has("excuse") || inputWords.has("vaanga")) &&
-        (inputWords.has("bathroom") || inputWords.has("restroom") || inputWords.has("toilet") || inputWords.has("poganum"))) {
+      (inputWords.has("please") || inputWords.has("excuse") || inputWords.has("vaanga")) &&
+      (inputWords.has("bathroom") || inputWords.has("restroom") || inputWords.has("toilet") || inputWords.has("poganum"))) {
       baseSim = Math.max(baseSim, 0.96);
     }
 
@@ -183,7 +183,7 @@ window.runFullPipeline = function(scenarioId, userText) {
   const bestMatch = ragResults[0];
 
   // ── STAGE 3: Ontology Verification ────────────────────────────────────────
-  const ontologyRules  = scenario.ontology.rules;
+  const ontologyRules = scenario.ontology.rules;
   const ruleEvaluations = ontologyRules.map(rule => {
     let status = "PASS";
     let details = "Rule criteria met successfully.";
@@ -213,19 +213,19 @@ window.runFullPipeline = function(scenarioId, userText) {
   });
 
   const ruleViolations = ruleEvaluations.filter(r => r.status === "VIOLATION");
-  const ruleFailures   = ruleEvaluations.filter(r => r.status === "FAIL");
+  const ruleFailures = ruleEvaluations.filter(r => r.status === "FAIL");
 
   // ── STAGE 4: LLM Score Evaluation ─────────────────────────────────────────
-  let politeScore    = 8;
-  let safetyScore    = 10;
+  let politeScore = 8;
+  let safetyScore = 10;
   let relevanceScore = 9;
   let characterEmotion = "neutral";
-  let mascotFeedback   = "";
-  let linguisticBlock  = null;
+  let mascotFeedback = "";
+  let linguisticBlock = null;
 
   if (linguisticResult.verdict === "FAIL") {
     linguisticBlock = linguisticResult;
-    politeScore  = 2;
+    politeScore = 2;
     characterEmotion = "concerned";
     if (linguisticResult.failType === "DISRESPECT") {
       mascotFeedback = `⚠️ Oops! The word "${linguisticResult.triggeredWord}" is disrespectful to use with ${getCharacterTitle(scenarioId)}. ${linguisticResult.suggestion}`;
@@ -256,13 +256,13 @@ window.runFullPipeline = function(scenarioId, userText) {
     }
 
     if (scenarioId === "stranger") {
-      const refusalCheck  = ruleEvaluations.find(r => r.id === "S_REFUSAL");
-      const adultCheck    = ruleEvaluations.find(r => r.id === "S_ADULT");
+      const refusalCheck = ruleEvaluations.find(r => r.id === "S_REFUSAL");
+      const adultCheck = ruleEvaluations.find(r => r.id === "S_ADULT");
       const distanceCheck = ruleEvaluations.find(r => r.id === "S_DISTANCE");
       if (refusalCheck?.status === "VIOLATION" || distanceCheck?.status === "VIOLATION") { safetyScore = 1; }
-      else if (refusalCheck?.status === "PASS" && adultCheck?.status === "PASS")         { safetyScore = 10; }
-      else if (refusalCheck?.status === "PASS")                                          { safetyScore = 7; }
-      else                                                                               { safetyScore = 3; }
+      else if (refusalCheck?.status === "PASS" && adultCheck?.status === "PASS") { safetyScore = 10; }
+      else if (refusalCheck?.status === "PASS") { safetyScore = 7; }
+      else { safetyScore = 3; }
     }
   }
 
@@ -270,18 +270,18 @@ window.runFullPipeline = function(scenarioId, userText) {
 
   if (!mascotFeedback) {
     if (scenarioId === "stranger") {
-      if (safetyScore >= 9)      { characterEmotion = "concerned"; mascotFeedback = "Sensational safety check! You said NO and told her you would check with your Mom. Strangers should never ask children for help or offer them things without their parents knowing. Keep up the excellent work!"; }
-      else if (safetyScore >= 6) { characterEmotion = "neutral";   mascotFeedback = "Good job saying NO. To make your answer even safer, remember to say that you need to check with your parents, or immediately run to a trusted adult!"; }
-      else                        { characterEmotion = "happy";    mascotFeedback = "Stop! That is very dangerous. Never, ever go with a stranger or accept treats from them, even if they have a cute kitten or delicious cookies. Say NO loudly, stay back, and go find a parent or teacher right away."; }
+      if (safetyScore >= 9) { characterEmotion = "concerned"; mascotFeedback = "Sensational safety check! You said NO and told her you would check with your Mom. Strangers should never ask children for help or offer them things without their parents knowing. Keep up the excellent work!"; }
+      else if (safetyScore >= 6) { characterEmotion = "neutral"; mascotFeedback = "Good job saying NO. To make your answer even safer, remember to say that you need to check with your parents, or immediately run to a trusted adult!"; }
+      else { characterEmotion = "happy"; mascotFeedback = "Stop! That is very dangerous. Never, ever go with a stranger or accept treats from them, even if they have a cute kitten or delicious cookies. Say NO loudly, stay back, and go find a parent or teacher right away."; }
     } else {
       if (bestMatch.similarity > 0.55) {
         characterEmotion = bestMatch.evaluation.emotion;
-        mascotFeedback   = bestMatch.evaluation.feedback;
+        mascotFeedback = bestMatch.evaluation.feedback;
       } else {
         characterEmotion = "concerned";
-        if (scenarioId === "teacher") mascotFeedback = "Hmm, Ms. Apple asked if anyone needs to go to the restroom before the spelling test. Let's try asking politely to use the restroom, or say 'No thank you, I am ready!'";
+        if (scenarioId === "teacher") mascotFeedback = "Hmm, Ms. Priya asked if anyone needs to go to the restroom before the spelling test. Let's try asking politely to use the restroom, or say 'No thank you, I am ready!'";
         else if (scenarioId === "parent") mascotFeedback = "Dad wants to know what happened to the robot toy. Let's try being honest and telling him you accidentally dropped it and are sorry.";
-        else if (scenarioId === "friend") mascotFeedback = "Leo is waiting on the swing! Try asking to share the swing, set a timer, or suggest playing a different game together.";
+        else if (scenarioId === "friend") mascotFeedback = "Arun is waiting on the swing! Try asking to share the swing, set a timer, or suggest playing a different game together.";
       }
     }
   }
@@ -292,22 +292,22 @@ window.runFullPipeline = function(scenarioId, userText) {
 
   const compositeScore = (politeScore + safetyScore + relevanceScore) / 3;
   let starRating = 3;
-  if (compositeScore >= 9.0)      starRating = 5;
+  if (compositeScore >= 9.0) starRating = 5;
   else if (compositeScore >= 7.5) starRating = 4;
   else if (compositeScore >= 5.0) starRating = 3;
   else if (compositeScore >= 3.0) starRating = 2;
-  else                            starRating = 1;
+  else starRating = 1;
 
   const result = {
-    whisper:  { confidence: whisperConfidence, text: cleanedInput },
-    rag:      { query: cleanedInput, matches: ragResults.slice(0, 3) },
+    whisper: { confidence: whisperConfidence, text: cleanedInput },
+    rag: { query: cleanedInput, matches: ragResults.slice(0, 3) },
     ontology: { ontologyDescription: scenario.ontology.description, rules: ruleEvaluations, hasViolations: ruleViolations.length > 0, hasFailures: ruleFailures.length > 0 },
     linguistic: linguisticResult,
     llm: {
-      scores:          { politeness: politeScore, safety: safetyScore, relevance: relevanceScore, overall: starRating },
+      scores: { politeness: politeScore, safety: safetyScore, relevance: relevanceScore, overall: starRating },
       characterEmotion: characterEmotion,
-      mascotFeedback:   mascotFeedback,
-      linguisticBlock:  linguisticBlock
+      mascotFeedback: mascotFeedback,
+      linguisticBlock: linguisticBlock
     }
   };
 
@@ -321,7 +321,7 @@ window.runFullPipeline = function(scenarioId, userText) {
 // ─────────────────────────────────────────────
 // ASYNCHRONOUS PIPELINE WITH PYTHON FASTAPI BACKEND
 // ─────────────────────────────────────────────
-window.runFullPipelineAsync = async function(scenarioId, userText) {
+window.runFullPipelineAsync = async function (scenarioId, userText) {
   // Always evaluate locally first
   const localResult = window.runFullPipeline(scenarioId, userText);
 
@@ -329,7 +329,7 @@ window.runFullPipelineAsync = async function(scenarioId, userText) {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1500); // 1.5s timeout
-    
+
     const response = await fetch("http://localhost:8000/reason", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -341,7 +341,7 @@ window.runFullPipelineAsync = async function(scenarioId, userText) {
     if (response.ok) {
       const liveOntologyData = await response.json();
       console.log("⚡ [FastAPI OWL Ontology Reasoner Response]:", liveOntologyData);
-      
+
       localResult.ontology.pythonBackendActive = true;
       localResult.ontology.owlFile = liveOntologyData.ontology.ontology_file;
       localResult.ontology.pythonRules = liveOntologyData.ontology.rules;
@@ -354,6 +354,6 @@ window.runFullPipelineAsync = async function(scenarioId, userText) {
     console.log("ℹ️ [Ontology Service]: Python FastAPI server offline, using in-browser rule engine.");
     localResult.ontology.pythonBackendActive = false;
   }
-  
+
   return localResult;
 };

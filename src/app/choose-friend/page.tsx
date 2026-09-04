@@ -7,11 +7,12 @@ import { CHARACTERS } from "@/lib/characters";
 export default function ChooseAFriend() {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<string>("father");
+  const [tier, setTier] = useState<number>(1);
 
   const handleContinue = () => {
     const char = CHARACTERS.find((c) => c.id === selectedId);
     if (char) {
-      router.push(`/session?character=${char.backendName}`);
+      router.push(`/session?character=${char.backendName}&tier=${tier}`);
     }
   };
 
@@ -26,7 +27,7 @@ export default function ChooseAFriend() {
           <span className="material-symbols-outlined text-[28px]">arrow_back</span>
         </button>
 
-        <header className="text-center mb-12 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 mt-8">
+        <header className="text-center mb-8 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 mt-8">
           <h1 className="text-[32px] leading-[44px] md:text-[48px] md:leading-[64px] font-bold text-primary">
             Choose a Character 🎭
           </h1>
@@ -34,6 +35,26 @@ export default function ChooseAFriend() {
             Pick who you want to practice speaking with today
           </p>
         </header>
+
+        {/* Tier Selection Toggle */}
+        <div className="flex bg-surface-container-high rounded-full p-1 mb-8 shadow-inner">
+          <button
+            onClick={() => setTier(1)}
+            className={`px-6 py-2 rounded-full text-[16px] font-bold transition-all ${
+              tier === 1 ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest'
+            }`}
+          >
+            Tier 1: Single Sentences
+          </button>
+          <button
+            onClick={() => setTier(2)}
+            className={`px-6 py-2 rounded-full text-[16px] font-bold transition-all ${
+              tier === 2 ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest'
+            }`}
+          >
+            Tier 2: Conversations
+          </button>
+        </div>
 
         {/* Character Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-5xl mx-auto">

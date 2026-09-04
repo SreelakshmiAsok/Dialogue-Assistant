@@ -1,0 +1,89 @@
+{
+  "_id": "t2_friend_01",
+  "id": "t2_friend_01",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Entering a Peer Conversation & Joining Play",
+  "learning_objective": "Child observes ongoing play, requests to join appropriately, and accepts turn-taking terms.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)",
+    "module": "Entering a Conversation & Joining Ongoing Activities",
+    "target_rules": [
+      "Wait for a brief pause in the activity",
+      "Ask to join with a friendly, open request",
+      "Accept the peer's terms or turn-taking order without argument"
+    ]
+  },
+  "scenario": "You see your friend playing cricket at the playground. You want to join the game.",
+  "initial_prompt": {
+    "tanglish": "Hey! Naanga cricket vilayadrom.",
+    "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்.",
+    "english": "Hey! We are playing cricket."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Hey! Naanga cricket vilayadrom.",
+        "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்."
+      },
+      "target_intent": "RequestToJoin",
+      "required_features": ["JoinIntent"],
+      "expected_responses": [
+        "Naanum vilayadava?",
+        "Naan join pannikava?",
+        "Enakum chance thariya?",
+        "Can I play with you?",
+        "Naanum varen"
+      ],
+      "model_answer": "Naanum vilayadava?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask your friend nicely if you can join the game!",
+        "gentle_correction": "Try asking: 'Naanum vilayadava?' (Can I play?)"
+      },
+      "next_character_reply": {
+        "tanglish": "Seri va! Aana adutha round la nee dhaan batting pannanum.",
+        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Seri va! Aana adutha round la nee dhaan batting pannanum.",
+        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்."
+      },
+      "target_intent": "CooperationAgreement",
+      "required_features": ["AgreementKeyword"],
+      "expected_responses": [
+        "Seri da, thank you!",
+        "Ok da",
+        "Kandippa batting panren",
+        "Okay, thanks da",
+        "Seri da"
+      ],
+      "model_answer": "Seri da, thank you!",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Say okay and thank your friend for letting you play!",
+        "gentle_correction": "A friendly reply is: 'Seri da, thank you!'"
+      },
+      "next_character_reply": {
+        "tanglish": "Super! Bat eduthutu vaa, start pannalam!",
+        "tamil": "சூப்பர்! பேட் எடுத்துட்டு வா, ஸ்டார்ட் பண்ணலாம்!"
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Game Joined! 🏏",
+    "success_message": "Awesome! You joined the cricket game using polite turn-taking!",
+    "stars": 3
+  }
+}

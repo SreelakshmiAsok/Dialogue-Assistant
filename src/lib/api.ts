@@ -40,6 +40,43 @@ export interface ProgressData {
   accuracy: number;
 }
 
+export interface Tier2LessonSummary {
+  id: string;
+  character: string;
+  skill: string;
+  learning_objective: string;
+  difficulty: number;
+  initial_prompt?: { tanglish: string; tamil: string; english: string };
+}
+
+export interface Tier2Lesson {
+  id: string;
+  character: string;
+  tier: number;
+  difficulty: number;
+  skill: string;
+  learning_objective: string;
+  scenario: string;
+  initial_prompt: { tanglish: string; tamil: string; english: string };
+  turns: any[];
+  completion: any;
+}
+
+export interface Tier2EvaluationResult {
+  correct: boolean;
+  stars_awarded: number;
+  feedback: string;
+  suggestion: string | null;
+  next_character_reply: { tanglish: string; tamil: string } | null;
+  next_turn_id: string | null;
+  is_completed: boolean;
+  scores: {
+    politeness: number;
+    safety: number;
+    relevance: number;
+  };
+}
+
 const API_BASE = "/api";
 
 export async function fetchCharacters(): Promise<Character[]> {
@@ -76,5 +113,34 @@ export function getAudioUrl(questionId: string): string {
 export async function fetchProgress(): Promise<ProgressData> {
   const res = await fetch(`${API_BASE}/progress`);
   if (!res.ok) throw new Error("Failed to fetch progress");
+  return res.json();
+}
+
+export async function fetchTier2Lessons(character: string): Promise<Tier2LessonSummary[]> {
+  const res = await fetch(`${API_BASE}/tier2/lessons/${character}`);
+  if (!res.ok) throw new Error("Failed to fetch tier 2 lessons");
+  const data = await res.json();
+  return data.lessons;
+}
+
+export async function fetchTier2Lesson(lessonId: string): Promise<Tier2Lesson> {
+  const res = await fetch(`${API_BASE}/tier2/lesson/${lessonId}`);
+  if (!res.ok) throw new Error("Failed to fetch tier 2 lesson");
+  const data = await res.json();
+  return data.lesson;
+}
+
+export async function evaluateTier2Turn(
+  lessonId: string,
+  turnId: string,
+  response: string,
+  retryCount: number
+): Promise<Tier2EvaluationResult> {
+  const res = await fetch(`${API_BASE}/tier2/evaluate-turn`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lesson_id: lessonId, turn_id: turnId, response, retry_count: retryCount }),
+  });
+  if (!res.ok) throw new Error("Failed to evaluate tier 2 turn");
   return res.json();
 }
