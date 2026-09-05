@@ -64,9 +64,6 @@ def api_questions(character):
     # Return safe fields (no expected_answers to client)
     safe_questions = []
     for q in questions:
-        # Determine if a pre‑recorded audio file exists for this question
-        audio_file_path = os.path.join('backend', 'static', 'audio', f"{q['id']}.mp3")
-        audio_url = f"/static/audio/{q['id']}.mp3" if os.path.exists(audio_file_path) else None
         safe_questions.append({
             "id": q["id"],
             "character": q["character"],
@@ -75,8 +72,7 @@ def api_questions(character):
             "social_story": q["social_story"],
             "question_tanglish": q["question_tanglish"],
             "question_tamil": q["question_tamil"],
-            "difficulty": q["difficulty"],
-            "audioUrl": audio_url
+            "difficulty": q["difficulty"]
         })
 
     return jsonify({"questions": safe_questions})
@@ -145,32 +141,6 @@ def api_evaluate():
     character = question.get("character", "Stranger")
 
     required_communication = question.get("required_communication")
-    # --------------------------------------------------------
-    # Step X: Ontology reasoning (new)
-    # --------------------------------------------------------
-    from engines.ontology_reasoner import run_reasoner
-    evidence = {
-        "role": character,
-        "features": [],
-        "intent": required_communication.get("intent") if required_communication else None,
-        "text": response,
-    }
-    # Simple heuristic feature extraction for demonstration
-    lower_resp = response.lower()
-    if "appa" in lower_resp or "sir" in lower_resp or "teacher" in lower_resp:
-        evidence["features"].append("HonorificMarker")
-    if any(tok in lower_resp for tok in ["min", "minute", "minutes", "hour", "hours", "time", "second", "seconds"]):
-        evidence["features"].append("TimeExtension")
-    if "no" in lower_resp or "don't" in lower_resp or "cannot" in lower_resp or "can't" in lower_resp:
-        evidence["features"].append("RefusalMarker")
-    # Run the ontology reasoner
-    ontology_inferences = run_reasoner(evidence)
-    # If ontology indicates a ParentPoliteUtterance (or any PoliteRequest), treat as matched
-    if any("Polite" in inf for inf in ontology_inferences):
-        matched = True
-        # Boost semantic score to reflect inferred correctness
-        best_semantic = max(best_semantic, 1.0)
-
     preferred_phrases = question.get("preferred_phrases", [])
     expected_answers = preferred_phrases or question.get("expected_answers", [])
 
@@ -194,6 +164,7 @@ def api_evaluate():
             "transcribed_text": "",
             "transcribed_tamil": "",
             "semantic_score": 0.0,
+            "nlp_similarity": 0.0,
             "sentiment": "Neutral"
         })
 
@@ -253,6 +224,7 @@ def api_evaluate():
             "transcribed_text": transcribed_tanglish,
             "transcribed_tamil": transcribed_tamil,
             "semantic_score": 0.0,
+            "nlp_similarity": 0.0,
             "sentiment": "Neutral"
         })
 
@@ -293,6 +265,30 @@ def api_evaluate():
             matched = True
 
     # --------------------------------------------------------
+    # Step 3a: NLP Semantic Model (Additional Signal)
+    # --------------------------------------------------------
+    from engines.nlp_semantic_engine import semantic_similarity as nlp_semantic_similarity
+    
+    # Calculate NLP semantic similarity against the expected meaning or model answer
+    target_text = required_communication.get("meaning", model_answer) if required_communication else model_answer
+    nlp_similarity = nlp_semantic_similarity(response, target_text)
+
+    # --------------------------------------------------------
+    # Step 3b: Combined Evidence Evaluation
+    # --------------------------------------------------------
+    # If the response wasn't matched by exact/fuzzy checks or linguistic rules,
+    # but the NLP model sees a very strong semantic overlap (> 0.80) 
+    # AND the linguistic intent extractor didn't flag it as a refusal, 
+    # we accept it based on combined strong evidence.
+    if not matched and nlp_similarity >= 0.80:
+        inferred = semantic_result.get("inferred_intent")
+        if inferred != "social_refusal" and respect_ok:
+            matched = True
+            # Boost semantic score so they get a passing amount of stars
+            if best_semantic < 0.75:
+                best_semantic = 0.75
+
+    # --------------------------------------------------------
     # Step 4: Sentiment
     # --------------------------------------------------------
     sentiment_result = analyze_sentiment(response)
@@ -301,7 +297,6 @@ def api_evaluate():
     # --------------------------------------------------------
     # Step 5: Calculate stars
     # --------------------------------------------------------
-    # Include ontology inference in star calculation (no direct penalty, but matched may be updated above)
     stars = calculate_stars(
         matched,
         best_semantic,
@@ -328,8 +323,10 @@ def api_evaluate():
         error_type=error_type,
         model_answer=model_answer,
         respect_required=respect_required,
-        missing_preferred_vocative=matched and missing_preferred_vocative
+        missing_preferred_vocative=matched and missing_preferred_vocative,
+        ontology_context=semantic_result.get("inferred_intent")
     )
+
 
     # --------------------------------------------------------
     # Save progress
@@ -354,6 +351,7 @@ def api_evaluate():
         "transcribed_text": transcribed_tanglish,
         "transcribed_tamil": transcribed_tamil,
         "semantic_score": round(best_semantic, 3),
+        "nlp_similarity": round(nlp_similarity, 3),
         "sentiment": sentiment
     })
 
