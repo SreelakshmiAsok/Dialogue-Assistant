@@ -122,7 +122,8 @@ def is_eating_answer(text):
     normalized = normalize_text(text)
     eating_words = [
         "saap", "saptaen", "saaptaen", "saapten", "saapitten",
-        "saaptuten", "saaptutten", "ate", "eaten", "eating",
+        "saaptuten", "saaptutten", "chaap", "chaappidden", "chaapidden",
+        "ate", "eaten", "eating",
         "food", "lunch", "dinner", "breakfast"
     ]
     for word in eating_words:

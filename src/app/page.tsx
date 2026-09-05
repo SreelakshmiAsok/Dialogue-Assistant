@@ -12,67 +12,74 @@ export default function WelcomeHome() {
     setTimeout(() => {
       setIsStarting(false);
       router.push("/choose-friend");
-    }, 200);
+    }, 180);
   };
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden bg-soft-gradient font-sans">
-      {/* Sky background */}
+    <div className="flex flex-col min-h-screen relative overflow-hidden bg-background text-on-background font-sans selection:bg-primary-container selection:text-on-primary-container">
+      {/* Background Soft Gradients & Pattern */}
       <div
-        className="absolute inset-0 z-0 opacity-30"
+        className="absolute inset-0 z-0 opacity-25 pointer-events-none transition-opacity"
         style={{
           backgroundImage: "url(/images/sky_clouds_bg.png)",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center top",
         }}
       />
+      <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary-container/40 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-secondary-container/40 blur-3xl pointer-events-none" />
 
-      {/* Top AppBar */}
-      <header className="absolute top-0 right-0 p-6 md:p-12 z-50">
+      {/* Top Header / App Bar */}
+      <header className="relative z-20 w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-on-primary shadow-md">
+            <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
+          </div>
+          <div>
+            <h2 className="text-[22px] font-bold tracking-tight text-primary leading-tight">Samvaad</h2>
+            <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Social Skills Assistant</p>
+          </div>
+        </div>
+
         <button
-          aria-label="Adult Settings"
-          className="w-16 h-16 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 text-primary"
+          aria-label="Parent and Educator Dashboard"
           onClick={() => router.push("/parent-access")}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
         >
-          <span className="material-symbols-outlined text-[32px]">settings</span>
+          <span className="material-symbols-outlined text-[20px] text-primary">admin_panel_settings</span>
+          <span className="hidden sm:inline">Parent &amp; Educator</span>
         </button>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-6 md:px-20 relative z-10">
-        <div className="flex flex-col items-center justify-center space-y-12 max-w-2xl mx-auto text-center w-full">
-          
-          {/* Avatar Area */}
-          <div className="w-40 h-40 md:w-56 md:h-56 rounded-full bg-surface-container flex items-center justify-center mb-4 shadow-ambient relative overflow-hidden border-4 border-primary-container">
-            <img 
-              className="w-full h-full object-cover" 
-              alt="SocialBuddy mascot" 
-              src="/images/sky_clouds_bg.png"
-            />
-          </div>
+      {/* Main Hero Content */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-8 relative z-10 max-w-5xl mx-auto w-full text-center">
+        {/* Welcome Pill */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container/70 text-on-secondary-container text-[13px] font-bold mb-6 shadow-sm animate-bounce-gentle">
+          <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+          <span>Bilingual English &amp; Tamil Dialogue Practice</span>
+        </div>
 
-          {/* Greeting Text */}
-          <div className="flex flex-col items-center space-y-4">
-            <h1 className="text-[36px] leading-[48px] md:text-[56px] md:leading-[72px] font-bold tracking-[0.02em] text-on-surface">
-              Hello!
-            </h1>
-            <p className="text-[24px] leading-[36px] font-semibold text-on-surface-variant max-w-md">
-              Ready to practice talking?
-            </p>
-            <p className="text-[18px] leading-[28px] text-on-surface-variant/70 max-w-sm">
-              Pick a friend and start your social skills session
-            </p>
-          </div>
+        {/* Hero Title & Subtitle */}
+        <h1 className="text-[40px] leading-[50px] sm:text-[56px] sm:leading-[66px] md:text-[68px] md:leading-[78px] font-bold text-on-surface tracking-tight max-w-3xl">
+          Welcome to <span className="text-primary font-extrabold">Samvaad</span>
+        </h1>
+        <p className="text-[18px] leading-[28px] sm:text-[22px] sm:leading-[34px] text-on-surface-variant max-w-2xl mt-4 font-medium">
+          A gentle, speech-powered companion helping children practice everyday conversations, social etiquette, and confidence through fun roleplay.
+        </p>
 
-          {/* Primary Action Button */}
-          <button 
+        {/* Primary Action Button */}
+        <div className="mt-10 w-full max-w-sm">
+          <button
+            id="start-practicing-btn"
             onClick={handleStart}
-            className={`mt-8 w-72 h-[84px] text-[26px] font-semibold rounded-[28px] shadow-ambient active-sink transition-all animate-gentle-pulse flex items-center justify-center gap-3 ${
-              isStarting ? 'bg-primary-container text-on-primary-container' : 'bg-primary text-on-primary'
+            className={`w-full h-[72px] text-[22px] sm:text-[24px] font-bold rounded-full shadow-lg transition-all flex items-center justify-center gap-3 active:scale-95 ${
+              isStarting ? "bg-primary-container text-on-primary-container scale-95" : "bg-primary text-on-primary hover:bg-surface-tint shadow-primary/25"
             }`}
           >
-            <span>Start Playing</span>
-            <span className="material-symbols-outlined text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+            <span>Start Practicing</span>
+            <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+              play_circle
+            </span>
           </button>
         </div>
       </main>

@@ -47,6 +47,9 @@ NORMALIZATION = {
     "serii": "seri",
     "sari.": "seri",
     "seri.": "seri",
+    "chari": "seri",
+    "charri": "seri",
+    "chari.": "seri",
 
     # Saaptiya / Saaptaen
     "saaptiya": "saaptiya",
@@ -58,6 +61,16 @@ NORMALIZATION = {
     "saptaen": "saaptaen",
     "sapten": "saaptaen",
     "saapten.": "saaptaen",
+    "chaappidden": "saaptaen",
+    "chaapidden": "saaptaen",
+    "chaappitten": "saaptaen",
+    "chaapitten": "saaptaen",
+    "chaaptaen": "saaptaen",
+    "chaapten": "saaptaen",
+    "saappidden": "saaptaen",
+    "saapidden": "saaptaen",
+    "saappitten": "saaptaen",
+    "saapitten": "saaptaen",
 
     # Homework completed
     "mudichiten": "mudichiten",

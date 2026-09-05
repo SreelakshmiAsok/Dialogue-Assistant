@@ -60,12 +60,12 @@ CORRECT_MESSAGES = {
 INCORRECT_MESSAGES = {
     "Father": [
         "Good try! Let's practice talking to Appa nicely. 🌸",
-        "Almost there! Try adding 'appa' to your answer. 🌟",
+        "Almost there! Let's try answering Appa again. 🌟",
         "You're learning! Let's try a polite way to answer Appa. 💪"
     ],
     "Teacher": [
         "Good try! Let's practice talking to Teacher nicely. 🌸",
-        "Almost there! Try adding 'teacher' or 'ma'am' to your answer. 🌟",
+        "Almost there! Let's try another answer for Teacher. 🌟",
         "You're learning! Let's try a polite way to answer Teacher. 💪"
     ],
     "Friend": [
@@ -75,7 +75,7 @@ INCORRECT_MESSAGES = {
     ],
     "Stranger": [
         "Good try! Let's practice being polite with strangers. 🌸",
-        "Almost there! Try adding 'sir' to your answer. 🌟",
+        "Almost there! Let's try a polite answer for strangers. 🌟",
         "You're learning! Let's try a polite and safe answer. 💪"
     ]
 }
