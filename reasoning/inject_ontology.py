@@ -27,7 +27,13 @@ with onto:
     class CooperativeSuggestion(CommunicativeIntent): pass
     
     # Linguistic Feature Subclasses
+    # Preserve old misspelled class for backward compatibility
     class HonorifcMarker(LinguisticFeature): pass
+    # Preferred correct spelling
+    class HonorificMarker(LinguisticFeature): HonorifcMarker
+    # New linguistic features
+    class RespectfulAddress(LinguisticFeature): pass
+    class TimeExtension(LinguisticFeature): pass
     class SlangMarker(LinguisticFeature): pass
     class PurposeStatement(LinguisticFeature): pass
     class RefusalMarker(LinguisticFeature): pass
@@ -56,10 +62,18 @@ with onto:
     class TeacherPoliteUtterance(Utterance):
         equivalent_to = [
             Utterance & 
-            usesFeature.some(HonorifcMarker) & 
+            usesFeature.some(HonorificMarker) & 
             usesFeature.some(PurposeStatement)
         ]
         
+    # Define a class for a Parent Polite Utterance (request with honorific and time extension)
+    class ParentPoliteUtterance(Utterance):
+        equivalent_to = [
+            Utterance &
+            usesFeature.some(HonorificMarker) &
+            usesFeature.some(TimeExtension)
+        ]
+
     class StrangerSafetyUtterance(Utterance):
         equivalent_to = [
             Utterance & 

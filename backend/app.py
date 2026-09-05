@@ -64,6 +64,9 @@ def api_questions(character):
     # Return safe fields (no expected_answers to client)
     safe_questions = []
     for q in questions:
+        # Determine if a pre‑recorded audio file exists for this question
+        audio_file_path = os.path.join('backend', 'static', 'audio', f"{q['id']}.mp3")
+        audio_url = f"/static/audio/{q['id']}.mp3" if os.path.exists(audio_file_path) else None
         safe_questions.append({
             "id": q["id"],
             "character": q["character"],
@@ -72,7 +75,8 @@ def api_questions(character):
             "social_story": q["social_story"],
             "question_tanglish": q["question_tanglish"],
             "question_tamil": q["question_tamil"],
-            "difficulty": q["difficulty"]
+            "difficulty": q["difficulty"],
+            "audioUrl": audio_url
         })
 
     return jsonify({"questions": safe_questions})
@@ -141,6 +145,32 @@ def api_evaluate():
     character = question.get("character", "Stranger")
 
     required_communication = question.get("required_communication")
+    # --------------------------------------------------------
+    # Step X: Ontology reasoning (new)
+    # --------------------------------------------------------
+    from engines.ontology_reasoner import run_reasoner
+    evidence = {
+        "role": character,
+        "features": [],
+        "intent": required_communication.get("intent") if required_communication else None,
+        "text": response,
+    }
+    # Simple heuristic feature extraction for demonstration
+    lower_resp = response.lower()
+    if "appa" in lower_resp or "sir" in lower_resp or "teacher" in lower_resp:
+        evidence["features"].append("HonorificMarker")
+    if any(tok in lower_resp for tok in ["min", "minute", "minutes", "hour", "hours", "time", "second", "seconds"]):
+        evidence["features"].append("TimeExtension")
+    if "no" in lower_resp or "don't" in lower_resp or "cannot" in lower_resp or "can't" in lower_resp:
+        evidence["features"].append("RefusalMarker")
+    # Run the ontology reasoner
+    ontology_inferences = run_reasoner(evidence)
+    # If ontology indicates a ParentPoliteUtterance (or any PoliteRequest), treat as matched
+    if any("Polite" in inf for inf in ontology_inferences):
+        matched = True
+        # Boost semantic score to reflect inferred correctness
+        best_semantic = max(best_semantic, 1.0)
+
     preferred_phrases = question.get("preferred_phrases", [])
     expected_answers = preferred_phrases or question.get("expected_answers", [])
 
@@ -271,6 +301,7 @@ def api_evaluate():
     # --------------------------------------------------------
     # Step 5: Calculate stars
     # --------------------------------------------------------
+    # Include ontology inference in star calculation (no direct penalty, but matched may be updated above)
     stars = calculate_stars(
         matched,
         best_semantic,

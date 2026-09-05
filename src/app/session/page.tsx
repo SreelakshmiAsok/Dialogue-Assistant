@@ -61,45 +61,6 @@ function Tier1SessionContent() {
       });
   }, [characterName, lessonId]);
 
-  const handlePlayAudio = useCallback(() => {
-    if (!currentQuestion) return;
-    // Cancel any in-progress speech or audio before starting new
-    window.speechSynthesis.cancel();
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
-      audioRef.current = null;
-    }
-    setIsPlaying(true);
-    const audio = new Audio(getAudioUrl(currentQuestion.id));
-    audioRef.current = audio;
-    // Use a single fallback guard — whichever fires first (catch OR onerror) runs the TTS, never both
-    let hasFallenBack = false;
-    const speakFallback = () => {
-      if (hasFallenBack) return;
-      hasFallenBack = true;
-      setIsPlaying(false);
-      if ("speechSynthesis" in window) {
-        const utterance = new SpeechSynthesisUtterance(currentQuestion.question_tanglish);
-        utterance.lang = "ta-IN";
-        utterance.rate = 0.85;
-        // Select a voice by gender matching the character
-        const voices = window.speechSynthesis.getVoices();
-        const isMale = ["Father", "Stranger"].includes(characterName);
-        const preferred = voices.find(v =>
-          v.lang.startsWith("ta") && (isMale ? v.name.toLowerCase().includes("male") || v.name.includes("Valluvar") : v.name.toLowerCase().includes("female") || v.name.includes("Pallavi"))
-        ) || voices.find(v => v.lang.startsWith("en") && (isMale ? v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david") || v.name.toLowerCase().includes("mark") : v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("susan")));
-        if (preferred) utterance.voice = preferred;
-        utterance.pitch = isMale ? 0.75 : 1.1;
-        utterance.onend = () => setIsPlaying(false);
-        speechSynthesis.speak(utterance);
-      }
-    };
-    audio.play().catch(speakFallback);
-    audio.onended = () => setIsPlaying(false);
-    audio.onerror = speakFallback;
-  }, [currentQuestion, characterName]);
-
   // Submit answer for evaluation
   const submitAnswer = useCallback(async (answer: string) => {
     if (!currentQuestion || !answer.trim()) return;
@@ -132,6 +93,84 @@ function Tier1SessionContent() {
       setIsEvaluating(false);
     }
   }, [currentQuestion]);
+
+const handlePlayAudio = useCallback(async () => {
+  if (!currentQuestion) return;
+  // Cancel any in‑progress speech or audio before starting new
+  window.speechSynthesis.cancel();
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current.src = "";
+    audioRef.current = null;
+  }
+  setIsPlaying(true);
+
+  // Helper to speak text via TTS and resolve when finished
+  const speak = (text: string) =>
+    new Promise<void>((resolve) => {
+      if ("speechSynthesis" in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "ta-IN";
+        utterance.rate = 0.85;
+        const voices = window.speechSynthesis.getVoices();
+        const isMale = ["Father", "Stranger"].includes(characterName);
+        const preferred =
+          voices.find(
+            (v) =>
+              v.lang.startsWith("ta") &&
+              (isMale
+                ? v.name.toLowerCase().includes("male") || v.name.includes("Valluvar")
+                : v.name.toLowerCase().includes("female") || v.name.includes("Pallavi"))
+          ) ||
+          voices.find(
+            (v) =>
+              v.lang.startsWith("en") &&
+              (isMale
+                ? v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david") || v.name.toLowerCase().includes("mark")
+                : v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("susan"))
+          );
+        if (preferred) utterance.voice = preferred;
+        utterance.pitch = isMale ? 0.75 : 1.1;
+        utterance.onend = () => resolve();
+        window.speechSynthesis.speak(utterance);
+      } else {
+        resolve();
+      }
+    });
+
+  try {
+    // 1. Play context (social_story) if present
+    if (currentQuestion.social_story) {
+      await speak(currentQuestion.social_story);
+    }
+    // 2. Play dialogue – try pre‑recorded audio first, fallback to TTS
+    const audio = new Audio(getAudioUrl(currentQuestion.id));
+    audioRef.current = audio;
+    await new Promise<void>((resolve) => {
+      const onEnd = () => resolve();
+      const onError = () => {
+        // fallback to TTS for the dialogue text
+        speak(currentQuestion.question_tanglish).then(() => resolve());
+      };
+      audio.onended = onEnd;
+      audio.onerror = onError;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(onError);
+      }
+    });
+  } finally {
+    setIsPlaying(false);
+  }
+}, [currentQuestion, characterName]);
+
+useEffect(() => {
+  if (currentQuestion) {
+    handlePlayAudio();
+  }
+}, [currentQuestion, handlePlayAudio]);
+
+
 
   // Start speech recognition
   const handleMicTap = useCallback(() => {
