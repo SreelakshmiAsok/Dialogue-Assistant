@@ -1,4 +1,3 @@
-import re
 from difflib import SequenceMatcher
 
 from nlp.preprocessing import normalize_text
@@ -109,16 +108,67 @@ def is_homework_completed(text):
 
 def is_yes_answer(text):
     normalized = normalize_text(text)
+    tokens = normalized.split()
+    return any(word in tokens for word in ["aama", "yes", "yeah", "yep", "ok", "okay"])
 
-    return "aama" in normalized
+
+def is_no_answer(text):
+    normalized = normalize_text(text)
+    tokens = normalized.split()
+    return any(word in tokens for word in ["illa", "no", "nope"])
 
 
 def is_eating_answer(text):
     normalized = normalize_text(text)
-    eating_words = ["saap", "sap", "ate", "eating"]
+    eating_words = [
+        "saap", "saptaen", "saaptaen", "saapten", "saapitten",
+        "saaptuten", "saaptutten", "ate", "eaten", "eating",
+        "food", "lunch", "dinner", "breakfast"
+    ]
     for word in eating_words:
         if word in normalized:
             return True
+    return False
+
+
+def is_meaning_refusal(text):
+    normalized = normalize_text(text)
+    refusal_markers = [
+        "won't tell", "wont tell", "will not tell",
+        "none of your", "dont want to say", "don't want to say",
+        "i won't", "i wont"
+    ]
+    return any(marker in normalized for marker in refusal_markers)
+
+
+def _eating_meaning(meaning):
+    meaning_l = (meaning or "").lower()
+    return any(token in meaning_l for token in [
+        "eaten", "eat", "meal", "food", "lunch", "saap"
+    ])
+
+
+def aligns_with_required_meaning(text, meaning, intent=""):
+    """
+    Concept-level check against required_communication.meaning.
+
+    This is intentionally independent of preferred honorifics so that
+    a conceptually correct sentence is not failed for low word overlap
+    with a short model phrase, and a wrong sentence is not passed just
+    because it contains 'appa'.
+    """
+    if is_meaning_refusal(text):
+        return False
+
+    if _eating_meaning(meaning) or (
+        intent == "AnswerQuestion" and _eating_meaning(meaning)
+    ):
+        return (
+            is_eating_answer(text)
+            or is_yes_answer(text)
+            or is_no_answer(text)
+        )
+
     return False
 
 
@@ -130,12 +180,16 @@ def semantic_match(user_response, scenario):
     normalized_response = normalize_text(user_response)
 
     expected = scenario.get("expected", "")
-
     accepted_answers = scenario.get("accepted_answers", [])
-
     response_type = scenario.get("response_type", "")
+    required_communication = scenario.get("required_communication") or {}
 
-    # Make sure expected answer is always included
+    if required_communication:
+        response_type = required_communication.get("intent", response_type) or response_type
+        meaning = required_communication.get("meaning", "")
+    else:
+        meaning = scenario.get("meaning", "")
+
     all_answers = list(accepted_answers)
 
     if expected and expected not in all_answers:
@@ -170,6 +224,28 @@ def semantic_match(user_response, scenario):
             }
 
     # --------------------------------------------------------
+    # REQUIRED COMMUNICATION GOAL (intent + meaning)
+    # --------------------------------------------------------
+
+    if meaning:
+        if aligns_with_required_meaning(normalized_response, meaning, response_type):
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": True,
+                "semantic_score": 0.90
+            }
+
+        # Meaning was specified and not met: do not let honorific overlap
+        # with preferred phrases (e.g. "5 min appa") count as a pass.
+        return {
+            "normalized": normalized_response,
+            "expected": expected,
+            "matched": False,
+            "semantic_score": 0.0
+        }
+
+    # --------------------------------------------------------
     # SPECIAL CONTEXT: HOMEWORK
     # --------------------------------------------------------
 
@@ -202,7 +278,7 @@ def semantic_match(user_response, scenario):
     # --------------------------------------------------------
     # SPECIAL CONTEXT: AnswerQuestion (Eating)
     # --------------------------------------------------------
-    
+
     if response_type == "AnswerQuestion":
         if is_eating_answer(normalized_response):
             return {
@@ -246,7 +322,7 @@ def semantic_match(user_response, scenario):
             }
 
     # --------------------------------------------------------
-    # FUZZY MATCH
+    # FUZZY MATCH (legacy lessons without required_communication)
     # --------------------------------------------------------
 
     best_score = 0.0
@@ -290,24 +366,20 @@ def semantic_match(user_response, scenario):
 if __name__ == "__main__":
 
     test_scenario = {
-        "expected": "Aama ma'am",
-        "accepted_answers": [
-            "Aama ma'am",
-            "Ama mam",
-            "Seri teacher",
-            "Mudichiten maam",
-            "Muduchutten maam"
-        ],
-        "response_type": "homework_completed"
+        "expected": "Saaptaen appa",
+        "accepted_answers": ["Saaptaen appa", "Aama appa"],
+        "required_communication": {
+            "intent": "AnswerQuestion",
+            "meaning": "Indicate whether they have eaten."
+        }
     }
 
     tests = [
-        "Aama ma'am",
-        "Ama mam",
-        "Seri teacher",
-        "Mudichutten maam",
-        "Muduchitten maam",
-        "illa di"
+        "Naan saapitten paa, neenga saaptiya?",
+        "Saaptaen appa.",
+        "Naan saapitten appa, neenga saaptiya?",
+        "5 min appa",
+        "I won't tell you"
     ]
 
     print("=" * 60)

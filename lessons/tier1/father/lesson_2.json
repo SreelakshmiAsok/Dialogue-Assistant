@@ -8,7 +8,7 @@
   "question_tamil": "சாப்பிட்டியா?",
   "required_communication": {
     "intent": "AnswerQuestion",
-    "meaning": "Indicate whether they have eaten"
+    "meaning": "Indicate whether they have eaten."
   },
   "preferred_phrases": [
     "Saaptaen appa",

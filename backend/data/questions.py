@@ -3,6 +3,46 @@
 # Designed for autistic children's social skills training
 # ============================================================
 
+import json
+import os
+
+LESSONS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "lessons")
+
+
+def _json_lesson_path(question_id):
+    """Map father_02 -> lessons/tier1/father/lesson_2.json when present."""
+    if not question_id or "_" not in question_id:
+        return None
+    character, _, rest = question_id.partition("_")
+    try:
+        num = int(rest)
+    except ValueError:
+        return None
+    path = os.path.normpath(
+        os.path.join(LESSONS_DIR, "tier1", character.lower(), f"lesson_{num}.json")
+    )
+    if os.path.isfile(path):
+        return path
+    return None
+
+
+def _merge_json_lesson(question):
+    """JSON lesson files are the source of truth when they exist."""
+    path = _json_lesson_path(question.get("id", ""))
+    if not path:
+        return question
+    try:
+        with open(path, encoding="utf-8") as handle:
+            data = json.load(handle)
+        if not isinstance(data, dict):
+            return question
+        merged = dict(question)
+        merged.update(data)
+        return merged
+    except (OSError, json.JSONDecodeError):
+        return question
+
+
 QUESTIONS = {
 
     # ========================================================
@@ -34,13 +74,15 @@ QUESTIONS = {
             "social_story": "It is lunchtime. Appa asks if you have eaten your food.",
             "question_tanglish": "Saaptiya?",
             "question_tamil": "சாப்பிட்டியா?",
-            "expected_answers": [
-                "Saaptaen appa", "Saapten appa", "Saptaen appa", "Sapten appa",
-                "Aama appa", "Illa appa", "Saapten appa",
-                "Saaptuten appa", "Saaptutten appa"
+            "required_communication": {
+                "intent": "AnswerQuestion",
+                "meaning": "Indicate whether they have eaten."
+            },
+            "preferred_phrases": [
+                "Saaptaen appa",
+                "Aama appa"
             ],
             "model_answer": "Saaptaen appa",
-            "respect_required": True,
             "difficulty": 1
         },
         {
@@ -1701,7 +1743,7 @@ def get_all_characters():
 
 def get_questions_for_character(character):
     """Return all questions for a given character."""
-    return QUESTIONS.get(character, [])
+    return [_merge_json_lesson(q) for q in QUESTIONS.get(character, [])]
 
 
 def get_question_by_id(question_id):
@@ -1709,7 +1751,7 @@ def get_question_by_id(question_id):
     for character, questions in QUESTIONS.items():
         for q in questions:
             if q["id"] == question_id:
-                return q
+                return _merge_json_lesson(q)
     return None
 
 

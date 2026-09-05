@@ -15,7 +15,7 @@ from data.questions import (
     get_questions_for_character,
     get_question_by_id
 )
-from engines.rule_engine import check_pragmatics, check_respect
+from engines.rule_engine import check_pragmatics
 from engines.semantic_engine import combined_similarity, semantic_match
 from nlp.bad_words_filter import check_inappropriate
 from engines.feedback_engine import generate_feedback, calculate_stars
@@ -139,13 +139,16 @@ def api_evaluate():
         return jsonify({"error": "Question not found"}), 404
 
     character = question.get("character", "Stranger")
-    
-    # Support new required_communication structure or fallback
-    required_communication = question.get("required_communication", None)
-    expected_answers = question.get("preferred_phrases", question.get("expected_answers", []))
-    
+
+    required_communication = question.get("required_communication")
+    preferred_phrases = question.get("preferred_phrases", [])
+    expected_answers = preferred_phrases or question.get("expected_answers", [])
+
     model_answer = question.get("model_answer", "")
-    respect_required = question.get("respect_required", True)
+    # Honorifics are stylistic when a semantic goal is defined.
+    respect_required = False if required_communication else question.get(
+        "respect_required", True
+    )
 
     # --------------------------------------------------------
     # Empty response
@@ -194,9 +197,8 @@ def api_evaluate():
         })
 
     # --------------------------------------------------------
-    # Step 2: Check answer correctness (rule engine)
+    # Step 2: Stylistic / safety rules (not semantic correctness)
     # --------------------------------------------------------
-    # Build a temporary scenario_id based on character
     rule_result = check_pragmatics(
         response,
         scenario_id=None,
@@ -204,48 +206,70 @@ def api_evaluate():
         character=character
     )
 
-    matched = rule_result["matched"]
+    if rule_result.get("critical_failure"):
+        feedback_result = generate_feedback(
+            character, False,
+            error_type="Safety Violation",
+            model_answer=model_answer,
+            respect_required=respect_required
+        )
+        return jsonify({
+            "correct": False,
+            "stars": 1,
+            "feedback": feedback_result["feedback"],
+            "suggestion": rule_result.get("suggestion") or feedback_result["suggestion"],
+            "model_answer": model_answer,
+            "encouragement": feedback_result["encouragement"],
+            "transcribed_text": transcribed_tanglish,
+            "transcribed_tamil": transcribed_tamil,
+            "semantic_score": 0.0,
+            "sentiment": "Neutral"
+        })
+
+    missing_preferred_vocative = rule_result.get(
+        "missing_preferred_vocative", False
+    )
+    respect_ok = not missing_preferred_vocative
 
     # --------------------------------------------------------
-    # Step 3: Semantic similarity
+    # Step 3: Semantic goal (required_communication)
     # --------------------------------------------------------
-    best_semantic = 0.0
-    for expected in expected_answers:
-        score = combined_similarity(normalized, expected)
-        if score > best_semantic:
-            best_semantic = score
+    semantic_scenario = {
+        "expected": model_answer,
+        "accepted_answers": expected_answers,
+        "response_type": (
+            required_communication.get("intent")
+            if required_communication else ""
+        ),
+        "required_communication": required_communication,
+        "meaning": (
+            required_communication.get("meaning", "")
+            if required_communication else ""
+        )
+    }
+    semantic_result = semantic_match(response, semantic_scenario)
+    matched = bool(semantic_result.get("matched"))
+    best_semantic = float(semantic_result.get("semantic_score") or 0.0)
 
-    # Accept if semantic score is high enough
-    if not matched and best_semantic >= 0.75:
-        matched = True
-        
-    # Support for decoupled intent check (Tier 1 fallback to decoupled rules)
-    if not matched and required_communication:
-        temp_scenario = {
-            "expected": model_answer,
-            "accepted_answers": expected_answers,
-            "response_type": required_communication.get("intent")
-        }
-        semantic_result = semantic_match(response, temp_scenario)
-        if semantic_result["matched"]:
+    # Legacy lessons without a semantic goal still use phrase similarity.
+    if not required_communication:
+        for expected in expected_answers:
+            score = combined_similarity(normalized, expected)
+            if score > best_semantic:
+                best_semantic = score
+        if not matched and (
+            rule_result.get("preferred_phrase_used") or best_semantic >= 0.75
+        ):
             matched = True
-            best_semantic = max(best_semantic, semantic_result["semantic_score"])
 
     # --------------------------------------------------------
-    # Step 4: Check respect
-    # --------------------------------------------------------
-    respect_ok = True
-    if respect_required:
-        respect_ok = check_respect(response, character=character)
-
-    # --------------------------------------------------------
-    # Step 5: Sentiment
+    # Step 4: Sentiment
     # --------------------------------------------------------
     sentiment_result = analyze_sentiment(response)
     sentiment = sentiment_result["sentiment"]
 
     # --------------------------------------------------------
-    # Step 6: Calculate stars
+    # Step 5: Calculate stars
     # --------------------------------------------------------
     stars = calculate_stars(
         matched,
@@ -254,22 +278,26 @@ def api_evaluate():
         not bad_check["is_inappropriate"]
     )
 
-    # --------------------------------------------------------
-    # Step 7: Generate feedback
-    # --------------------------------------------------------
-    error_type = rule_result.get("error_type", "None")
-
-    if matched and not respect_ok:
-        error_type = "Missing Honorific"
-        # We no longer hard-fail matched = False here.
-        # The sentence is semantically correct, but missing a stylistic honorific.
+    if matched and missing_preferred_vocative:
         stars = max(stars, 3)
+
+    # --------------------------------------------------------
+    # Step 6: Generate feedback
+    # --------------------------------------------------------
+    error_type = "None"
+    if not matched:
+        error_type = rule_result.get("error_type") or "Incorrect Response"
+        if error_type in ("None", "Missing Honorific"):
+            error_type = "Incorrect Response"
+    elif missing_preferred_vocative:
+        error_type = "Missing Honorific"
 
     feedback_result = generate_feedback(
         character, matched,
         error_type=error_type,
         model_answer=model_answer,
-        respect_required=respect_required
+        respect_required=respect_required,
+        missing_preferred_vocative=matched and missing_preferred_vocative
     )
 
     # --------------------------------------------------------

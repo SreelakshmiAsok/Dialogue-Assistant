@@ -23,8 +23,15 @@ ENCOURAGEMENTS = [
     "Great job practicing! You're a superstar! 🌟"
 ]
 
+PREFERRED_VOCATIVE = {
+    "Father": "appa",
+    "Teacher": "teacher",
+    "Stranger": "sir"
+}
+
 CORRECT_MESSAGES = {
     "Father": [
+        "Great job talking with Appa! 🌸 You answered Appa.",
         "Great job! You spoke to Appa very nicely! 🌟",
         "Wonderful! That's a lovely way to talk to Appa! ⭐",
         "Perfect! Appa will be so happy with your answer! 💛",
@@ -86,9 +93,13 @@ RESPECT_MISSING_MESSAGES = {
 # ============================================================
 
 def generate_feedback(character, matched, error_type=None,
-                      model_answer="", respect_required=True):
+                      model_answer="", respect_required=True,
+                      missing_preferred_vocative=False):
     """
     Generate gentle, encouraging feedback for autistic children.
+
+    Semantic success is affirmed even when a preferred honorific is missing.
+    Missing vocatives become optional suggestions, not corrections.
 
     Returns:
         dict with feedback, suggestion, encouragement
@@ -99,9 +110,19 @@ def generate_feedback(character, matched, error_type=None,
             CORRECT_MESSAGES.get(character, CORRECT_MESSAGES["Stranger"])
         )
         suggestion = None
-        if error_type == "Missing Honorific" and model_answer:
-            suggestion = f"You could also say '{model_answer}' if you want to address them directly. 🌸"
-            
+        if missing_preferred_vocative or error_type == "Missing Honorific":
+            vocative = PREFERRED_VOCATIVE.get(character)
+            if vocative:
+                suggestion = (
+                    f"You could also say '{vocative}' when addressing "
+                    f"{'him' if character == 'Father' else 'them'} directly."
+                )
+            elif model_answer:
+                suggestion = (
+                    f"You could also say '{model_answer}' if you want "
+                    "to address them directly. 🌸"
+                )
+
         return {
             "feedback": feedback,
             "suggestion": suggestion,
@@ -176,7 +197,7 @@ def calculate_stars(matched, semantic_score=0.0, respect_ok=True,
             return 3
 
     if matched and not respect_ok:
-        return 2
+        return 3
 
     if semantic_score >= 0.6:
         return 2

@@ -1,9 +1,9 @@
-import re
 from difflib import SequenceMatcher
 from nlp.preprocessing import normalize_text
 
 # ============================================================
 # CHARACTER-SPECIFIC RULES
+# Honorifics here are stylistic preferences, not pass/fail gates.
 # ============================================================
 
 CHARACTER_RULES = {
@@ -46,6 +46,15 @@ CHARACTER_RULES = {
     }
 }
 
+STRANGER_DANGER_ACCEPT = [
+    "sure", "okay", "ok", "yes", "aama", "come", "go",
+    "puppy", "candy", "chocolate", "car"
+]
+STRANGER_SAFETY_REFUSE = [
+    "no", "illa", "don't", "dont", "cant", "cannot", "mudiyadhu",
+    "parent", "amma", "appa", "mom", "dad", "teacher"
+]
+
 
 # ============================================================
 # TEXT SIMILARITY
@@ -65,7 +74,7 @@ def similarity_score(text1, text2):
 
 
 # ============================================================
-# RESPECT CHECK
+# RESPECT CHECK (stylistic)
 # ============================================================
 
 def check_respect(response, character):
@@ -79,16 +88,17 @@ def check_respect(response, character):
         return True
 
     normalized = normalize_text(response)
+    tokens = set(normalized.split())
 
     for word in rules["respect_words"]:
-        if word in normalized.split():
+        if normalize_text(word) in tokens:
             return True
 
     return False
 
 
 # ============================================================
-# CORRECT ANSWER CHECK
+# PREFERRED PHRASE CHECK (optional style, not correctness)
 # ============================================================
 
 def check_answer(response, expected_answers):
@@ -97,11 +107,9 @@ def check_answer(response, expected_answers):
     for expected in expected_answers:
         normalized_expected = normalize_text(expected)
 
-        # Exact match
         if normalized_response == normalized_expected:
             return True
 
-        # Very close spelling match
         score = similarity_score(
             normalized_response,
             normalized_expected
@@ -113,62 +121,79 @@ def check_answer(response, expected_answers):
     return False
 
 
+def _stranger_safety_violation(response):
+    normalized = normalize_text(response)
+    tokens = normalized.split()
+    accepted = any(word in tokens or word in normalized for word in STRANGER_DANGER_ACCEPT)
+    refused = any(word in tokens or word in normalized for word in STRANGER_SAFETY_REFUSE)
+    return accepted and not refused
+
+
 # ============================================================
 # MAIN RULE CHECK
 # ============================================================
 
 def check_pragmatics(response, scenario_id=None, expected_answers=None, character=None):
     """
-    Main rule check logic.
+    Stylistic and safety checks only.
+
+    Correctness of meaning is owned by the semantic engine.
+    Missing honorifics are flags, not hard failures.
     """
     response = response or ""
-    
-    # Fallback to Stranger if no character provided
+
     if not character:
         character = "Stranger"
 
     normalized_response = normalize_text(response)
 
-    # Empty response
     if not normalized_response:
         return {
             "matched": False,
+            "preferred_phrase_used": False,
+            "missing_preferred_vocative": False,
+            "critical_failure": False,
             "error_type": "No Response",
             "suggestion": "Please try answering the question.",
             "stars": 0
         }
 
     # --------------------------------------------------------
-    # Check expected answers FIRST
+    # Safety checks remain critical failures
     # --------------------------------------------------------
-    if expected_answers:
-        if check_answer(response, expected_answers):
-            return {
-                "matched": True,
-                "error_type": "None",
-                "suggestion": "Great job!",
-                "stars": 1
-            }
+    if character == "Stranger" and _stranger_safety_violation(response):
+        return {
+            "matched": False,
+            "preferred_phrase_used": False,
+            "missing_preferred_vocative": False,
+            "critical_failure": True,
+            "error_type": "Safety Violation",
+            "suggestion": "Stay safe. Ask a trusted adult for help.",
+            "stars": 0
+        }
 
-    # --------------------------------------------------------
-    # Respect check
-    # --------------------------------------------------------
-    if not check_respect(response, character):
-        rules = CHARACTER_RULES.get(character)
-        if rules:
-            return {
-                "matched": False,
-                "error_type": "Missing Honorific",
-                "suggestion": rules["error_message"],
-                "stars": 0
-            }
+    preferred_phrase_used = bool(
+        expected_answers and check_answer(response, expected_answers)
+    )
 
-    # --------------------------------------------------------
-    # Incorrect response
-    # --------------------------------------------------------
+    rules = CHARACTER_RULES.get(character, {})
+    has_vocative_expectation = bool(rules.get("respect_words"))
+    missing_preferred_vocative = (
+        has_vocative_expectation and not check_respect(response, character)
+    )
+
+    error_type = "None"
+    suggestion = "Great job!"
+    if missing_preferred_vocative:
+        error_type = "Missing Honorific"
+        suggestion = rules.get("error_message", "")
+
     return {
-        "matched": False,
-        "error_type": "Incorrect Response",
-        "suggestion": "Try giving a more suitable response.",
-        "stars": 0
+        "matched": preferred_phrase_used,
+        "preferred_phrase_used": preferred_phrase_used,
+        "missing_preferred_vocative": missing_preferred_vocative,
+        "critical_failure": False,
+        "error_type": error_type,
+        "suggestion": suggestion,
+        "stars": 1 if preferred_phrase_used else 0
     }
