@@ -1,0 +1,20 @@
+{
+  "id": "father_03",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "TV",
+  "social_story": "You are watching TV. Appa asks you to turn off the TV because it is study time.",
+  "question_tanglish": "TV off pannuva?",
+  "question_tamil": "TV ஆஃப் பண்ணுவா?",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Pannuren appa",
+    "Panren appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

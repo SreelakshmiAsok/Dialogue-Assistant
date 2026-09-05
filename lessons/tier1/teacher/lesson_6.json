@@ -1,0 +1,20 @@
+{
+  "id": "teacher_06",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Book",
+  "social_story": "Teacher asks everyone to open their textbook to page 10.",
+  "question_tanglish": "Book open pannunga.",
+  "question_tamil": "புக் ஓபன் பண்ணுங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Aama teacher",
+    "Ok teacher",
+    "Seri miss",
+    "Seri ma'am"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

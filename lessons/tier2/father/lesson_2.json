@@ -1,0 +1,66 @@
+{
+  "id": "t2_father_02",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Admitting a mistake",
+  "learning_objective": "Child tells the truth about a mistake.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™"
+  },
+  "scenario": "You accidentally spilled water on the table. Appa sees it.",
+  "initial_prompt": {
+    "tanglish": "Table la epdi thanni kottuchu?",
+    "tamil": "டேபிள் ல எப்படி தண்ணி கொட்டுச்சு?",
+    "english": "How did water spill on the table?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Table la epdi thanni kottuchu?",
+        "tamil": "டேபிள் ல எப்படி தண்ணி கொட்டுச்சு?",
+        "english": "How did water spill on the table?"
+      },
+      "expected_responses": [
+        "Sorry appa, naan dhaan kottiten",
+        "Thriyama kottiten appa",
+        "Ennala dhaan appa kottuchu"
+      ],
+      "model_answer": "Sorry appa, theriyama kottiten",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Paravala, poitu oru cloth eduthutu va thodaikalam.",
+        "tamil": "பரவால்ல, போய்ட்டு ஒரு கிளாத் எடுத்துட்டு வா தொடைக்கலாம்.",
+        "english": "It's ok, go get a cloth to wipe it."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Paravala, poitu oru cloth eduthutu va thodaikalam.",
+        "tamil": "பரவால்ல, போய்ட்டு ஒரு கிளாத் எடுத்துட்டு வா தொடைக்கலாம்.",
+        "english": "It's ok, go get a cloth to wipe it."
+      },
+      "expected_responses": [
+        "Idho konduraren appa",
+        "Seri appa",
+        "Ok appa"
+      ],
+      "model_answer": "Seri appa, idho konduraren",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Next time careful ah iru.",
+        "tamil": "நெக்ஸ்ட் டைம் கேர்ஃபுல் ஆ இரு.",
+        "english": "Be careful next time."
+      },
+      "is_terminal": true
+    }
+  ]
+}

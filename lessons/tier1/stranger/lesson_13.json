@@ -1,0 +1,21 @@
+{
+  "id": "stranger_13",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Shop",
+  "social_story": "You are at a shop. The shopkeeper asks what you want.",
+  "question_tanglish": "Enna venum?",
+  "question_tamil": "என்ன வேணும்?",
+  "expected_answers": [
+    "Pencil venum sir",
+    "Notebook venum sir",
+    "Water venum sir",
+    "Chocolate venum sir",
+    "Biscuit venum sir",
+    "Idhu venum sir"
+  ],
+  "model_answer": "Pencil venum sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

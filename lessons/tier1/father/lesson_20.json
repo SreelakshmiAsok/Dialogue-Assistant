@@ -1,0 +1,20 @@
+{
+  "id": "father_20",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Milk",
+  "social_story": "Appa gives you a glass of milk in the morning.",
+  "question_tanglish": "Paal kudicha?",
+  "question_tamil": "பால் குடிச்சா?",
+  "expected_answers": [
+    "Kudichen appa",
+    "Kudichiten appa",
+    "Aama appa",
+    "Illa appa",
+    "Kudikuren appa"
+  ],
+  "model_answer": "Kudichen appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

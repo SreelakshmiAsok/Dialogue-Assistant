@@ -1,0 +1,20 @@
+{
+  "id": "teacher_25",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Doubt",
+  "social_story": "You have a doubt about the lesson. Teacher asks what your doubt is.",
+  "question_tanglish": "Enna doubt?",
+  "question_tamil": "என்ன டவுட்?",
+  "expected_answers": [
+    "Indha question puriyala teacher",
+    "Idhu puriyala teacher",
+    "Innum oru thara sollunga teacher",
+    "Doubt irukku teacher",
+    "Please explain teacher"
+  ],
+  "model_answer": "Indha question puriyala teacher",
+  "respect_required": true,
+  "difficulty": 3,
+  "tier": 1
+}

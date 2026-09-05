@@ -1,0 +1,23 @@
+{
+  "id": "father_01",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Shopping",
+  "social_story": "You are at home. Appa wants to go to the shop. He asks you to come with him.",
+  "question_tanglish": "En kooda kadaiki variya?",
+  "question_tamil": "என் கூட கடைக்கி வரியா?",
+  "expected_answers": [
+    "Varen appa",
+    "Varan appa",
+    "Varaen appa",
+    "Varraen appa",
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Varengo appa"
+  ],
+  "model_answer": "Varen appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

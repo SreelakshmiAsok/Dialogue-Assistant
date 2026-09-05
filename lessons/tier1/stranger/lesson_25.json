@@ -1,0 +1,21 @@
+{
+  "id": "stranger_25",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Goodbye",
+  "social_story": "A kind uncle helped you find your way. He says goodbye.",
+  "question_tanglish": "Seri, poi va, careful.",
+  "question_tamil": "சரி, போய் வா, கேர்ஃபுல்.",
+  "expected_answers": [
+    "Thank you sir",
+    "Thanks sir",
+    "Nandri sir",
+    "Romba nandri sir",
+    "Thank you uncle",
+    "Bye sir"
+  ],
+  "model_answer": "Thank you sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

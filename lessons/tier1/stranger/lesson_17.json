@@ -1,0 +1,20 @@
+{
+  "id": "stranger_17",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "School Ask",
+  "social_story": "A new neighbor asks which school you go to.",
+  "question_tanglish": "Enga school?",
+  "question_tamil": "எங்க ஸ்கூல்?",
+  "expected_answers": [
+    "Anga sir",
+    "Pakkathula sir",
+    "Near sir",
+    "Idho school sir",
+    "School peyar solluven sir"
+  ],
+  "model_answer": "Anga sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

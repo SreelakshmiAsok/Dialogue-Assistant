@@ -1,0 +1,26 @@
+{
+  "id": "teacher_02",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Homework",
+  "social_story": "Teacher is checking homework. She asks if you finished it.",
+  "question_tanglish": "Homework mudichacha?",
+  "question_tamil": "ஹோம்வொர்க் முடிச்சாச்சா?",
+  "expected_answers": [
+    "Aama teacher",
+    "Ama teacher",
+    "Aama ma'am",
+    "Mudichiten teacher",
+    "Mudichitten teacher",
+    "Mudichutten teacher",
+    "Mudichiten ma'am",
+    "Seri teacher",
+    "Aama sir",
+    "Yes teacher",
+    "Yes ma'am"
+  ],
+  "model_answer": "Aama teacher, mudichiten",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

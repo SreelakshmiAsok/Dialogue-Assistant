@@ -1,0 +1,20 @@
+{
+  "id": "father_04",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Books",
+  "social_story": "Appa is sitting in the hall. He asks you to bring his book from the table.",
+  "question_tanglish": "Book eduthu kudu.",
+  "question_tamil": "புக் எடுத்துக் குடு.",
+  "expected_answers": [
+    "Idho appa",
+    "Seri appa",
+    "Kudukuren appa",
+    "Eduthukuren appa",
+    "Aama appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

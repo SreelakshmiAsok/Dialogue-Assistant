@@ -1,0 +1,21 @@
+{
+  "id": "teacher_01",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Greeting",
+  "social_story": "You walk into the classroom in the morning. Teacher greets you.",
+  "question_tanglish": "Good morning! Ulla vaanga.",
+  "question_tamil": "குட் மார்னிங்! உள்ள வாங்க.",
+  "expected_answers": [
+    "Good morning teacher",
+    "Good morning miss",
+    "Good morning sir",
+    "Good morning ma'am",
+    "Vanakkam teacher",
+    "Vanakkam miss"
+  ],
+  "model_answer": "Good morning teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

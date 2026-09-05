@@ -1,0 +1,26 @@
+{
+  "id": "father_02",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Meals",
+  "social_story": "It is lunchtime. Appa asks if you have eaten your food.",
+  "question_tanglish": "Saaptiya?",
+  "question_tamil": "சாப்பிட்டியா?",
+  "required_communication": {
+    "intent": "AnswerQuestion",
+    "meaning": "Indicate whether they have eaten"
+  },
+  "preferred_phrases": [
+    "Saaptaen appa",
+    "Saapten appa",
+    "Saptaen appa",
+    "Sapten appa",
+    "Aama appa",
+    "Illa appa",
+    "Saaptuten appa",
+    "Saaptutten appa"
+  ],
+  "model_answer": "Saaptaen appa",
+  "difficulty": 1,
+  "tier": 1
+}

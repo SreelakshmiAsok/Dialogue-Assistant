@@ -1,0 +1,66 @@
+{
+  "id": "t2_teacher_04",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Answering politely",
+  "learning_objective": "Child answers when called upon.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)"
+  },
+  "scenario": "The teacher calls your name to answer a question.",
+  "initial_prompt": {
+    "tanglish": "2 plus 2 enna varum? Unakku theriyuma?",
+    "tamil": "2 ப்ளஸ் 2 என்ன வரும்? உனக்கு தெரியுமா?",
+    "english": "What is 2 plus 2? Do you know?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "2 plus 2 enna varum? Unakku theriyuma?",
+        "tamil": "2 ப்ளஸ் 2 என்ன வரும்? உனக்கு தெரியுமா?",
+        "english": "What is 2 plus 2? Do you know?"
+      },
+      "expected_responses": [
+        "4 miss",
+        "Four teacher",
+        "Four ma'am"
+      ],
+      "model_answer": "Four miss",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Very good! Correct answer.",
+        "tamil": "வெரி குட்! கரெக்ட் ஆன்சர்.",
+        "english": "Very good! Correct answer."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Very good! Correct answer.",
+        "tamil": "வெரி குட்! கரெக்ட் ஆன்சர்.",
+        "english": "Very good! Correct answer."
+      },
+      "expected_responses": [
+        "Thank you miss",
+        "Thanks teacher",
+        "Seri miss"
+      ],
+      "model_answer": "Thank you miss",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Ok ukaaru.",
+        "tamil": "ஓகே உக்காரு.",
+        "english": "Ok sit down."
+      },
+      "is_terminal": true
+    }
+  ]
+}

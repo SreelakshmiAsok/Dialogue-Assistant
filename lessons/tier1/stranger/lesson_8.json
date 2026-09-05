@@ -1,0 +1,21 @@
+{
+  "id": "stranger_08",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Hotel",
+  "social_story": "A hungry person asks you where a hotel (restaurant) is.",
+  "question_tanglish": "Hotel enga iruku?",
+  "question_tamil": "ஹோட்டல் எங்க இருக்கு?",
+  "expected_answers": [
+    "Opposite la sir",
+    "Ethir pakkam sir",
+    "Straight sir",
+    "Theriyadhu sir",
+    "Anga sir",
+    "Near bus stand sir"
+  ],
+  "model_answer": "Anga irukku sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

@@ -1,0 +1,20 @@
+{
+  "id": "stranger_23",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Compliment",
+  "social_story": "An aunty in the neighborhood says you look nice today.",
+  "question_tanglish": "Romba azhaga irukke!",
+  "question_tamil": "ரொம்ப அழகா இருக்கே!",
+  "expected_answers": [
+    "Thank you aunty",
+    "Thanks aunty",
+    "Nandri aunty",
+    "Thank you sir",
+    "Thanks"
+  ],
+  "model_answer": "Thank you aunty",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

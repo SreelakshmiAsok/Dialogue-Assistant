@@ -1,0 +1,20 @@
+{
+  "id": "stranger_24",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Water Request",
+  "social_story": "A thirsty person asks you if they can get water nearby.",
+  "question_tanglish": "Thanni kidaikuma inga?",
+  "question_tamil": "தண்ணி கிடைக்குமா இங்க?",
+  "expected_answers": [
+    "Anga sir",
+    "Kadai la sir",
+    "Inga irukku sir",
+    "Theriyadhu sir",
+    "Idho sir"
+  ],
+  "model_answer": "Anga irukku sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

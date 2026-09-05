@@ -1,0 +1,19 @@
+{
+  "id": "father_21",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Shoes",
+  "social_story": "You are going out. Appa asks you to wear your shoes.",
+  "question_tanglish": "Shoes podu.",
+  "question_tamil": "ஷூஸ் போடு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Poduren appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

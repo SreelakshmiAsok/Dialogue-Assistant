@@ -1,0 +1,21 @@
+{
+  "id": "friend_25",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Bye",
+  "social_story": "It is time to go home. Your friend says bye to you.",
+  "question_tanglish": "Bye da, naalaikku paappom.",
+  "question_tamil": "பை டா, நாளைக்கு பாப்போம்.",
+  "expected_answers": [
+    "Bye da",
+    "Seri da bye",
+    "Naalaikku paappom da",
+    "Ok da bye",
+    "Bye machi",
+    "Ta da"
+  ],
+  "model_answer": "Bye da, naalaikku paappom",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

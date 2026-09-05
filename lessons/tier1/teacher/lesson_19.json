@@ -1,0 +1,20 @@
+{
+  "id": "teacher_19",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Thank You",
+  "social_story": "Teacher helped you solve a difficult math problem.",
+  "question_tanglish": "Ippo purinjutha?",
+  "question_tamil": "இப்போ புரிஞ்சுதா?",
+  "expected_answers": [
+    "Purinjuthu teacher thank you",
+    "Purinjuchu teacher",
+    "Aama teacher nandri",
+    "Thank you teacher",
+    "Purinjuthu teacher"
+  ],
+  "model_answer": "Purinjuthu teacher, thank you",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

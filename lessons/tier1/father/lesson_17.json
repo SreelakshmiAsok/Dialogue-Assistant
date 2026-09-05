@@ -1,0 +1,19 @@
+{
+  "id": "father_17",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Temple",
+  "social_story": "It is Friday. Appa asks if you want to come to the temple.",
+  "question_tanglish": "Kovilukku variya?",
+  "question_tamil": "கோவிலுக்கு வரியா?",
+  "expected_answers": [
+    "Varen appa",
+    "Seri appa",
+    "Aama appa",
+    "Polaam appa"
+  ],
+  "model_answer": "Varen appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

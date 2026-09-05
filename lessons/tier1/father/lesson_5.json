@@ -1,0 +1,23 @@
+{
+  "id": "father_05",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Homework",
+  "social_story": "You come home from school. Appa asks if you finished your homework.",
+  "question_tanglish": "Homework mudichacha?",
+  "question_tamil": "ஹோம்வொர்க் முடிச்சாச்சா?",
+  "expected_answers": [
+    "Aama appa",
+    "Mudichiten appa",
+    "Mudichitten appa",
+    "Mudichutten appa",
+    "Seri appa",
+    "Illa appa",
+    "Pannuren appa",
+    "Illai appa"
+  ],
+  "model_answer": "Mudichiten appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,20 @@
+{
+  "id": "stranger_15",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Help",
+  "social_story": "An elderly person drops their bag. They ask for your help.",
+  "question_tanglish": "Konjam help pannuva?",
+  "question_tamil": "கொஞ்சம் ஹெல்ப் பண்ணுவா?",
+  "expected_answers": [
+    "Seri sir",
+    "Pannuren sir",
+    "Aama sir",
+    "Idho sir",
+    "Kudukuren sir"
+  ],
+  "model_answer": "Seri sir, pannuren",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

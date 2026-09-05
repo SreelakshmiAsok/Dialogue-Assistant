@@ -1,0 +1,20 @@
+{
+  "id": "teacher_18",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Exam",
+  "social_story": "Exam is next week. Teacher asks if you are preparing well.",
+  "question_tanglish": "Exam ku prepare panriya?",
+  "question_tamil": "எக்ஸாம் க்கு ப்ரிபேர் பண்றியா?",
+  "expected_answers": [
+    "Aama teacher",
+    "Pannuren teacher",
+    "Padikkuren teacher",
+    "Yes teacher",
+    "Prepare pannuren teacher"
+  ],
+  "model_answer": "Aama teacher, padikkuren",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

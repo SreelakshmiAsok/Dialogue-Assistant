@@ -1,0 +1,19 @@
+{
+  "id": "stranger_16",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Name",
+  "social_story": "A new person in your street asks your name.",
+  "question_tanglish": "Unoda peyar enna?",
+  "question_tamil": "உனோட பெயர் என்ன?",
+  "expected_answers": [
+    "En peyar sir",
+    "Solluven sir",
+    "En peyar",
+    "Peyar solluven sir"
+  ],
+  "model_answer": "En peyar ... sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

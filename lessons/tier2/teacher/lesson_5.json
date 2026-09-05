@@ -1,0 +1,66 @@
+{
+  "id": "t2_teacher_05",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Requesting sensory break",
+  "learning_objective": "Child politely requests a sensory break.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)"
+  },
+  "scenario": "The classroom is very noisy and you feel overwhelmed. You want 5 minutes of quiet time.",
+  "initial_prompt": {
+    "tanglish": "Ellarum group activity pannunga.",
+    "tamil": "எல்லாரும் குரூப் ஆக்டிவிட்டி பண்ணுங்க.",
+    "english": "Everyone do the group activity."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Ellarum group activity pannunga.",
+        "tamil": "எல்லாரும் குரூப் ஆக்டிவிட்டி பண்ணுங்க.",
+        "english": "Everyone do the group activity."
+      },
+      "expected_responses": [
+        "Miss, enaku konjam quiet time venum",
+        "Teacher, sathama irukku naan veliya polama",
+        "Miss, 5 minutes break venum"
+      ],
+      "model_answer": "Miss, enaku konjam quiet time venum",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Ennachu ma? Satham jasthiya irukka?",
+        "tamil": "என்னாச்சு மா? சத்தம் ஜாஸ்தியா இருக்கா?",
+        "english": "What happened? Is it too noisy?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Ennachu ma? Satham jasthiya irukka?",
+        "tamil": "என்னாச்சு மா? சத்தம் ஜாஸ்தியா இருக்கா?",
+        "english": "What happened? Is it too noisy?"
+      },
+      "expected_responses": [
+        "Aama miss",
+        "Yes teacher",
+        "Thala valikkudhu miss"
+      ],
+      "model_answer": "Aama miss",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seri, 5 minutes veliya irundhuttu vaanga.",
+        "tamil": "சரி, 5 மினிட்ஸ் வெளிய இருந்துட்டு வாங்க.",
+        "english": "Ok, stay outside for 5 minutes and come back."
+      },
+      "is_terminal": true
+    }
+  ]
+}

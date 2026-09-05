@@ -1,0 +1,66 @@
+{
+  "id": "t2_father_04",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Meal manners",
+  "learning_objective": "Child expresses food preference politely.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™"
+  },
+  "scenario": "Appa is serving you vegetables that you don't like.",
+  "initial_prompt": {
+    "tanglish": "Indha carrot saapdu, udambukku nalladhu.",
+    "tamil": "இந்த கேரட் சாப்பிடு, உடம்புக்கு நல்லது.",
+    "english": "Eat this carrot, it's good for health."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Indha carrot saapdu, udambukku nalladhu.",
+        "tamil": "இந்த கேரட் சாப்பிடு, உடம்புக்கு நல்லது.",
+        "english": "Eat this carrot, it's good for health."
+      },
+      "expected_responses": [
+        "Appa enaku konjam podhum",
+        "Enaku idhu pudikadhu appa, konjam dhaan venum",
+        "Ok appa konjam mattum saapduren"
+      ],
+      "model_answer": "Enaku carrot pudikadhu appa, aana konjam saapduren",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seri konjam mattum saapdu, next time vera seiyalam.",
+        "tamil": "சரி கொஞ்சம் மட்டும் சாப்பிடு, நெக்ஸ்ட் டைம் வேற செய்யலாம்.",
+        "english": "Ok eat a little bit, next time we will make something else."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Seri konjam mattum saapdu, next time vera seiyalam.",
+        "tamil": "சரி கொஞ்சம் மட்டும் சாப்பிடு, நெக்ஸ்ட் டைம் வேற செய்யலாம்.",
+        "english": "Ok eat a little bit, next time we will make something else."
+      },
+      "expected_responses": [
+        "Thank you appa",
+        "Seri appa",
+        "Ok appa"
+      ],
+      "model_answer": "Thank you appa",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Good boy/girl.",
+        "tamil": "குட் பாய்/கேர்ள்.",
+        "english": "Good boy/girl."
+      },
+      "is_terminal": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "stranger_21",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Lost",
+  "social_story": "You got separated from your parent. A kind person asks if you are okay.",
+  "question_tanglish": "Nee ok va? Yaaru kooda vandha?",
+  "question_tamil": "நீ ஓகே வா? யாரு கூட வந்த?",
+  "expected_answers": [
+    "Appa kooda sir",
+    "Amma kooda sir",
+    "En appa sir",
+    "En amma sir",
+    "Parent kooda sir"
+  ],
+  "model_answer": "Appa kooda vandhen sir",
+  "respect_required": true,
+  "difficulty": 3,
+  "tier": 1
+}

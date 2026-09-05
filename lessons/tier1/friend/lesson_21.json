@@ -1,0 +1,20 @@
+{
+  "id": "friend_21",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Kite",
+  "social_story": "It is a windy day. Your friend asks if you want to fly kites.",
+  "question_tanglish": "Pattam vidalaama?",
+  "question_tamil": "பட்டம் விடலாமா?",
+  "expected_answers": [
+    "Vidalaama",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Polaam da"
+  ],
+  "model_answer": "Va da, vidalaama",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

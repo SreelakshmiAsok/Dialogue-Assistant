@@ -1,0 +1,63 @@
+{
+  "id": "t2_friend_05",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Handling a disagreement",
+  "learning_objective": "Child handles losing gracefully.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+  },
+  "scenario": "You were playing a running race and your friend won.",
+  "initial_prompt": {
+    "tanglish": "Naan dhaan first vandhen! Naan win panniten!",
+    "tamil": "நான் தான் ஃபர்ஸ்ட் வந்தேன்! நான் வின் பண்ணிட்டேன்!",
+    "english": "I came first! I won!"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Naan dhaan first vandhen! Naan win panniten!",
+        "tamil": "நான் தான் ஃபர்ஸ்ட் வந்தேன்! நான் வின் பண்ணிட்டேன்!",
+        "english": "I came first! I won!"
+      },
+      "expected_responses": [
+        "Congrats da",
+        "Super da",
+        "Nalla odina",
+        "Next time naan jeyippen"
+      ],
+      "model_answer": "Congrats da, super ah odina",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Thanks da! Neeyum nalla odina.",
+        "tamil": "தேங்க்ஸ் டா! நீயும் நல்லா ஓடின.",
+        "english": "Thanks! You ran well too."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Thanks da! Neeyum nalla odina.",
+        "tamil": "தேங்க்ஸ் டா! நீயும் நல்லா ஓடின.",
+        "english": "Thanks! You ran well too."
+      },
+      "expected_responses": [
+        "Innoru match polama?",
+        "Thank you",
+        "Seri da"
+      ],
+      "model_answer": "Innoru match polama?",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Seri vaa, innoru round povom!",
+        "tamil": "சரி வா, இன்னொரு ரவுண்ட் போவோம்!",
+        "english": "Okay come, let's go for another round!"
+      },
+      "is_terminal": true
+    }
+  ]
+}

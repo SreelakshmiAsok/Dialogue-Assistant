@@ -1,0 +1,67 @@
+{
+  "id": "t2_teacher_01",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Asking permission",
+  "learning_objective": "Child asks permission nicely.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)"
+  },
+  "scenario": "You are in class and need to use the restroom.",
+  "initial_prompt": {
+    "tanglish": "Students, board la irukuradha ezhudhunga.",
+    "tamil": "ஸ்டுடென்ட்ஸ், போர்ட் ல இருக்குறத எழுதுங்க.",
+    "english": "Students, write down what's on the board."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Students, board la irukuradha ezhudhunga.",
+        "tamil": "ஸ்டுடென்ட்ஸ், போர்ட் ல இருக்குறத எழுதுங்க.",
+        "english": "Students, write down what's on the board."
+      },
+      "expected_responses": [
+        "Miss, bathroom polama?",
+        "Restroom ponum miss",
+        "Teacher, restroom polama?"
+      ],
+      "model_answer": "Teacher, restroom polama?",
+      "required_features": [
+        "Honorific",
+        "RestroomIntent"
+      ],
+      "next_character_reply": {
+        "tanglish": "Ok, seekiram poitu vaanga.",
+        "tamil": "ஓகே, சீக்கிரம் போய்ட்டு வாங்க.",
+        "english": "Ok, go quickly and come back."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Ok, seekiram poitu vaanga.",
+        "tamil": "ஓகே, சீக்கிரம் போய்ட்டு வாங்க.",
+        "english": "Ok, go quickly and come back."
+      },
+      "expected_responses": [
+        "Seri miss",
+        "Thank you miss",
+        "Ok teacher"
+      ],
+      "model_answer": "Thank you miss",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Careful ah ponga.",
+        "tamil": "கேர்ஃபுல் ஆ போங்க.",
+        "english": "Go carefully."
+      },
+      "is_terminal": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "teacher_09",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Reading",
+  "social_story": "It is reading time. Teacher asks you to read aloud.",
+  "question_tanglish": "Read pannunga.",
+  "question_tamil": "ரீட் பண்ணுங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Padikuren teacher",
+    "Aama teacher",
+    "Ok teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

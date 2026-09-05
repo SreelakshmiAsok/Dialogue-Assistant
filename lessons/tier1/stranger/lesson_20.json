@@ -1,0 +1,21 @@
+{
+  "id": "stranger_20",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Auto",
+  "social_story": "You need to take an auto. The auto driver asks where you want to go.",
+  "question_tanglish": "Enga ponum?",
+  "question_tamil": "எங்க போணும்?",
+  "expected_answers": [
+    "School sir",
+    "Veetukku sir",
+    "Bus stand sir",
+    "Hospital sir",
+    "Kovil sir",
+    "Market sir"
+  ],
+  "model_answer": "School sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

@@ -1,0 +1,19 @@
+{
+  "id": "father_18",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Dress",
+  "social_story": "You are going to a family function. Appa asks you to wear nice clothes.",
+  "question_tanglish": "Nalla dress podu.",
+  "question_tamil": "நல்ல ட்ரெஸ் போடு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Poduren appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,20 @@
+{
+  "id": "friend_09",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Shopping",
+  "social_story": "Your friend wants to go to the nearby shop to buy something.",
+  "question_tanglish": "Shopping polaama?",
+  "question_tamil": "ஷாப்பிங் போலாமா?",
+  "expected_answers": [
+    "Polaam da",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Ok da"
+  ],
+  "model_answer": "Polaam da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

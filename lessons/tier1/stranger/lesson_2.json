@@ -1,0 +1,23 @@
+{
+  "id": "stranger_02",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Bus Stand",
+  "social_story": "An uncle asks you where the bus stand is.",
+  "question_tanglish": "Bus stand enga?",
+  "question_tamil": "பஸ் ஸ்டாண்ட் எங்க?",
+  "expected_answers": [
+    "Straight poonga sir",
+    "Straight sir",
+    "Left la sir",
+    "Right la sir",
+    "Theriyadhu sir",
+    "Anga sir",
+    "Idho sir",
+    "Munnaadi sir"
+  ],
+  "model_answer": "Straight poonga sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

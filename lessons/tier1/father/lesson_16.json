@@ -1,0 +1,19 @@
+{
+  "id": "father_16",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Studies",
+  "social_story": "Exam is coming next week. Appa asks if you are studying well.",
+  "question_tanglish": "Nalla padikkuriya?",
+  "question_tamil": "நல்லா படிக்குறியா?",
+  "expected_answers": [
+    "Aama appa",
+    "Padikkuren appa",
+    "Nalla padikkuren appa",
+    "Seri appa"
+  ],
+  "model_answer": "Aama appa, padikkuren",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

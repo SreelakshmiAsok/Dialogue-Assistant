@@ -1,0 +1,19 @@
+{
+  "id": "teacher_14",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Write",
+  "social_story": "Teacher dictates notes. She asks you to write them down.",
+  "question_tanglish": "Ezhudhunga.",
+  "question_tamil": "எழுதுங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Ezhuthuren teacher",
+    "Aama teacher",
+    "Ok teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,21 @@
+{
+  "id": "teacher_04",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Understanding",
+  "social_story": "Teacher just explained a math problem. She asks if you understood.",
+  "question_tanglish": "Question purinjutha?",
+  "question_tamil": "கேள்வி புரிஞ்சுதா?",
+  "expected_answers": [
+    "Purinjuthu teacher",
+    "Purinjudhu teacher",
+    "Aama teacher",
+    "Puriyala teacher",
+    "Innum oru thara sollunga teacher",
+    "Purinjuchu teacher"
+  ],
+  "model_answer": "Purinjuthu teacher",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

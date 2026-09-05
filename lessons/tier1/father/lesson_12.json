@@ -1,0 +1,19 @@
+{
+  "id": "father_12",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Cleaning",
+  "social_story": "Your room is messy. Appa asks you to clean your room.",
+  "question_tanglish": "Room clean pannu.",
+  "question_tamil": "ரூம் க்ளீன் பண்ணு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Pannuren appa",
+    "Ok appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

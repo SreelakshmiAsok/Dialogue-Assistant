@@ -1,0 +1,64 @@
+{
+  "id": "t2_stranger_03",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Direction request refusal",
+  "learning_objective": "Child politey refuses to give directions or leave safe zone.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+  },
+  "scenario": "A stranger asks you for directions to a hospital.",
+  "initial_prompt": {
+    "tanglish": "Indha hospital enga irukku nu theriyuma?",
+    "tamil": "இந்த ஹாஸ்பிடல் எங்க இருக்கு னு தெரியுமா?",
+    "english": "Do you know where this hospital is?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Indha hospital enga irukku nu theriyuma?",
+        "tamil": "இந்த ஹாஸ்பிடல் எங்க இருக்கு னு தெரியுமா?",
+        "english": "Do you know where this hospital is?"
+      },
+      "expected_responses": [
+        "Theriyadhu sir",
+        "Enaku theriyadhu",
+        "Enga appa kitta kelunga"
+      ],
+      "model_answer": "Enaku theriyadhu sir.",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Konjam vandhu vazhi kaatu.",
+        "tamil": "கொஞ்சம் வந்து வழி காட்டு.",
+        "english": "Come and show me the way."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Konjam vandhu vazhi kaatu.",
+        "tamil": "கொஞ்சம் வந்து வழி காட்டு.",
+        "english": "Come and show me the way."
+      },
+      "expected_responses": [
+        "No naan vara maaten",
+        "Vera yar kitta yavadhu kelunga",
+        "Theriyadhu"
+      ],
+      "model_answer": "No, naan vara maaten. Vera yaravathu kitta kelunga.",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seri naan vera yar kitta aavadhu kekuren.",
+        "tamil": "சரி நான் வேற யார் கிட்ட ஆவது கேக்குறேன்.",
+        "english": "Ok I will ask someone else."
+      },
+      "is_terminal": true
+    }
+  ]
+}

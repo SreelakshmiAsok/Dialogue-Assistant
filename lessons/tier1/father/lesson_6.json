@@ -1,0 +1,20 @@
+{
+  "id": "father_06",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Water",
+  "social_story": "Appa is thirsty. He asks you to bring a glass of water.",
+  "question_tanglish": "Thanni kondu va.",
+  "question_tamil": "தண்ணி கொண்டு வா.",
+  "expected_answers": [
+    "Seri appa",
+    "Idho appa",
+    "Konduvaren appa",
+    "Aama appa",
+    "Konduraren appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

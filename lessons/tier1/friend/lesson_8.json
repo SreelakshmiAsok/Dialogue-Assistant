@@ -1,0 +1,20 @@
+{
+  "id": "friend_08",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Sharing",
+  "social_story": "You have two chocolates. Your friend asks if you can share one.",
+  "question_tanglish": "Oru chocolate kudutha?",
+  "question_tamil": "ஒரு சாக்லேட் குடுத்தா?",
+  "expected_answers": [
+    "Idho da",
+    "Seri da eduthuko",
+    "Eduthuko da",
+    "Kudukuren da",
+    "Aama da"
+  ],
+  "model_answer": "Idho da, eduthuko",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

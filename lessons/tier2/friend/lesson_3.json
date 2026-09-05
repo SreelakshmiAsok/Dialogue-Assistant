@@ -1,0 +1,64 @@
+{
+  "id": "t2_friend_03",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Giving a compliment",
+  "learning_objective": "Child gives a sincere compliment.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+  },
+  "scenario": "Your friend shows you a drawing they made.",
+  "initial_prompt": {
+    "tanglish": "En drawing epdi irukku?",
+    "tamil": "என் டிராயிங் எப்படி இருக்கு?",
+    "english": "How is my drawing?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "En drawing epdi irukku?",
+        "tamil": "என் டிராயிங் எப்படி இருக்கு?",
+        "english": "How is my drawing?"
+      },
+      "expected_responses": [
+        "Super ah irukku",
+        "Nalla irukku",
+        "Very nice"
+      ],
+      "model_answer": "Super ah irukku da",
+      "required_features": [
+        "Acceptance"
+      ],
+      "next_character_reply": {
+        "tanglish": "Thanks da! Idhu oru superhero.",
+        "tamil": "தேங்க்ஸ் டா! இது ஒரு சூப்பர் ஹீரோ.",
+        "english": "Thanks! It's a superhero."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Thanks da! Idhu oru superhero.",
+        "tamil": "தேங்க்ஸ் டா! இது ஒரு சூப்பர் ஹீரோ.",
+        "english": "Thanks! It's a superhero."
+      },
+      "expected_responses": [
+        "Wow super",
+        "Enakkum varaithariya?",
+        "Nalla color"
+      ],
+      "model_answer": "Wow super",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Vaa rendu perum serndhu varayalam.",
+        "tamil": "வா ரெண்டு பேரும் சேர்ந்து வரையலாம்.",
+        "english": "Come let's draw together."
+      },
+      "is_terminal": true
+    }
+  ]
+}

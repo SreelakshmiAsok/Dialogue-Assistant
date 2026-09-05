@@ -1,0 +1,20 @@
+{
+  "id": "father_07",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Punctuality",
+  "social_story": "It is morning. You are getting ready for school. Appa tells you not to be late.",
+  "question_tanglish": "Late aagidathe.",
+  "question_tamil": "லேட் ஆகிடாதே.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Aagamaaten appa",
+    "Ready appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,21 @@
+{
+  "id": "friend_03",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Food",
+  "social_story": "It is break time at school. Your friend asks if you want to eat together.",
+  "question_tanglish": "Saapdalama?",
+  "question_tamil": "சாப்பிடலாமா?",
+  "expected_answers": [
+    "Sapdalaam",
+    "Saapdalaam da",
+    "Va da",
+    "Seri da",
+    "Polaam da",
+    "Aama da"
+  ],
+  "model_answer": "Sapdalaam da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

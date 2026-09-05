@@ -1,0 +1,21 @@
+{
+  "id": "teacher_13",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Answer",
+  "social_story": "Teacher asks a question in class. She asks if you know the answer.",
+  "question_tanglish": "Ivukku answer theriyuma?",
+  "question_tamil": "இதுக்கு ஆன்சர் தெரியுமா?",
+  "expected_answers": [
+    "Theriyum teacher",
+    "Theriyum miss",
+    "Theriyadhu teacher",
+    "Theriyadhu miss",
+    "Aama teacher",
+    "Yes teacher"
+  ],
+  "model_answer": "Theriyum teacher",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

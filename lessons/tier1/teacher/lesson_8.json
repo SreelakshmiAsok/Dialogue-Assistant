@@ -1,0 +1,21 @@
+{
+  "id": "teacher_08",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Assignment",
+  "social_story": "Teacher asks if you completed the class assignment.",
+  "question_tanglish": "Assignment complete pannittiya?",
+  "question_tamil": "அசைன்மென்ட் கம்ப்ளீட் பண்ணிட்டியா?",
+  "expected_answers": [
+    "Panniten teacher",
+    "Pannitten teacher",
+    "Aama teacher",
+    "Complete teacher",
+    "Yes teacher",
+    "Mudichiten teacher"
+  ],
+  "model_answer": "Panniten teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

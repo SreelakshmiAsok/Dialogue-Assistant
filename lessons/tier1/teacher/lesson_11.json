@@ -1,0 +1,20 @@
+{
+  "id": "teacher_11",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Attendance",
+  "social_story": "Teacher is taking attendance. She calls your name.",
+  "question_tanglish": "Present ah?",
+  "question_tamil": "ப்ரசண்ட் ஆ?",
+  "expected_answers": [
+    "Present teacher",
+    "Present miss",
+    "Present ma'am",
+    "Yes teacher",
+    "Irukken teacher"
+  ],
+  "model_answer": "Present teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

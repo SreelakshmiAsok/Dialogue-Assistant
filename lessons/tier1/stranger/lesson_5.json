@@ -1,0 +1,21 @@
+{
+  "id": "stranger_05",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Library",
+  "social_story": "A person asks you where the library is.",
+  "question_tanglish": "Library enga?",
+  "question_tamil": "லைப்ரெரி எங்க?",
+  "expected_answers": [
+    "Left la sir",
+    "Left sir",
+    "Right la sir",
+    "Straight sir",
+    "Theriyadhu sir",
+    "Anga sir"
+  ],
+  "model_answer": "Left la sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

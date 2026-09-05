@@ -1,0 +1,20 @@
+{
+  "id": "teacher_23",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Sports",
+  "social_story": "It is sports period. Teacher asks if you want to play.",
+  "question_tanglish": "Sports period, aadalaama?",
+  "question_tamil": "ஸ்போர்ட்ஸ் பீரியட், ஆடலாமா?",
+  "expected_answers": [
+    "Aama teacher",
+    "Aadalaam teacher",
+    "Seri teacher",
+    "Yes teacher",
+    "Ready teacher"
+  ],
+  "model_answer": "Aama teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

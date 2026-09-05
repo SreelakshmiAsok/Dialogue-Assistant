@@ -1,0 +1,21 @@
+{
+  "id": "stranger_06",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Railway",
+  "social_story": "A traveler with bags asks you for the railway station.",
+  "question_tanglish": "Railway station enga?",
+  "question_tamil": "ரெயில்வே ஸ்டேஷன் எங்க?",
+  "expected_answers": [
+    "Right la sir",
+    "Right sir",
+    "Left la sir",
+    "Straight sir",
+    "Theriyadhu sir",
+    "Anga sir"
+  ],
+  "model_answer": "Right la sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,66 @@
+{
+  "id": "t2_stranger_04",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Refusing personal info",
+  "learning_objective": "Child refuses to give personal information.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+  },
+  "scenario": "A stranger asks for your home address or phone number.",
+  "initial_prompt": {
+    "tanglish": "Un peru enna? Un veedu enga irukku?",
+    "tamil": "உன் பேரு என்ன? உன் வீடு எங்க இருக்கு?",
+    "english": "What is your name? Where is your house?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Un peru enna? Un veedu enga irukku?",
+        "tamil": "உன் பேரு என்ன? உன் வீடு எங்க இருக்கு?",
+        "english": "What is your name? Where is your house?"
+      },
+      "expected_responses": [
+        "Sollamaten",
+        "Enaku unga kitta pesa koodadhu",
+        "No"
+      ],
+      "model_answer": "Naan sollamaten",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "Thappa nenaikadha, naan unga appa friend.",
+        "tamil": "தப்பா நினைக்காத, நான் உங்க அப்பா ஃப்ரெண்ட்.",
+        "english": "Don't mistake me, I am your dad's friend."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Thappa nenaikadha, naan unga appa friend.",
+        "tamil": "தப்பா நினைக்காத, நான் உங்க அப்பா ஃப்ரெண்ட்.",
+        "english": "Don't mistake me, I am your dad's friend."
+      },
+      "expected_responses": [
+        "Aana amma kitta kekanum",
+        "No naan sollamaten",
+        "Appa kitte poi kelunga"
+      ],
+      "model_answer": "No, naan sollamaten.",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "(Stranger leaves).",
+        "tamil": "(ஸ்ட்ரேஞ்சர் செல்கிறார்).",
+        "english": "(Stranger leaves)."
+      },
+      "is_terminal": true
+    }
+  ]
+}

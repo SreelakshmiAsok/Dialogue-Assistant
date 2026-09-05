@@ -1,0 +1,66 @@
+{
+  "id": "t2_teacher_03",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Apologizing",
+  "learning_objective": "Child apologizes respectfully.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)"
+  },
+  "scenario": "You forgot to bring your English book to class.",
+  "initial_prompt": {
+    "tanglish": "English book open pannunga.",
+    "tamil": "இங்கிலீஷ் புக் ஓபன் பண்ணுங்க.",
+    "english": "Open your English book."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "English book open pannunga.",
+        "tamil": "இங்கிலீஷ் புக் ஓபன் பண்ணுங்க.",
+        "english": "Open your English book."
+      },
+      "expected_responses": [
+        "Miss, naan book marandhuten",
+        "Teacher, book eduthutu varala",
+        "Sorry miss book kondu varala"
+      ],
+      "model_answer": "Sorry miss, naan book marandhuten",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Oh, seri pakkathu student kooda share pannikonga.",
+        "tamil": "ஓ, சரி பக்கத்து ஸ்டுடென்ட் கூட ஷேர் பண்ணிக்கோங்க.",
+        "english": "Oh, ok share with the student next to you."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Oh, seri pakkathu student kooda share pannikonga.",
+        "tamil": "ஓ, சரி பக்கத்து ஸ்டுடென்ட் கூட ஷேர் பண்ணிக்கோங்க.",
+        "english": "Oh, ok share with the student next to you."
+      },
+      "expected_responses": [
+        "Seri miss",
+        "Thank you teacher",
+        "Ok miss"
+      ],
+      "model_answer": "Seri miss, thank you",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Naalaikku marakkama eduthutu vaanga.",
+        "tamil": "நாளைக்கு மறக்காம எடுத்துட்டு வாங்க.",
+        "english": "Bring it without fail tomorrow."
+      },
+      "is_terminal": true
+    }
+  ]
+}

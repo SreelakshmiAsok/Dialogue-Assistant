@@ -1,0 +1,20 @@
+{
+  "id": "stranger_18",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Excuse Me",
+  "social_story": "You need to pass through a crowded area. You need to say excuse me.",
+  "question_tanglish": "Vazhividunga.",
+  "question_tamil": "வழிவிடுங்க.",
+  "expected_answers": [
+    "Excuse me sir",
+    "Excuse me",
+    "Please sir",
+    "Konjam vazhividunga sir",
+    "Sorry sir"
+  ],
+  "model_answer": "Excuse me sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

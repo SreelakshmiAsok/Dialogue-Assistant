@@ -1,0 +1,20 @@
+{
+  "id": "teacher_03",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Notebook",
+  "social_story": "Teacher asks you to give your notebook for correction.",
+  "question_tanglish": "Notebook kudunga.",
+  "question_tamil": "நோட்புக் குடுங்க.",
+  "expected_answers": [
+    "Idho teacher",
+    "Idho miss",
+    "Idho ma'am",
+    "Seri teacher",
+    "Kudukuren teacher"
+  ],
+  "model_answer": "Idho teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

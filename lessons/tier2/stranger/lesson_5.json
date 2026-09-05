@@ -1,0 +1,65 @@
+{
+  "id": "t2_stranger_05",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Emergency response",
+  "learning_objective": "Child responds to an emergency correctly.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+  },
+  "scenario": "A stranger is following you while you are walking.",
+  "initial_prompt": {
+    "tanglish": "Hey, nillu enga pora?",
+    "tamil": "ஹேய், நில்லு எங்க போற?",
+    "english": "Hey, stop, where are you going?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Hey, nillu enga pora?",
+        "tamil": "ஹேய், நில்லு எங்க போற?",
+        "english": "Hey, stop, where are you going?"
+      },
+      "expected_responses": [
+        "No",
+        "Help",
+        "Don't follow me",
+        "Amma!"
+      ],
+      "model_answer": "No! (Walk away fast)",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "Nillu, oru nimisham.",
+        "tamil": "நில்லு, ஒரு நிமிஷம்.",
+        "english": "Stop, one minute."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Nillu, oru nimisham.",
+        "tamil": "நில்லு, ஒரு நிமிஷம்.",
+        "english": "Stop, one minute."
+      },
+      "expected_responses": [
+        "Help!",
+        "Yarachum kaapathunga",
+        "Amma appa"
+      ],
+      "model_answer": "Help! Yarachum kaapathunga!",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "(People come, stranger runs away).",
+        "tamil": "(மக்கள் வருகிறார்கள், ஸ்ட்ரேஞ்சர் ஓடுகிறார்).",
+        "english": "(People come, stranger runs away)."
+      },
+      "is_terminal": true
+    }
+  ]
+}

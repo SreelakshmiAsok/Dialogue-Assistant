@@ -1,0 +1,21 @@
+{
+  "id": "father_09",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "School",
+  "social_story": "You come back from school. Appa asks how your day at school was.",
+  "question_tanglish": "School epdi irundhudhu?",
+  "question_tamil": "ஸ்கூல் எப்படி இருந்துச்சு?",
+  "expected_answers": [
+    "Nalla irundhudhu appa",
+    "Nallaa irundhudhu appa",
+    "Nalla irundhuchu appa",
+    "Super appa",
+    "Romba nalla irundhuchu appa",
+    "Ok irundhudhu appa"
+  ],
+  "model_answer": "Nalla irundhudhu appa",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

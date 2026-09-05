@@ -1,0 +1,19 @@
+{
+  "id": "teacher_22",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Cleaning",
+  "social_story": "The classroom is messy. Teacher asks everyone to clean up.",
+  "question_tanglish": "Class clean pannunga.",
+  "question_tamil": "கிளாஸ் க்ளீன் பண்ணுங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Aama teacher",
+    "Pannuren teacher",
+    "Ok teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

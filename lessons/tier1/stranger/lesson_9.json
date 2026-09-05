@@ -1,0 +1,20 @@
+{
+  "id": "stranger_09",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - School",
+  "social_story": "A parent asks you where the school is.",
+  "question_tanglish": "School enga?",
+  "question_tamil": "ஸ்கூல் எங்க?",
+  "expected_answers": [
+    "Munnaadi sir",
+    "Straight poonga sir",
+    "Left la sir",
+    "Anga sir",
+    "Theriyadhu sir"
+  ],
+  "model_answer": "Munnaadi sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

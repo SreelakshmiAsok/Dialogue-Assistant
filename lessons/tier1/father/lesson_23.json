@@ -1,0 +1,19 @@
+{
+  "id": "father_23",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Helping",
+  "social_story": "Appa is carrying heavy bags. He asks you to help.",
+  "question_tanglish": "Konjam help pannu.",
+  "question_tamil": "கொஞ்சம் ஹெல்ப் பண்ணு.",
+  "expected_answers": [
+    "Seri appa",
+    "Varen appa",
+    "Aama appa",
+    "Pannuren appa"
+  ],
+  "model_answer": "Seri appa, varen",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

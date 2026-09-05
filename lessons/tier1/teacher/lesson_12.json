@@ -1,0 +1,20 @@
+{
+  "id": "teacher_12",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Permission",
+  "social_story": "You need to go to the bathroom. Teacher asks what you need.",
+  "question_tanglish": "Enna venum?",
+  "question_tamil": "என்ன வேணும்?",
+  "expected_answers": [
+    "Bathroom ponum teacher",
+    "Bathroom polama teacher",
+    "Washroom teacher",
+    "May I go teacher",
+    "Permission teacher"
+  ],
+  "model_answer": "Bathroom ponum teacher",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

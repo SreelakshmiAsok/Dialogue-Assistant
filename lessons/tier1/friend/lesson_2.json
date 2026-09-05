@@ -1,0 +1,23 @@
+{
+  "id": "friend_02",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Movie",
+  "social_story": "It is a holiday. Your friend asks if you want to watch a movie.",
+  "question_tanglish": "Movie paakalaama?",
+  "question_tamil": "மூவி பாக்கலாமா?",
+  "expected_answers": [
+    "Polaam da",
+    "Paakalaama da",
+    "Seri da",
+    "Va da",
+    "Ok da",
+    "Aama da",
+    "Paakkalaam",
+    "Polaam machi"
+  ],
+  "model_answer": "Polaam da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

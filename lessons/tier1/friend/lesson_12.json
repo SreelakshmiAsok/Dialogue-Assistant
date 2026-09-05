@@ -1,0 +1,20 @@
+{
+  "id": "friend_12",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Birthday",
+  "social_story": "Your friend invites you to their birthday party.",
+  "question_tanglish": "En birthday party ku varuva?",
+  "question_tamil": "என் பர்த்டே பார்ட்டி க்கு வருவா?",
+  "expected_answers": [
+    "Varen da",
+    "Seri da",
+    "Aama da",
+    "Happy birthday da",
+    "Definitely da"
+  ],
+  "model_answer": "Varen da, happy birthday!",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

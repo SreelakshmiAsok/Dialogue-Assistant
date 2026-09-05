@@ -1,0 +1,21 @@
+{
+  "id": "friend_15",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Race",
+  "social_story": "You and your friend are in the park. They challenge you to a race.",
+  "question_tanglish": "Race podalaama?",
+  "question_tamil": "ரேஸ் போடலாமா?",
+  "expected_answers": [
+    "Va da",
+    "Podalaama",
+    "Seri da",
+    "Aama da",
+    "Ok da",
+    "Ready da"
+  ],
+  "model_answer": "Va da, podalaama",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

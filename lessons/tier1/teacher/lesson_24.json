@@ -1,0 +1,21 @@
+{
+  "id": "teacher_24",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Goodbye",
+  "social_story": "School is over. Teacher says goodbye to the class.",
+  "question_tanglish": "Bye children, naalaikku paappom.",
+  "question_tamil": "பை சில்ட்ரன், நாளைக்கு பாப்போம்.",
+  "expected_answers": [
+    "Bye teacher",
+    "Good bye teacher",
+    "Bye miss",
+    "Thank you teacher bye",
+    "Naalaikku paappom teacher",
+    "Vanakkam teacher"
+  ],
+  "model_answer": "Bye teacher, thank you",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

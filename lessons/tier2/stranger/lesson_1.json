@@ -1,0 +1,66 @@
+{
+  "id": "t2_stranger_01",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Refusing a lure",
+  "learning_objective": "Child refuses a gift from a stranger.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+  },
+  "scenario": "An unknown person offers you a chocolate at the park.",
+  "initial_prompt": {
+    "tanglish": "Indha pa, unakku chocolate.",
+    "tamil": "இந்தா பா, உனக்கு சாக்லேட்.",
+    "english": "Here, a chocolate for you."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Indha pa, unakku chocolate.",
+        "tamil": "இந்தா பா, உனக்கு சாக்லேட்.",
+        "english": "Here, a chocolate for you."
+      },
+      "expected_responses": [
+        "Enaku venam",
+        "No thanks",
+        "Venam"
+      ],
+      "model_answer": "Enaku venam!",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "Paravala, eduthuko, idhu super chocolate.",
+        "tamil": "பரவால்ல, எடுத்துக்கோ, இது சூப்பர் சாக்லேட்.",
+        "english": "It's ok, take it, it's a super chocolate."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Paravala, eduthuko, idhu super chocolate.",
+        "tamil": "பரவால்ல, எடுத்துக்கோ, இது சூப்பர் சாக்லேட்.",
+        "english": "It's ok, take it, it's a super chocolate."
+      },
+      "expected_responses": [
+        "Enga amma kitta kekanum",
+        "No venam",
+        "Naan vanga maaten"
+      ],
+      "model_answer": "No venam, enga amma thita vanga kudadhu",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "(Stranger walks away).",
+        "tamil": "(ஸ்ட்ரேஞ்சர் நடந்து செல்கிறார்).",
+        "english": "(Stranger walks away)."
+      },
+      "is_terminal": true
+    }
+  ]
+}

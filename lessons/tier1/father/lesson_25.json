@@ -1,0 +1,21 @@
+{
+  "id": "father_25",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Thanks",
+  "social_story": "Appa bought you a new book as a gift.",
+  "question_tanglish": "Pudhu book vangichu irukken, pudikkuma?",
+  "question_tamil": "புது புக் வாங்கிச்சு இருக்கேன், புடிக்குமா?",
+  "expected_answers": [
+    "Thank you appa",
+    "Thanks appa",
+    "Romba nandri appa",
+    "Pudikkum appa",
+    "Super appa",
+    "Romba pudikkum appa"
+  ],
+  "model_answer": "Thank you appa",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

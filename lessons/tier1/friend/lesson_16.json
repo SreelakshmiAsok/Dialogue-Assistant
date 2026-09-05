@@ -1,0 +1,20 @@
+{
+  "id": "friend_16",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Drawing",
+  "social_story": "Your friend wants to draw pictures together.",
+  "question_tanglish": "Drawing podalaama?",
+  "question_tamil": "ட்ராயிங் போடலாமா?",
+  "expected_answers": [
+    "Podalaama",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Ok da"
+  ],
+  "model_answer": "Podalaama da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

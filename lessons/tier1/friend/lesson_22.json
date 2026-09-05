@@ -1,0 +1,20 @@
+{
+  "id": "friend_22",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Waiting",
+  "social_story": "Your friend asks you to wait for them after school.",
+  "question_tanglish": "School mudinja wait pannu da.",
+  "question_tamil": "ஸ்கூல் முடிஞ்சா வெயிட் பண்ணு டா.",
+  "expected_answers": [
+    "Seri da",
+    "Pannuren da",
+    "Ok da",
+    "Aama da",
+    "Wait pannuren da"
+  ],
+  "model_answer": "Seri da, wait pannuren",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

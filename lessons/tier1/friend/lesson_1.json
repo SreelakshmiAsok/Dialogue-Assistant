@@ -1,0 +1,26 @@
+{
+  "id": "friend_01",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Cricket",
+  "social_story": "You are in the playground. Your friend asks you to play cricket.",
+  "question_tanglish": "Cricket vilayaadalaama?",
+  "question_tamil": "கிரிக்கெட் விளையாடலாமா?",
+  "expected_answers": [
+    "Va da",
+    "Vaa da",
+    "Seri da",
+    "Sari da",
+    "Aama da",
+    "Ama da",
+    "Okay da",
+    "Ok da",
+    "Vilayaadalaam",
+    "Va machi",
+    "Polaam da"
+  ],
+  "model_answer": "Va da, vilayaadalaam",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

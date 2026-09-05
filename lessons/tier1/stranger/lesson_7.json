@@ -1,0 +1,21 @@
+{
+  "id": "stranger_07",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Bank",
+  "social_story": "An office person asks where the bank is.",
+  "question_tanglish": "Bank enga iruku?",
+  "question_tamil": "பேங்க் எங்க இருக்கு?",
+  "expected_answers": [
+    "Near signal sir",
+    "Signal pakkathula sir",
+    "Straight poonga sir",
+    "Theriyadhu sir",
+    "Left la sir",
+    "Right la sir"
+  ],
+  "model_answer": "Near signal sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

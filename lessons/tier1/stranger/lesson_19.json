@@ -1,0 +1,20 @@
+{
+  "id": "stranger_19",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Park",
+  "social_story": "A family asks you where the nearby park is.",
+  "question_tanglish": "Park enga iruku?",
+  "question_tamil": "பார்க் எங்க இருக்கு?",
+  "expected_answers": [
+    "Anga irukku sir",
+    "Straight poonga sir",
+    "Left la sir",
+    "Theriyadhu sir",
+    "Near sir"
+  ],
+  "model_answer": "Anga irukku sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

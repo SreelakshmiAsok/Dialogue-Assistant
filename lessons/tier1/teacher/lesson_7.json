@@ -1,0 +1,19 @@
+{
+  "id": "teacher_07",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Attention",
+  "social_story": "Teacher is writing on the board. She asks everyone to look at the board.",
+  "question_tanglish": "Board paarunga.",
+  "question_tamil": "போர்ட் பாருங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Paakuren teacher",
+    "Aama teacher",
+    "Ok teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

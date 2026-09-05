@@ -1,0 +1,20 @@
+{
+  "id": "stranger_22",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Polite Decline",
+  "social_story": "A stranger offers you candy. You should politely say no.",
+  "question_tanglish": "Chocolate venum?",
+  "question_tamil": "சாக்லேட் வேணுமா?",
+  "expected_answers": [
+    "Vendaam sir",
+    "Illa sir",
+    "Vendaam thanks sir",
+    "No thank you sir",
+    "Vendaam nandri sir"
+  ],
+  "model_answer": "Vendaam sir, nandri",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

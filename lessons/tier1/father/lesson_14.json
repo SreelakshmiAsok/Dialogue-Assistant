@@ -1,0 +1,20 @@
+{
+  "id": "father_14",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Medicine",
+  "social_story": "You are feeling sick. Appa gives you medicine and asks you to take it.",
+  "question_tanglish": "Marundhu saapdu.",
+  "question_tamil": "மருந்து சாப்பிடு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Saapiduren appa",
+    "Ok appa",
+    "Saaptuten appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

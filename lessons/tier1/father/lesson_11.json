@@ -1,0 +1,20 @@
+{
+  "id": "father_11",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Sleep",
+  "social_story": "It is bedtime. Appa tells you to go to sleep.",
+  "question_tanglish": "Poi thoongu.",
+  "question_tamil": "போய் தூங்கு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Good night appa",
+    "Thoonguran appa"
+  ],
+  "model_answer": "Seri appa, good night",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

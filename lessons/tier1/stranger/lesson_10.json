@@ -1,0 +1,21 @@
+{
+  "id": "stranger_10",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Temple",
+  "social_story": "An elderly person asks you where the temple is.",
+  "question_tanglish": "Kovil enga?",
+  "question_tamil": "கோவில் எங்க?",
+  "expected_answers": [
+    "Indha road la sir",
+    "Straight poonga sir",
+    "Left la sir",
+    "Right la sir",
+    "Theriyadhu sir",
+    "Anga sir"
+  ],
+  "model_answer": "Indha road la sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -67,7 +67,7 @@ export interface Tier2EvaluationResult {
   stars_awarded: number;
   feedback: string;
   suggestion: string | null;
-  next_character_reply: { tanglish: string; tamil: string } | null;
+  next_character_reply: { tanglish: string; tamil: string; english?: string } | null;
   next_turn_id: string | null;
   is_completed: boolean;
   scores: {
@@ -75,6 +75,8 @@ export interface Tier2EvaluationResult {
     safety: number;
     relevance: number;
   };
+  transcribed_text: string;
+  transcribed_tamil: string;
 }
 
 const API_BASE = "/api";

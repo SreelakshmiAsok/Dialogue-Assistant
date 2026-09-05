@@ -1,0 +1,68 @@
+{
+  "id": "t2_father_01",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Negotiating screen time transition",
+  "learning_objective": "Child negotiates properly and accepts limits.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™"
+  },
+  "scenario": "It is 7:00 PM. Appa asks you to turn off the TV for study time. Practice asking for 5 more minutes politely.",
+  "initial_prompt": {
+    "tanglish": "TV off pannu, padikka neram aachu.",
+    "tamil": "டிவி ஆஃப் பண்ணு, படிக்க நேரம் ஆச்சு.",
+    "english": "Turn off the TV, it's time to study."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "TV off pannu, padikka neram aachu.",
+        "tamil": "டிவி ஆஃப் பண்ணு, படிக்க நேரம் ஆச்சு.",
+        "english": "Turn off the TV, it's time to study."
+      },
+      "expected_responses": [
+        "Appa, 5 minutes pls",
+        "Konjam neram appa",
+        "Oru 5 nimisham appa pls"
+      ],
+      "model_answer": "Appa, innum 5 minutes please?",
+      "required_features": [
+        "RespectWord",
+        "TimeExtension"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seri, aana 5 mins mudinjona off pannanum, promise?",
+        "tamil": "சரி, ஆனா 5 மினிட்ஸ் முடிஞ்சோன ஆஃப் பண்ணனும், ப்ராமிஸ்?",
+        "english": "Ok, but after 5 mins you must turn it off, promise?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Seri, aana 5 mins mudinjona off pannanum, promise?",
+        "tamil": "சரி, ஆனா 5 மினிட்ஸ் முடிஞ்சோன ஆஃப் பண்ணனும், ப்ராமிஸ்?",
+        "english": "Ok, but after 5 mins you must turn it off, promise?"
+      },
+      "expected_responses": [
+        "Promise appa",
+        "Kandippa appa",
+        "Seri appa off panren"
+      ],
+      "model_answer": "Promise appa!",
+      "required_features": [
+        "RespectWord",
+        "PromiseKeyword"
+      ],
+      "next_character_reply": {
+        "tanglish": "Good, naan wait panren.",
+        "tamil": "குட், நான் வெயிட் பண்றேன்.",
+        "english": "Good, I will wait."
+      },
+      "is_terminal": true
+    }
+  ]
+}

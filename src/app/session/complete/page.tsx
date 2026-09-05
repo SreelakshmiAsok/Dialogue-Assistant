@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCharacterByBackendName } from "@/lib/characters";
+import { saveLessonCompletion } from "@/lib/progress";
 
 function SessionCompleteContent() {
   const router = useRouter();
@@ -13,11 +14,18 @@ function SessionCompleteContent() {
   const correct = parseInt(searchParams.get("correct") || "0");
   const total = parseInt(searchParams.get("total") || "0");
   const characterName = searchParams.get("character") || "Father";
+  const lessonId = searchParams.get("lessonId");
+  const tier = searchParams.get("tier");
+  
   const charMeta = getCharacterByBackendName(characterName);
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
 
-  const handlePlayReward = () => {
-    setIsPlaying(true);
+  useEffect(() => {
+    // Save progress to local roadmap
+    if (lessonId && characterName) {
+      saveLessonCompletion(characterName, lessonId, stars);
+    }
+
     if ("speechSynthesis" in window) {
       const messages = [
         "Great job! You did amazing today!",
@@ -26,18 +34,15 @@ function SessionCompleteContent() {
       ];
       const utterance = new SpeechSynthesisUtterance(messages[Math.floor(Math.random() * messages.length)]);
       utterance.rate = 0.9;
-      utterance.onend = () => setIsPlaying(false);
       speechSynthesis.speak(utterance);
-    } else {
-      setTimeout(() => setIsPlaying(false), 2000);
     }
-  };
+  }, [lessonId, characterName, stars]);
 
   // Determine celebration level
   const getMessage = () => {
-    if (accuracy >= 80) return { title: "Amazing! 🎉", subtitle: "You're a social skills superstar!" };
-    if (accuracy >= 50) return { title: "Great Job! ⭐", subtitle: "You're learning so well! Keep practicing!" };
-    return { title: "Good Try! 💪", subtitle: "Every practice makes you better!" };
+    if (accuracy >= 80) return { title: "Amazing!", subtitle: "You're a social skills superstar!" };
+    if (accuracy >= 50) return { title: "Great Job!", subtitle: "You're learning so well! Keep practicing!" };
+    return { title: "Good Try!", subtitle: "Every practice makes you better!" };
   };
 
   const msg = getMessage();
@@ -95,42 +100,31 @@ function SessionCompleteContent() {
           </div>
         </div>
 
-        {/* Audio Feedback Button */}
-        <button 
-          onClick={handlePlayReward}
-          className="flex items-center justify-center space-x-3 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-full px-8 h-14 text-on-surface group active:scale-95 shadow-sm"
-        >
-          <span 
-            className={`material-symbols-outlined text-secondary transition-transform duration-300 ${isPlaying ? 'scale-125' : 'group-hover:scale-110'}`} 
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            volume_up
-          </span>
-          <span className="text-[20px] font-semibold">Hear Reward</span>
-        </button>
+        {/* Auto-playing reward audio */}
 
         {/* Actions */}
         <div className="w-full max-w-md flex flex-col space-y-3 pt-4">
           <button 
-            onClick={() => router.push(`/session?character=${characterName}`)}
+            onClick={() => router.push(`/session?character=${characterName}&lessonId=${lessonId || ''}&tier=${tier || 1}`)}
             className="w-full h-16 bg-primary text-on-primary rounded-full text-[22px] font-semibold hover:bg-surface-tint shadow-md active:shadow-none active:translate-y-1 transition-all"
           >
             Play Again
           </button>
           
           <button 
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(`/roadmap/${characterName}`)}
             className="w-full h-16 border-3 border-secondary text-secondary rounded-full text-[22px] font-semibold hover:bg-secondary-container transition-colors active:scale-95"
             style={{ borderWidth: '3px' }}
           >
-            View Progress
+            <span className="material-symbols-outlined mr-2 align-middle">map</span>
+            Back to Roadmap
           </button>
 
           <button 
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/choose-friend")}
             className="w-full h-14 text-on-surface-variant text-[18px] font-semibold hover:text-on-surface transition-colors active:scale-95"
           >
-            🏠 Back to Home
+            🎭 Choose Another Character
           </button>
         </div>
       </main>

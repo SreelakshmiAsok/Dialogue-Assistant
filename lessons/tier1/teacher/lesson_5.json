@@ -1,0 +1,20 @@
+{
+  "id": "teacher_05",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Class Start",
+  "social_story": "It is the start of a new period. Teacher asks if everyone is ready.",
+  "question_tanglish": "Class aarambikkalaama?",
+  "question_tamil": "கிளாஸ் ஆரம்பிக்கலாமா?",
+  "expected_answers": [
+    "Ready teacher",
+    "Aama teacher",
+    "Seri teacher",
+    "Ready miss",
+    "Yes teacher"
+  ],
+  "model_answer": "Ready teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,66 @@
+{
+  "id": "t2_friend_02",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Sharing a toy or game",
+  "learning_objective": "Child agrees to take turns and share.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+  },
+  "scenario": "You are playing with a new car. Your friend wants to play with it.",
+  "initial_prompt": {
+    "tanglish": "Indha car super ah irukku, naan konjam vilayadava?",
+    "tamil": "இந்த கார் சூப்பர் ஆ இருக்கு, நான் கொஞ்சம் விளையாடவா?",
+    "english": "This car is great, can I play for a while?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Indha car super ah irukku, naan konjam vilayadava?",
+        "tamil": "இந்த கார் சூப்பர் ஆ இருக்கு, நான் கொஞ்சம் விளையாடவா?",
+        "english": "This car is great, can I play for a while?"
+      },
+      "expected_responses": [
+        "Seri da, eduthuko",
+        "Ok, nee vilayadu",
+        "Take it"
+      ],
+      "model_answer": "Seri da, eduthuko",
+      "required_features": [
+        "Acceptance"
+      ],
+      "next_character_reply": {
+        "tanglish": "Thanks da! 5 minutes kalichu unakku tharen.",
+        "tamil": "தேங்க்ஸ் டா! 5 மினிட்ஸ் கழிச்சு உனக்கு தாரேன்.",
+        "english": "Thanks! I'll give it back in 5 minutes."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Thanks da! 5 minutes kalichu unakku tharen.",
+        "tamil": "தேங்க்ஸ் டா! 5 மினிட்ஸ் கழிச்சு உனக்கு தாரேன்.",
+        "english": "Thanks! I'll give it back in 5 minutes."
+      },
+      "expected_responses": [
+        "Ok da",
+        "No problem",
+        "Seri"
+      ],
+      "model_answer": "Ok da, no problem",
+      "required_features": [
+        "Acceptance"
+      ],
+      "next_character_reply": {
+        "tanglish": "Naama serndhu race vidalama?",
+        "tamil": "நாம சேர்ந்து ரேஸ் விடலாமா?",
+        "english": "Shall we race together?"
+      },
+      "is_terminal": true
+    }
+  ]
+}

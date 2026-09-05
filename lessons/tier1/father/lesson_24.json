@@ -1,0 +1,20 @@
+{
+  "id": "father_24",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Morning",
+  "social_story": "It is early morning. Appa wakes you up for school.",
+  "question_tanglish": "Ezhundhu, school time achu.",
+  "question_tamil": "எழுந்து, ஸ்கூல் டைம் ஆச்சு.",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Ezhundhuten appa",
+    "Ok appa",
+    "Varen appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

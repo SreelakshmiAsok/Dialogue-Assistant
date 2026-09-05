@@ -1,0 +1,20 @@
+{
+  "id": "father_15",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Breakfast",
+  "social_story": "It is morning. Appa calls you to eat breakfast.",
+  "question_tanglish": "Va saapdu, breakfast ready.",
+  "question_tamil": "வா சாப்பிடு, ப்ரேக்ஃபாஸ்ட் ரெடி.",
+  "expected_answers": [
+    "Varen appa",
+    "Seri appa",
+    "Aama appa",
+    "Ok appa",
+    "Varengo appa"
+  ],
+  "model_answer": "Varen appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

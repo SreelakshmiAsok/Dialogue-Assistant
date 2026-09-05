@@ -1,0 +1,66 @@
+{
+  "id": "t2_teacher_02",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Asking for help",
+  "learning_objective": "Child asks for help when stuck.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)"
+  },
+  "scenario": "You are doing a math sum but you don't understand it.",
+  "initial_prompt": {
+    "tanglish": "Ellarum math homework panreengala?",
+    "tamil": "எல்லாரும் மேத் ஹோம்வொர்க் பண்றீங்களா?",
+    "english": "Is everyone doing their math homework?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Ellarum math homework panreengala?",
+        "tamil": "எல்லாரும் மேத் ஹோம்வொர்க் பண்றீங்களா?",
+        "english": "Is everyone doing their math homework?"
+      },
+      "expected_responses": [
+        "Miss, enaku idhu puriyala",
+        "Teacher konjam help pannunga",
+        "Miss doubt irukku"
+      ],
+      "model_answer": "Teacher, enaku oru doubt irukku",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Enna sum ma puriyala? Vangandu paakuren.",
+        "tamil": "என்ன சம் மா புரியல? வந்து பாக்குறேன்.",
+        "english": "Which sum don't you understand? Let me come and see."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Enna sum ma puriyala? Vangandu paakuren.",
+        "tamil": "என்ன சம் மா புரியல? வந்து பாக்குறேன்.",
+        "english": "Which sum don't you understand? Let me come and see."
+      },
+      "expected_responses": [
+        "Third sum miss",
+        "Indha sum teacher",
+        "Idhu dhaan miss"
+      ],
+      "model_answer": "Indha third sum teacher",
+      "required_features": [
+        "Honorific"
+      ],
+      "next_character_reply": {
+        "tanglish": "Ok, naan explain panren.",
+        "tamil": "ஓகே, நான் எக்ஸ்பிளைன் பண்றேன்.",
+        "english": "Ok, I will explain."
+      },
+      "is_terminal": true
+    }
+  ]
+}

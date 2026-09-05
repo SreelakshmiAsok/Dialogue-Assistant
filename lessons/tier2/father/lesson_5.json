@@ -1,0 +1,66 @@
+{
+  "id": "t2_father_05",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Morning routine",
+  "learning_objective": "Child greets and prepares for school.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™"
+  },
+  "scenario": "You wake up in the morning. Appa comes to your room.",
+  "initial_prompt": {
+    "tanglish": "Good morning! Ezhundhu ready aagu.",
+    "tamil": "குட் மார்னிங்! எழுந்து ரெடி ஆகு.",
+    "english": "Good morning! Wake up and get ready."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Good morning! Ezhundhu ready aagu.",
+        "tamil": "குட் மார்னிங்! எழுந்து ரெடி ஆகு.",
+        "english": "Good morning! Wake up and get ready."
+      },
+      "expected_responses": [
+        "Good morning appa",
+        "Ezhundhuten appa",
+        "Seri appa"
+      ],
+      "model_answer": "Good morning appa!",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Poi brush pannitu va, milk ready.",
+        "tamil": "போய் ப்ரஷ் பண்ணிட்டு வா, மில்க் ரெடி.",
+        "english": "Go brush and come, milk is ready."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Poi brush pannitu va, milk ready.",
+        "tamil": "போய் ப்ரஷ் பண்ணிட்டு வா, மில்க் ரெடி.",
+        "english": "Go brush and come, milk is ready."
+      },
+      "expected_responses": [
+        "Idho poren appa",
+        "Seri appa",
+        "Ok appa"
+      ],
+      "model_answer": "Seri appa, idho poren",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seekiram va.",
+        "tamil": "சீக்கிரம் வா.",
+        "english": "Come quickly."
+      },
+      "is_terminal": true
+    }
+  ]
+}

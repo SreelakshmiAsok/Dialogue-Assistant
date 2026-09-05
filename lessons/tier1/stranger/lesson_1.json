@@ -1,0 +1,24 @@
+{
+  "id": "stranger_01",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Post Office",
+  "social_story": "You are walking on the road. A person you don't know asks you where the post office is.",
+  "question_tanglish": "Post office enga iruku?",
+  "question_tamil": "போஸ்ட் ஆபிஸ் எங்க இருக்கு?",
+  "expected_answers": [
+    "Theriyadhu sir",
+    "Theriyathu sir",
+    "Theriyadhu",
+    "Theriyathu",
+    "I don't know sir",
+    "Sorry sir theriyadhu",
+    "Straight poonga sir",
+    "Left la irukku sir",
+    "Right la irukku sir"
+  ],
+  "model_answer": "Theriyadhu sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

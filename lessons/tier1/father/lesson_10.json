@@ -1,0 +1,21 @@
+{
+  "id": "father_10",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Outing",
+  "social_story": "It is a weekend. Appa asks if you want to go outside for a walk.",
+  "question_tanglish": "Veliya polaama?",
+  "question_tamil": "வெளியே போலாமா?",
+  "expected_answers": [
+    "Polaam appa",
+    "Polaama appa",
+    "Seri appa",
+    "Aama appa",
+    "Vanga appa",
+    "Polaam"
+  ],
+  "model_answer": "Polaam appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

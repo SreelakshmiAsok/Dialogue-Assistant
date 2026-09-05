@@ -1,0 +1,66 @@
+{
+  "id": "t2_father_03",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Offering help",
+  "learning_objective": "Child offers assistance.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™"
+  },
+  "scenario": "Appa is coming home with heavy grocery bags.",
+  "initial_prompt": {
+    "tanglish": "Romba weight ah irukku indha bags.",
+    "tamil": "ரொம்ப வெயிட் ஆ இருக்கு இந்த பேக்ஸ்.",
+    "english": "These bags are very heavy."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Romba weight ah irukku indha bags.",
+        "tamil": "ரொம்ப வெயிட் ஆ இருக்கு இந்த பேக்ஸ்.",
+        "english": "These bags are very heavy."
+      },
+      "expected_responses": [
+        "Naan help panren appa",
+        "Oru bag kudu pa",
+        "Naan thookuren appa"
+      ],
+      "model_answer": "Naan help panren appa",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Thank you ma, indha chinna bag ah pidicho.",
+        "tamil": "தேங்க் யூ மா, இந்த சின்ன பேக் ஆ பிடிச்சோ.",
+        "english": "Thank you, hold this small bag."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Thank you ma, indha chinna bag ah pidicho.",
+        "tamil": "தேங்க் யூ மா, இந்த சின்ன பேக் ஆ பிடிச்சோ.",
+        "english": "Thank you, hold this small bag."
+      },
+      "expected_responses": [
+        "Seri appa",
+        "Ok appa",
+        "Kudu pa"
+      ],
+      "model_answer": "Seri appa",
+      "required_features": [
+        "RespectWord"
+      ],
+      "next_character_reply": {
+        "tanglish": "Super, ulla vechiru.",
+        "tamil": "சூப்பர், உள்ள வச்சிரு.",
+        "english": "Super, put it inside."
+      },
+      "is_terminal": true
+    }
+  ]
+}

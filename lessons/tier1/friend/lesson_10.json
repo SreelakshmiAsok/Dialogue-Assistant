@@ -1,0 +1,20 @@
+{
+  "id": "friend_10",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Photo",
+  "social_story": "You and your friend are at a park. They want to take a photo.",
+  "question_tanglish": "Photo edukalaama?",
+  "question_tamil": "ஃபோட்டோ எடுக்கலாமா?",
+  "expected_answers": [
+    "Seri da",
+    "Edukkalaam",
+    "Va da",
+    "Aama da",
+    "Ok da"
+  ],
+  "model_answer": "Seri da, edukkalaam",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

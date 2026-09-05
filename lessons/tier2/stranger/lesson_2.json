@@ -1,0 +1,66 @@
+{
+  "id": "t2_stranger_02",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 3,
+  "skill": "Refusing a ride",
+  "learning_objective": "Child refuses to get into a stranger's car.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+  },
+  "scenario": "A car pulls up and a stranger tells you to get in.",
+  "initial_prompt": {
+    "tanglish": "Va thambi/pappa, unga appa car la kootitu vara sonnaru.",
+    "tamil": "வா தம்பி/பாப்பா, உங்க அப்பா கார்ல கூட்டிட்டு வர சொன்னாரு.",
+    "english": "Come, your dad told me to bring you in the car."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Va thambi/pappa, unga appa car la kootitu vara sonnaru.",
+        "tamil": "வா தம்பி/பாப்பா, உங்க அப்பா கார்ல கூட்டிட்டு வர சொன்னாரு.",
+        "english": "Come, your dad told me to bring you in the car."
+      },
+      "expected_responses": [
+        "No naan vara maaten",
+        "Enga appa appadi solla maataru",
+        "Enaku unna theriyadhu"
+      ],
+      "model_answer": "No, naan vara maaten!",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "Unmaiya dhaan solren, vaa late aagudhu.",
+        "tamil": "உண்மையா தான் சொல்றேன், வா லேட் ஆகுது.",
+        "english": "I'm telling the truth, come it's getting late."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Unmaiya dhaan solren, vaa late aagudhu.",
+        "tamil": "உண்மையா தான் சொல்றேன், வா லேட் ஆகுது.",
+        "english": "I'm telling the truth, come it's getting late."
+      },
+      "expected_responses": [
+        "Help!",
+        "Amma!",
+        "No venam"
+      ],
+      "model_answer": "No venam! (Run away)",
+      "required_features": [
+        "FirmNo"
+      ],
+      "next_character_reply": {
+        "tanglish": "(Stranger drives away).",
+        "tamil": "(ஸ்ட்ரேஞ்சர் ஓட்டி செல்கிறார்).",
+        "english": "(Stranger drives away)."
+      },
+      "is_terminal": true
+    }
+  ]
+}

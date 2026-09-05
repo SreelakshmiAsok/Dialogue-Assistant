@@ -1,0 +1,20 @@
+{
+  "id": "friend_18",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Study Together",
+  "social_story": "Exam is coming. Your friend asks if you want to study together.",
+  "question_tanglish": "Serndhu padikalaama?",
+  "question_tamil": "சேர்ந்து படிக்கலாமா?",
+  "expected_answers": [
+    "Padikalaama",
+    "Seri da",
+    "Va da",
+    "Aama da",
+    "Polaam da"
+  ],
+  "model_answer": "Seri da, padikalaama",
+  "respect_required": false,
+  "difficulty": 2,
+  "tier": 1
+}

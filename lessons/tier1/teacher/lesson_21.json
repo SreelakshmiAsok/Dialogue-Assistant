@@ -1,0 +1,19 @@
+{
+  "id": "teacher_21",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Apology",
+  "social_story": "You accidentally pushed your friend. Teacher asks you to say sorry.",
+  "question_tanglish": "Sorry sollu.",
+  "question_tamil": "ஸாரி சொல்லு.",
+  "expected_answers": [
+    "Sorry teacher",
+    "Seri teacher",
+    "Sorry solluven teacher",
+    "Aama teacher"
+  ],
+  "model_answer": "Sorry teacher, I will say sorry",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

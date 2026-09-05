@@ -1,0 +1,19 @@
+{
+  "id": "teacher_16",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Line Up",
+  "social_story": "It is assembly time. Teacher asks everyone to stand in line.",
+  "question_tanglish": "Line la nikkuonga.",
+  "question_tamil": "லைன்ல நிக்கோங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Aama teacher",
+    "Ok teacher",
+    "Nikkuren teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

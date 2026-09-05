@@ -1,0 +1,21 @@
+{
+  "id": "friend_13",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Sorry",
+  "social_story": "Your friend accidentally broke your pencil. They say sorry.",
+  "question_tanglish": "Sorry da, unoda pencil odanjiduchu.",
+  "question_tamil": "ஸாரி டா, உனோட பென்சில் ஒடைஞ்சிடுச்சு.",
+  "expected_answers": [
+    "Paravala da",
+    "Parava illa da",
+    "Ok da",
+    "Pothum da",
+    "No problem da",
+    "Its ok da"
+  ],
+  "model_answer": "Paravala da",
+  "respect_required": false,
+  "difficulty": 2,
+  "tier": 1
+}

@@ -1,0 +1,66 @@
+{
+  "id": "t2_friend_01",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Entering an ongoing game / asking to join play",
+  "learning_objective": "Child observes ongoing play and politely requests to join.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+  },
+  "scenario": "You see your friend playing cricket. You want to join.",
+  "initial_prompt": {
+    "tanglish": "Hey! Naanga cricket vilayadrom.",
+    "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்.",
+    "english": "Hey! We are playing cricket."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Hey! Naanga cricket vilayadrom.",
+        "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்.",
+        "english": "Hey! We are playing cricket."
+      },
+      "expected_responses": [
+        "Naanum vilayadava?",
+        "Can I play with you?",
+        "Naan join pannikava?"
+      ],
+      "model_answer": "Naanum vilayadava?",
+      "required_features": [
+        "JoinIntent"
+      ],
+      "next_character_reply": {
+        "tanglish": "Seri va, next unakku batting.",
+        "tamil": "சரி வா, நெக்ஸ்ட் உனக்கு பேட்டிங்.",
+        "english": "Okay come, next is your batting."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Seri va, next unakku batting.",
+        "tamil": "சரி வா, நெக்ஸ்ட் உனக்கு பேட்டிங்.",
+        "english": "Okay come, next is your batting."
+      },
+      "expected_responses": [
+        "Ok da, thanks!",
+        "Seri da",
+        "Thank you!"
+      ],
+      "model_answer": "Ok da, thanks!",
+      "required_features": [
+        "Acceptance"
+      ],
+      "next_character_reply": {
+        "tanglish": "Super, bat eduthuko!",
+        "tamil": "சூப்பர், பேட் எடுத்துக்கோ!",
+        "english": "Super, take the bat!"
+      },
+      "is_terminal": true
+    }
+  ]
+}

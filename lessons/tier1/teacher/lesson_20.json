@@ -1,0 +1,19 @@
+{
+  "id": "teacher_20",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Sharing",
+  "social_story": "Your friend forgot their pencil. Teacher asks you to share yours.",
+  "question_tanglish": "Pencil share pannunga.",
+  "question_tamil": "பென்சில் ஷேர் பண்ணுங்க.",
+  "expected_answers": [
+    "Seri teacher",
+    "Aama teacher",
+    "Ok teacher",
+    "Kudukuren teacher"
+  ],
+  "model_answer": "Seri teacher",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

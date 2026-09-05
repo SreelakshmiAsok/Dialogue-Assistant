@@ -1,0 +1,20 @@
+{
+  "id": "friend_20",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Book Exchange",
+  "social_story": "Your friend has a storybook. They ask if you want to borrow it.",
+  "question_tanglish": "Idhu nalla book da, padikuriya?",
+  "question_tamil": "இது நல்ல புக் டா, படிக்குறியா?",
+  "expected_answers": [
+    "Seri da kudu",
+    "Aama da",
+    "Padikuren da",
+    "Thanks da",
+    "Kudu da"
+  ],
+  "model_answer": "Seri da, thanks",
+  "respect_required": false,
+  "difficulty": 2,
+  "tier": 1
+}

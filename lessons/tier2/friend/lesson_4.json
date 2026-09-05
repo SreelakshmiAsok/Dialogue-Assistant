@@ -1,0 +1,63 @@
+{
+  "id": "t2_friend_04",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Starting a conversation about interests",
+  "learning_objective": "Child engages in a conversation about common interests.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+  },
+  "scenario": "You see your friend watching a cartoon.",
+  "initial_prompt": {
+    "tanglish": "Hey, naan Ben 10 paathutu irukken.",
+    "tamil": "ஹேய், நான் பென் 10 பாத்துட்டு இருக்கேன்.",
+    "english": "Hey, I am watching Ben 10."
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "prompt": {
+        "tanglish": "Hey, naan Ben 10 paathutu irukken.",
+        "tamil": "ஹேய், நான் பென் 10 பாத்துட்டு இருக்கேன்.",
+        "english": "Hey, I am watching Ben 10."
+      },
+      "expected_responses": [
+        "Enakkum Ben 10 pudikkum",
+        "Super",
+        "Naanum paakava?"
+      ],
+      "model_answer": "Enakkum Ben 10 romba pudikkum",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Un favourite alien edhu?",
+        "tamil": "உன் ஃபேவரிட் ஏலியன் எது?",
+        "english": "Which is your favorite alien?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "prompt": {
+        "tanglish": "Un favourite alien edhu?",
+        "tamil": "உன் ஃபேவரிட் ஏலியன் எது?",
+        "english": "Which is your favorite alien?"
+      },
+      "expected_responses": [
+        "Four arms",
+        "Heatblast",
+        "XLR8",
+        "Theriyadhu"
+      ],
+      "model_answer": "Four arms",
+      "required_features": [],
+      "next_character_reply": {
+        "tanglish": "Awesome! Vaa ukaandhu paakalam.",
+        "tamil": "ஆஸம்! வா உக்காந்து பாக்கலாம்.",
+        "english": "Awesome! Come sit and watch."
+      },
+      "is_terminal": true
+    }
+  ]
+}

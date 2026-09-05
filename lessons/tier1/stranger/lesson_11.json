@@ -1,0 +1,19 @@
+{
+  "id": "stranger_11",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Time",
+  "social_story": "A person on the road asks you what time it is.",
+  "question_tanglish": "Time enna?",
+  "question_tamil": "டைம் என்ன?",
+  "expected_answers": [
+    "Theriyadhu sir",
+    "Watch illa sir",
+    "Phone parunga sir",
+    "Sorry sir theriyadhu"
+  ],
+  "model_answer": "Theriyadhu sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

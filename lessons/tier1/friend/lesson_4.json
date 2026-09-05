@@ -1,0 +1,21 @@
+{
+  "id": "friend_04",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Games",
+  "social_story": "Your friend has a new mobile game. They ask if you want to play.",
+  "question_tanglish": "Game aadalaama?",
+  "question_tamil": "கேம் ஆடலாமா?",
+  "expected_answers": [
+    "Va da",
+    "Aadalaama",
+    "Seri da",
+    "Aama da",
+    "Ok da",
+    "Va machi"
+  ],
+  "model_answer": "Va da, aadalaam",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

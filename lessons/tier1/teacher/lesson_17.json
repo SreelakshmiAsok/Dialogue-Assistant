@@ -1,0 +1,20 @@
+{
+  "id": "teacher_17",
+  "character": "Teacher",
+  "avatar": "👩‍🏫",
+  "lesson": "Project",
+  "social_story": "Teacher asks about your science project progress.",
+  "question_tanglish": "Project epdi varudhu?",
+  "question_tamil": "ப்ராஜெக்ட் எப்படி வருது?",
+  "expected_answers": [
+    "Nalla varudhu teacher",
+    "Pannikkitu irukken teacher",
+    "Almost ready teacher",
+    "Mudiyum teacher",
+    "Konjam help venum teacher"
+  ],
+  "model_answer": "Nalla varudhu teacher",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

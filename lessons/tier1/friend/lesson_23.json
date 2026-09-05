@@ -1,0 +1,20 @@
+{
+  "id": "friend_23",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Singing",
+  "social_story": "Your friend hears a nice song. They ask if you want to sing together.",
+  "question_tanglish": "Paatu paadalaama?",
+  "question_tamil": "பாட்டு பாடலாமா?",
+  "expected_answers": [
+    "Paadalaama",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Ok da"
+  ],
+  "model_answer": "Va da, paadalaama",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

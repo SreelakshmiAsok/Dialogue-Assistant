@@ -1,0 +1,19 @@
+{
+  "id": "father_08",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Phone",
+  "social_story": "You are playing with Appa's phone. He asks you to give it back.",
+  "question_tanglish": "Phone kudu.",
+  "question_tamil": "போன் குடு.",
+  "expected_answers": [
+    "Idho appa",
+    "Seri appa",
+    "Kudukuren appa",
+    "Aama appa"
+  ],
+  "model_answer": "Idho appa",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,18 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CHARACTERS } from "@/lib/characters";
+import { getCharacterProgress } from "@/lib/progress";
 
 export default function ChooseAFriend() {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<string>("father");
-  const [tier, setTier] = useState<number>(1);
+  const [progressData, setProgressData] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    // Load progress for all characters on mount
+    const newProgress: Record<string, number> = {};
+    CHARACTERS.forEach((char) => {
+      const prog = getCharacterProgress(char.backendName);
+      newProgress[char.id] = prog.completedLessons.length;
+    });
+    setProgressData(newProgress);
+  }, []);
 
   const handleContinue = () => {
     const char = CHARACTERS.find((c) => c.id === selectedId);
     if (char) {
-      router.push(`/session?character=${char.backendName}&tier=${tier}`);
+      router.push(`/roadmap/${char.backendName}`);
     }
   };
 
@@ -27,39 +38,22 @@ export default function ChooseAFriend() {
           <span className="material-symbols-outlined text-[28px]">arrow_back</span>
         </button>
 
-        <header className="text-center mb-8 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 mt-8">
+        <header className="text-center mb-12 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 mt-8">
           <h1 className="text-[32px] leading-[44px] md:text-[48px] md:leading-[64px] font-bold text-primary">
-            Choose a Character 🎭
+            Choose a Character
           </h1>
           <p className="text-[20px] leading-[32px] text-on-surface-variant max-w-2xl">
             Pick who you want to practice speaking with today
           </p>
         </header>
 
-        {/* Tier Selection Toggle */}
-        <div className="flex bg-surface-container-high rounded-full p-1 mb-8 shadow-inner">
-          <button
-            onClick={() => setTier(1)}
-            className={`px-6 py-2 rounded-full text-[16px] font-bold transition-all ${
-              tier === 1 ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest'
-            }`}
-          >
-            Tier 1: Single Sentences
-          </button>
-          <button
-            onClick={() => setTier(2)}
-            className={`px-6 py-2 rounded-full text-[16px] font-bold transition-all ${
-              tier === 2 ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-highest'
-            }`}
-          >
-            Tier 2: Conversations
-          </button>
-        </div>
-
         {/* Character Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-5xl mx-auto">
           {CHARACTERS.map((char) => {
             const isSelected = selectedId === char.id;
+            const completedCount = progressData[char.id] || 0;
+            const progressText = `${completedCount}/5 lessons`;
+            
             return (
               <button
                 key={char.id}
@@ -90,13 +84,11 @@ export default function ChooseAFriend() {
                   {char.subtitle}
                 </span>
 
-                {/* Difficulty Badge */}
+                {/* Roadmap Progress Badge */}
                 <span className={`mt-3 px-4 py-1.5 rounded-full text-[13px] font-bold ${
-                  char.difficulty === 'easy' ? 'bg-secondary-container text-on-secondary-container' :
-                  char.difficulty === 'medium' ? 'bg-tertiary-container text-on-tertiary-container' :
-                  'bg-error-container text-on-error-container'
+                  completedCount >= 5 ? 'bg-primary text-on-primary' : 'bg-secondary-container text-on-secondary-container'
                 }`}>
-                  {char.difficultyLabel}
+                  {progressText}
                 </span>
 
                 {/* Selection Indicator */}
@@ -117,8 +109,8 @@ export default function ChooseAFriend() {
           onClick={handleContinue}
           className="w-full max-w-md h-[64px] bg-primary text-on-primary text-[24px] font-semibold rounded-full flex items-center justify-center gap-2 hover:bg-surface-tint active:scale-95 transition-all focus:outline-none focus:ring-4 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-surface shadow-sm"
         >
-          Continue
-          <span className="material-symbols-outlined">arrow_forward</span>
+          View Roadmap
+          <span className="material-symbols-outlined">map</span>
         </button>
       </div>
     </div>

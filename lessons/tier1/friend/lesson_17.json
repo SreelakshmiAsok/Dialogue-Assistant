@@ -1,0 +1,21 @@
+{
+  "id": "friend_17",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Hide and Seek",
+  "social_story": "Your friend wants to play hide and seek.",
+  "question_tanglish": "Hide and seek aadalaama?",
+  "question_tamil": "ஹைட் அண்ட் சீக் ஆடலாமா?",
+  "expected_answers": [
+    "Aadalaama",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Ok da",
+    "Polaam da"
+  ],
+  "model_answer": "Va da, aadalaama",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

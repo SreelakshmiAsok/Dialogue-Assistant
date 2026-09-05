@@ -1,0 +1,20 @@
+{
+  "id": "friend_19",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Ice Cream",
+  "social_story": "It is a hot day. Your friend asks if you want to get ice cream.",
+  "question_tanglish": "Ice cream saapdalama?",
+  "question_tamil": "ஐஸ் கிரீம் சாப்பிடலாமா?",
+  "expected_answers": [
+    "Saapdalaam da",
+    "Polaam da",
+    "Va da",
+    "Seri da",
+    "Aama da"
+  ],
+  "model_answer": "Polaam da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

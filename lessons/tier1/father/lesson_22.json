@@ -1,0 +1,20 @@
+{
+  "id": "father_22",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Manners",
+  "social_story": "You ate dinner. Appa asks if you liked the food.",
+  "question_tanglish": "Saapadu epdi irundhuchu?",
+  "question_tamil": "சாப்பாடு எப்படி இருந்துச்சு?",
+  "expected_answers": [
+    "Nalla irundhudhu appa",
+    "Super appa",
+    "Romba nalla appa",
+    "Nallaa irundhudhu appa",
+    "Tasty appa"
+  ],
+  "model_answer": "Nalla irundhudhu appa",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

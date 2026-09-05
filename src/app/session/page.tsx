@@ -15,6 +15,9 @@ function Tier1SessionContent() {
   const searchParams = useSearchParams();
   const characterName = searchParams.get("character") || "Father";
 
+  const lessonId = searchParams.get("lessonId");
+  const tier = searchParams.get("tier");
+
   const [charMeta, setCharMeta] = useState<CharacterMeta | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,13 +45,17 @@ function Tier1SessionContent() {
 
     fetchQuestions(characterName)
       .then((qs) => {
-        setQuestions(qs);
+        if (lessonId) {
+          setQuestions(qs.filter(q => q.id === lessonId));
+        } else {
+          setQuestions(qs);
+        }
         setLoading(false);
       })
       .catch(() => {
         setLoading(false);
       });
-  }, [characterName]);
+  }, [characterName, lessonId]);
 
   // Play question audio via TTS
   const handlePlayAudio = useCallback(() => {
@@ -58,8 +65,16 @@ function Tier1SessionContent() {
     if (audioRef.current) {
       audioRef.current.pause();
     }
+    
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    let hasFallenBack = false;
 
     const fallbackTTS = () => {
+      if (hasFallenBack) return;
+      hasFallenBack = true;
       if ("speechSynthesis" in window) {
         const utterance = new SpeechSynthesisUtterance(currentQuestion.question_tanglish);
         utterance.rate = 0.85;
@@ -178,7 +193,7 @@ function Tier1SessionContent() {
       setShowTextInput(false);
     } else {
       // Session complete
-      router.push(`/session/complete?stars=${sessionStars}&correct=${sessionCorrect}&total=${questions.length}&character=${characterName}`);
+      router.push(`/session/complete?stars=${sessionStars}&correct=${sessionCorrect}&total=${questions.length}&character=${characterName}&lessonId=${lessonId || ''}&tier=${tier || 1}`);
     }
   };
 
@@ -361,7 +376,7 @@ function Tier1SessionContent() {
                   onClick={handleNext}
                   className="px-8 py-3 bg-primary text-on-primary rounded-full text-[16px] font-semibold hover:bg-surface-tint transition-colors active:scale-95 shadow-sm"
                 >
-                  {currentIndex < questions.length - 1 ? "Next ➡️" : "Finish ✨"}
+                  {currentIndex < questions.length - 1 ? "Next" : "Finish"}
                 </button>
               </div>
             </div>
@@ -447,11 +462,13 @@ function Tier2SessionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const characterName = searchParams.get("character") || "Father";
+  const lessonId = searchParams.get("lessonId");
+  const tier = searchParams.get("tier");
 
   const [charMeta, setCharMeta] = useState<CharacterMeta | null>(null);
   const [lesson, setLesson] = useState<Tier2Lesson | null>(null);
   const [currentTurnId, setCurrentTurnId] = useState<string | null>(null);
-  const [conversationHistory, setConversationHistory] = useState<{ speaker: 'character' | 'child', text: string, tamilText?: string }[]>([]);
+  const [conversationHistory, setConversationHistory] = useState<{ speaker: 'character' | 'child', text: string, tamilText?: string, englishText?: string }[]>([]);
   const [retryCount, setRetryCount] = useState(0);
   
   const [isListening, setIsListening] = useState(false);
@@ -462,6 +479,7 @@ function Tier2SessionContent() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<Tier2EvaluationResult | null>(null);
   const [sessionStars, setSessionStars] = useState(0);
+  const [expandedTranslations, setExpandedTranslations] = useState<number[]>([]);
 
   const recognitionRef = useRef<any>(null);
 
@@ -471,13 +489,14 @@ function Tier2SessionContent() {
 
     fetchTier2Lessons(characterName)
       .then((summaries) => {
-        if (summaries.length > 0) {
-          fetchTier2Lesson(summaries[0].id).then(fullLesson => {
+        const targetSummary = lessonId ? summaries.find(s => s.id === lessonId) : summaries[0];
+        if (targetSummary) {
+          fetchTier2Lesson(targetSummary.id).then(fullLesson => {
             setLesson(fullLesson);
             if (fullLesson.turns.length > 0) {
               setCurrentTurnId(fullLesson.turns[0].turn_id);
               setConversationHistory([
-                { speaker: 'character', text: fullLesson.turns[0].prompt.tanglish, tamilText: fullLesson.turns[0].prompt.tamil }
+                { speaker: 'character', text: fullLesson.turns[0].prompt.tanglish, tamilText: fullLesson.turns[0].prompt.tamil, englishText: fullLesson.turns[0].prompt.english }
               ]);
               playTTS(fullLesson.turns[0].prompt.tanglish);
             }
@@ -488,6 +507,7 @@ function Tier2SessionContent() {
 
   const playTTS = (text: string) => {
     if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.85;
 
@@ -518,28 +538,30 @@ function Tier2SessionContent() {
         setSessionStars(prev => prev + result.stars_awarded);
         setConversationHistory(prev => [
           ...prev,
-          { speaker: 'child', text: answer }
+          { speaker: 'child', text: result.transcribed_text, tamilText: result.transcribed_tamil }
         ]);
         
         if (result.next_character_reply) {
            setTimeout(() => {
              setConversationHistory(prev => [
                ...prev,
-               { speaker: 'character', text: result.next_character_reply!.tanglish, tamilText: result.next_character_reply!.tamil }
+               { speaker: 'character', text: result.next_character_reply!.tanglish, tamilText: result.next_character_reply!.tamil, englishText: result.next_character_reply!.english }
              ]);
              playTTS(result.next_character_reply!.tanglish);
              setCurrentTurnId(result.next_turn_id);
              setEvaluation(null);
              
              if (result.is_completed) {
-               setTimeout(() => {
-                 router.push(`/session/complete?stars=${sessionStars + result.stars_awarded}&character=${characterName}&tier=2`);
-               }, 4000); // wait for TTS to finish
-             }
+                setTimeout(() => {
+                  const totalChildTurns = conversationHistory.filter(m => m.speaker === 'child').length + 1;
+                  router.push(`/session/complete?stars=${sessionStars + result.stars_awarded}&correct=${totalChildTurns}&total=${lesson.turns.length}&character=${characterName}&tier=2&lessonId=${lessonId || ''}`);
+                }, 4000); // wait for TTS to finish
+              }
            }, 2000);
         } else {
            setTimeout(() => {
-             router.push(`/session/complete?stars=${sessionStars + result.stars_awarded}&character=${characterName}&tier=2`);
+             const totalChildTurns = conversationHistory.filter(m => m.speaker === 'child').length + 1;
+             router.push(`/session/complete?stars=${sessionStars + result.stars_awarded}&correct=${totalChildTurns}&total=${lesson.turns.length}&character=${characterName}&tier=2&lessonId=${lessonId || ''}`);
            }, 3000);
         }
       } else {
@@ -605,16 +627,45 @@ function Tier2SessionContent() {
       <main className="flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 relative z-0 pb-32">
         <div className="absolute inset-0 opacity-15 z-0 rounded-[32px] overflow-hidden mx-4 mt-2"><img src={charMeta.backgroundPath} alt="" className="w-full h-full object-cover" /></div>
         
-        <div className="relative z-10 flex-1 flex flex-col gap-6 p-4 overflow-y-auto">
+        {/* Social Story Context */}
+        {lesson.scenario && (
+          <div className="relative z-10 bg-surface-container/80 backdrop-blur-sm px-5 py-3 rounded-2xl mx-4 mt-4 max-w-2xl self-center text-center">
+            <p className="text-[16px] leading-[24px] text-on-surface-variant italic">
+              📖 {lesson.scenario}
+            </p>
+          </div>
+        )}
+        
+        <div className="relative z-10 flex-1 flex flex-col gap-6 p-4 overflow-y-auto mt-2">
            {conversationHistory.map((msg, i) => (
-             <div key={i} className={`flex ${msg.speaker === 'character' ? 'justify-start' : 'justify-end'} items-end gap-3`}>
-               {msg.speaker === 'character' && (
-                 <img src={charMeta.imagePath} className="w-12 h-12 rounded-full border-2 border-primary object-cover" />
-               )}
-               <div className={`p-4 rounded-2xl max-w-[75%] ${msg.speaker === 'character' ? 'bg-surface-container text-on-surface rounded-bl-sm' : 'bg-primary text-on-primary rounded-br-sm shadow-md'}`}>
-                 <p className="text-[18px] font-semibold">{msg.text}</p>
-                 {msg.tamilText && <p className="text-[14px] mt-1 opacity-80">{msg.tamilText}</p>}
+             <div key={i} className={`flex flex-col ${msg.speaker === 'character' ? 'items-start' : 'items-end'}`}>
+               <div className={`flex ${msg.speaker === 'character' ? 'justify-start' : 'justify-end'} items-end gap-3 w-full`}>
+                 {msg.speaker === 'character' && (
+                   <img src={charMeta.imagePath} className="w-12 h-12 rounded-full border-2 border-primary object-cover" />
+                 )}
+                 <div className={`p-4 rounded-2xl max-w-[75%] ${msg.speaker === 'character' ? 'bg-surface-container text-on-surface rounded-bl-sm' : 'bg-primary text-on-primary rounded-br-sm shadow-md'}`}>
+                   <p className="text-[18px] font-semibold tracking-[0.02em]">{msg.text}</p>
+                   {msg.tamilText && <p className={`text-[15px] mt-1 font-medium ${msg.speaker === 'character' ? 'text-on-surface-variant' : 'text-on-primary/80'}`}>{msg.tamilText}</p>}
+                 </div>
                </div>
+               
+               {/* English Subtitle Toggle */}
+               {msg.englishText && (
+                 <div className={`mt-2 ${msg.speaker === 'character' ? 'ml-16' : 'mr-2'}`}>
+                   <button 
+                     onClick={() => setExpandedTranslations(prev => prev.includes(i) ? prev.filter(idx => idx !== i) : [...prev, i])}
+                     className="flex items-center gap-1 px-3 py-1 bg-surface-container-high hover:bg-surface-variant text-on-surface-variant rounded-full text-[13px] font-bold transition-colors"
+                   >
+                     <span className="material-symbols-outlined text-[16px]">translate</span>
+                     {expandedTranslations.includes(i) ? "Hide English" : "English Subtitle"}
+                   </button>
+                   {expandedTranslations.includes(i) && (
+                     <div className="mt-2 bg-surface-container-lowest border border-outline-variant p-3 rounded-xl max-w-xs shadow-sm">
+                       <p className="text-[14px] text-on-surface font-medium">{msg.englishText}</p>
+                     </div>
+                   )}
+                 </div>
+               )}
              </div>
            ))}
 

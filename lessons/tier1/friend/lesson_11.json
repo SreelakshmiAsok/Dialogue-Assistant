@@ -1,0 +1,20 @@
+{
+  "id": "friend_11",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Homework Help",
+  "social_story": "Your friend is stuck on homework. They ask if you can help.",
+  "question_tanglish": "Homework la help pannuva?",
+  "question_tamil": "ஹோம்வொர்க் ல ஹெல்ப் பண்ணுவா?",
+  "expected_answers": [
+    "Pannuren da",
+    "Seri da",
+    "Va da paappom",
+    "Aama da",
+    "Help pannuren"
+  ],
+  "model_answer": "Pannuren da",
+  "respect_required": false,
+  "difficulty": 2,
+  "tier": 1
+}

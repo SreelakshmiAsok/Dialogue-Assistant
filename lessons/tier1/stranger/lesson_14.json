@@ -1,0 +1,20 @@
+{
+  "id": "stranger_14",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Bus",
+  "social_story": "You are at the bus stop. The bus conductor asks where you are going.",
+  "question_tanglish": "Enga ponum?",
+  "question_tamil": "எங்க போணும்?",
+  "expected_answers": [
+    "School sir",
+    "Veetukku sir",
+    "Bus stand sir",
+    "Town sir",
+    "Kovil sir"
+  ],
+  "model_answer": "School sir",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

@@ -1,0 +1,22 @@
+{
+  "id": "stranger_04",
+  "character": "Stranger",
+  "avatar": "🧑",
+  "lesson": "Directions - Hospital",
+  "social_story": "A worried aunty asks you where the nearest hospital is.",
+  "question_tanglish": "Hospital enga iruku?",
+  "question_tamil": "ஹாஸ்பிடல் எங்க இருக்கு?",
+  "expected_answers": [
+    "Straight sir",
+    "Straight poonga sir",
+    "Left la irukku sir",
+    "Right la irukku sir",
+    "Theriyadhu sir",
+    "Anga irukku sir",
+    "Near signal sir"
+  ],
+  "model_answer": "Straight poonga sir",
+  "respect_required": true,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,20 @@
+{
+  "id": "father_19",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Permission",
+  "social_story": "You want to go to your friend's house. Appa asks where you are going.",
+  "question_tanglish": "Enga poreh?",
+  "question_tamil": "எங்க போறே?",
+  "expected_answers": [
+    "Friend veetukku appa",
+    "Friend house appa",
+    "Pakkathula appa",
+    "Veliya appa",
+    "Nanban veetukku appa"
+  ],
+  "model_answer": "Friend veetukku appa",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

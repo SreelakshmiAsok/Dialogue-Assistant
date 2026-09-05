@@ -1,0 +1,20 @@
+{
+  "id": "friend_06",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Beach",
+  "social_story": "It is a sunny day. Your friend wants to go to the beach.",
+  "question_tanglish": "Beach polaama?",
+  "question_tamil": "பீச் போலாமா?",
+  "expected_answers": [
+    "Polaam da",
+    "Va da",
+    "Seri da",
+    "Aama da",
+    "Let's go da"
+  ],
+  "model_answer": "Polaam da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

@@ -1,0 +1,20 @@
+{
+  "id": "father_13",
+  "character": "Father",
+  "avatar": "👨",
+  "lesson": "Guests",
+  "social_story": "Guests are coming to your house. Appa asks you to behave nicely.",
+  "question_tanglish": "Nalla nadandhukkanum, puriyudha?",
+  "question_tamil": "நல்லா நடந்துக்கணும், புரியுதா?",
+  "expected_answers": [
+    "Seri appa",
+    "Aama appa",
+    "Puriyudhu appa",
+    "Ok appa",
+    "Nalla nadandhukuren appa"
+  ],
+  "model_answer": "Seri appa",
+  "respect_required": true,
+  "difficulty": 2,
+  "tier": 1
+}

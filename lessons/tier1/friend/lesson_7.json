@@ -1,0 +1,21 @@
+{
+  "id": "friend_07",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Football",
+  "social_story": "Your friend has a football. They ask if you want to play.",
+  "question_tanglish": "Football aadalaama?",
+  "question_tamil": "ஃபுட்பால் ஆடலாமா?",
+  "expected_answers": [
+    "Va da",
+    "Aadalaama",
+    "Seri da",
+    "Aama da",
+    "Ok da",
+    "Polaam da"
+  ],
+  "model_answer": "Va da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

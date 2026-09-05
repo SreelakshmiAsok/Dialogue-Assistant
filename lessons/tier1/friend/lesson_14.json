@@ -1,0 +1,20 @@
+{
+  "id": "friend_14",
+  "character": "Friend",
+  "avatar": "👦",
+  "lesson": "Thanks",
+  "social_story": "Your friend shared their lunch with you.",
+  "question_tanglish": "Naan share pannava unakku?",
+  "question_tamil": "நான் ஷேர் பண்ணவா உனக்கு?",
+  "expected_answers": [
+    "Thanks da",
+    "Thank you da",
+    "Seri da",
+    "Aama da",
+    "Romba thanks da"
+  ],
+  "model_answer": "Thanks da",
+  "respect_required": false,
+  "difficulty": 1,
+  "tier": 1
+}

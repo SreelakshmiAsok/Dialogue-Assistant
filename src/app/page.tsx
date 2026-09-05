@@ -54,7 +54,7 @@ export default function WelcomeHome() {
           {/* Greeting Text */}
           <div className="flex flex-col items-center space-y-4">
             <h1 className="text-[36px] leading-[48px] md:text-[56px] md:leading-[72px] font-bold tracking-[0.02em] text-on-surface">
-              Hello! 👋
+              Hello!
             </h1>
             <p className="text-[24px] leading-[36px] font-semibold text-on-surface-variant max-w-md">
               Ready to practice talking?
