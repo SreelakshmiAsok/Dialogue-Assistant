@@ -557,12 +557,13 @@ def api_evaluate():
 
     ontology_eval = ontology_reasoner.evaluate_utterance(
         role=character,
-        context=question.get("context", "General"),
+        context=question.get("context") or question.get("lesson", "General"),
         utterance_text=response,
         intent=inferred_intent,
         has_politeness=respect_ok,
         semantic_similarity=nlp_similarity,
-        expected_goal=expected_goal
+        expected_goal=expected_goal,
+        scenario_id=question.get("id")
     )
     
     # Combined evidence evaluation:
@@ -570,10 +571,12 @@ def api_evaluate():
     # Acceptance requires intent/context agreement, ontology appropriateness,
     # or strong semantic equivalence (>= 0.88).
     intent_verified = False
-    if ontology_eval.get("is_appropriate") and inferred_intent != "unknown":
+    if ontology_eval.get("goal_satisfied") and inferred_intent != "unknown":
         matched = True
         intent_verified = True
         best_semantic = max(best_semantic, nlp_similarity, 0.82)
+    elif matched and ontology_eval.get("is_appropriate"):
+        intent_verified = True
     elif ontology_eval.get("is_appropriate") and nlp_similarity >= 0.88:
         matched = True
         intent_verified = True

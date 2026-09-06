@@ -54,6 +54,36 @@
   <rdfs:range rdf:resource="#SocialContext"/>
 </owl:ObjectProperty>
 
+<owl:ObjectProperty rdf:about="#hasSocialRole">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#SocialRole"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#inSocialContext">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#SocialContext"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#expectsIntent">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#CommunicativeIntent"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#allowsAlternativeIntent">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#CommunicativeIntent"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#violatesScenario">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#CommunicativeIntent"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#requiresFeature">
+  <rdfs:domain rdf:resource="#CommunicationScenario"/>
+  <rdfs:range rdf:resource="#LinguisticFeature"/>
+</owl:ObjectProperty>
+
 <owl:DatatypeProperty rdf:about="#hasText">
   <rdfs:domain>
     <owl:Class>
@@ -85,6 +115,18 @@
 <owl:Class rdf:about="#Utterance"/>
 
 <owl:Class rdf:about="#Response"/>
+
+<owl:Class rdf:about="#CommunicativeIntent">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LinguisticFeature">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SocialContext">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
 
 <owl:Class rdf:about="#Teacher">
   <rdfs:subClassOf rdf:resource="#SocialRole"/>
@@ -124,18 +166,6 @@
 
 <owl:Class rdf:about="#Request">
   <rdfs:subClassOf rdf:resource="#Utterance"/>
-</owl:Class>
-
-<owl:Class rdf:about="#SocialContext">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-</owl:Class>
-
-<owl:Class rdf:about="#CommunicativeIntent">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-</owl:Class>
-
-<owl:Class rdf:about="#LinguisticFeature">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
 </owl:Class>
 
 <owl:Class rdf:about="#TeacherContext">
@@ -232,6 +262,17 @@
       </owl:intersectionOf>
     </owl:Class>
   </owl:equivalentClass>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Utterance"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#usesFeature"/>
+          <owl:someValuesFrom rdf:resource="#HonorificMarker"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
 </owl:Class>
 
 <owl:Class rdf:about="#StrangerSafetyUtterance">
@@ -257,6 +298,77 @@
   <rdfs:subClassOf rdf:resource="#Utterance"/>
 </owl:Class>
 
+<owl:Class rdf:about="#MealContext">
+  <rdfs:subClassOf rdf:resource="#ParentContext"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ClassroomContext">
+  <rdfs:subClassOf rdf:resource="#TeacherContext"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PlaygroundContext">
+  <rdfs:subClassOf rdf:resource="#PeerContext"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CommunicationScenario">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AnswerQuestion">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IncompleteTaskReport">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PoliteInterruption">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#StrangerCompliance">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#HostileRefusal">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DisrespectfulInformal">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#HonorificMarker">
+  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExcuseMeMarker">
+  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FirstPersonStateMarker">
+  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TimeExtensionMarker">
+  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParentPoliteInterruptionUtterance">
+  <rdfs:subClassOf rdf:resource="#Utterance"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Utterance"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#usesFeature"/>
+          <owl:someValuesFrom rdf:resource="#ExcuseMeMarker"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
 <owl:NamedIndividual rdf:about="#ChildUser">
   <rdf:type rdf:resource="#Person"/>
 </owl:NamedIndividual>
@@ -279,6 +391,217 @@
   <hasText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Good morning, Teacher! How are you today?</hasText>
   <isSafe rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isSafe>
   <politenessLevel rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</politenessLevel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#TeacherContextInd">
+  <rdf:type rdf:resource="#TeacherContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ParentContextInd">
+  <rdf:type rdf:resource="#ParentContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PeerContextInd">
+  <rdf:type rdf:resource="#PeerContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#StrangerContextInd">
+  <rdf:type rdf:resource="#StrangerContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#MealContextInd">
+  <rdf:type rdf:resource="#MealContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#TeacherRoleInd">
+  <rdf:type rdf:resource="#Teacher"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ParentRoleInd">
+  <rdf:type rdf:resource="#Parent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PeerRoleInd">
+  <rdf:type rdf:resource="#Peer"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#StrangerRoleInd">
+  <rdf:type rdf:resource="#Stranger"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_AnswerQuestion">
+  <rdf:type rdf:resource="#AnswerQuestion"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#MealContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_TaskCompletion">
+  <rdf:type rdf:resource="#TaskCompletionConfirmation"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_IncompleteTask">
+  <rdf:type rdf:resource="#IncompleteTaskReport"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PoliteRequest">
+  <rdf:type rdf:resource="#PoliteRequest"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#PeerContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PoliteInterruption">
+  <rdf:type rdf:resource="#PoliteInterruption"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ContextualRequest">
+  <rdf:type rdf:resource="#ContextualRequest"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_SafetyRefusal">
+  <rdf:type rdf:resource="#SafetyRefusal"/>
+  <appropriateFor rdf:resource="#StrangerContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_Uncertainty">
+  <rdf:type rdf:resource="#UncertaintyResponse"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+  <appropriateFor rdf:resource="#StrangerContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_SocialAcceptance">
+  <rdf:type rdf:resource="#PeerInvitationAcceptance"/>
+  <appropriateFor rdf:resource="#PeerContextInd"/>
+  <violates rdf:resource="#StrangerContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_StrangerCompliance">
+  <rdf:type rdf:resource="#StrangerCompliance"/>
+  <violates rdf:resource="#StrangerContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PoliteRefusal">
+  <rdf:type rdf:resource="#PoliteRefusal"/>
+  <appropriateFor rdf:resource="#ParentContextInd"/>
+  <appropriateFor rdf:resource="#PeerContextInd"/>
+  <appropriateFor rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_CooperativeSuggestion">
+  <rdf:type rdf:resource="#CooperativeSuggestion"/>
+  <appropriateFor rdf:resource="#PeerContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_HostileRefusal">
+  <rdf:type rdf:resource="#HostileRefusal"/>
+  <violates rdf:resource="#ParentContextInd"/>
+  <violates rdf:resource="#PeerContextInd"/>
+  <violates rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_DisrespectfulInformal">
+  <rdf:type rdf:resource="#DisrespectfulInformal"/>
+  <violates rdf:resource="#ParentContextInd"/>
+  <violates rdf:resource="#TeacherContextInd"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_HonorificMarker">
+  <rdf:type rdf:resource="#HonorificMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_RefusalMarker">
+  <rdf:type rdf:resource="#RefusalMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_TrustedAdultReference">
+  <rdf:type rdf:resource="#TrustedAdultReference"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_ExcuseMeMarker">
+  <rdf:type rdf:resource="#ExcuseMeMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_FirstPersonStateMarker">
+  <rdf:type rdf:resource="#FirstPersonStateMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_TimeExtensionMarker">
+  <rdf:type rdf:resource="#TimeExtensionMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Father_Meals">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_ContextualRequest"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_FirstPersonStateMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Father_PoliteInterruption">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <expectsIntent rdf:resource="#intent_PoliteInterruption"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRequest"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <requiresFeature rdf:resource="#feat_ExcuseMeMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Father_Chore">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletion"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_ContextualRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Stranger_Safety">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SafetyRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_Uncertainty"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <violatesScenario rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_TrustedAdultReference"/>
+  <requiresFeature rdf:resource="#feat_RefusalMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Teacher_Greeting">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_HonorificMarker"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_Peer_Play">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
 </owl:NamedIndividual>
 
 

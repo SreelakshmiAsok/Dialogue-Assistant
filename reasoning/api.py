@@ -74,7 +74,8 @@ def reason_endpoint(req: ReasoningRequest):
         utterance_text=req.userText,
         intent=req.intent,
         has_politeness=req.has_politeness,
-        semantic_similarity=req.semantic_similarity
+        semantic_similarity=req.semantic_similarity,
+        scenario_id=req.scenarioId
     )
 
     # Determine feedback summary based on ontology status

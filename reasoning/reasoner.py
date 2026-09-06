@@ -8,6 +8,12 @@ try:
 except ImportError:
     OWLREADY2_AVAILABLE = False
 
+try:
+    from ontology_service import OntologyService
+except ImportError:
+    from reasoning.ontology_service import OntologyService
+
+
 class SocialOntologyReasoner:
     def __init__(self, owl_file_path=None):
         if owl_file_path is None:
@@ -15,30 +21,14 @@ class SocialOntologyReasoner:
             owl_file_path = os.path.join(base_dir, "social_communication.owl")
         
         self.owl_file_path = owl_file_path
-        self.onto = None
-        self.load_ontology()
+        self.ontology_service = OntologyService(self.owl_file_path)
+        self.onto = self.ontology_service.onto
 
-    def load_ontology(self):
-        if not os.path.exists(self.owl_file_path):
-            raise FileNotFoundError(f"Ontology file not found: {self.owl_file_path}")
-
-        if OWLREADY2_AVAILABLE:
-            try:
-                self.onto = get_ontology(self.owl_file_path).load()
-                print(f"[Ontology] Loaded successfully via Owlready2 from {self.owl_file_path}")
-                return
-            except Exception as e:
-                print(f"[Ontology] Owlready2 load error: {e}. Falling back to XML parser.")
-        
-        # Fallback XML parsing for basic metadata inspection
-        self.tree = ET.parse(self.owl_file_path)
-        self.root = self.tree.getroot()
-        print(f"[Ontology] Loaded via XML parser from {self.owl_file_path}")
-
-    def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None, expected_goal: str = None):
+    def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None, expected_goal: str = None, scenario_id: str = None):
         """
         Evaluates an utterance against social communication rules defined in the ontology.
-        Uses NLP-extracted features (intent, politeness, similarity) and scenario goal to infer AppropriateSocialResponse.
+        Queries the OWL knowledge graph via OntologyService to infer AppropriateSocialResponse
+        based on scenario-level task expectations, context constraints, and linguistic features.
         """
         role_clean = role.lower()
         text_clean = utterance_text.lower().strip()
@@ -53,80 +43,54 @@ class SocialOntologyReasoner:
         is_appropriate = False
         inference_details = "Not enough semantic/intent evidence to infer appropriateness."
 
-        # 1. Communicative Goal Alignment (Scenario-driven generalization)
-        goal_satisfied = False
-        if expected_goal and intent and intent != "unknown":
-            if expected_goal in ("task_completion", "homework_completed", "completion"):
-                if intent in ("task_completion", "confirmation"):
-                    goal_satisfied = True
-                    inference_details = f"Inferred AppropriateSocialResponse: Confirmed completion for '{expected_goal}' goal."
-                elif intent == "incomplete_task":
-                    goal_satisfied = True
-                    inference_details = "Inferred AppropriateSocialResponse: Honestly reported incomplete task."
-            elif expected_goal in ("peer_cooperation", "social_acceptance", "peer_invitation"):
-                if intent in ("social_acceptance", "peer_cooperation", "peer_invitation"):
-                    goal_satisfied = True
-                    inference_details = "Inferred AppropriateSocialResponse: Accepted peer activity."
-                elif intent == "social_refusal":
-                    goal_satisfied = True
-                    inference_details = "Inferred AppropriateSocialResponse: Polite refusal to peer."
-            elif expected_goal in ("safe_refusal", "uncertainty"):
-                if intent in ("social_refusal", "uncertainty"):
-                    goal_satisfied = True
-                    inference_details = "Inferred AppropriateSocialResponse: Safe refusal or uncertainty with Stranger."
-            elif intent == expected_goal:
-                goal_satisfied = True
-                inference_details = f"Inferred AppropriateSocialResponse: Matched expected communicative goal '{expected_goal}'."
+        # 1. Ontology Knowledge Graph Query (Scenario-Aware & Context-Aware Reasoning)
+        onto_eval = self.ontology_service.evaluate_intent(
+            role=role,
+            context=context,
+            intent=intent or "unknown",
+            scenario_id=scenario_id,
+            expected_goal=expected_goal
+        )
 
-        # 2. Intent + Context mapping (The Ontology Reasoning)
-        intent_appropriate = goal_satisfied
-        if intent and intent != "unknown":
-            if role_clean == "stranger":
-                if intent in ("social_refusal", "uncertainty"):
-                    intent_appropriate = True
-                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Stranger."
-                elif intent == "social_acceptance":
-                    intent_appropriate = False
-                    inference_details = "Safety Violation: Cannot accept invitations from a Stranger."
-                    violations.append("S_SAFETY_CRITICAL")
-            
-            elif role_clean in ("peer", "friend"):
-                if intent in ("social_acceptance", "peer_cooperation", "peer_invitation"):
-                    intent_appropriate = True
-                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Peer."
-                elif intent == "social_refusal":
-                    intent_appropriate = True
-                    inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for Peer."
-            
-            elif role_clean in ("parent", "teacher", "father"):
-                if intent in ("task_completion", "confirmation", "social_acceptance", "contextual_request", "AnswerQuestion", "homework_completed", "yes"):
-                    intent_appropriate = True
-                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for {role}."
-                elif intent == "social_refusal":
-                    if has_politeness:
-                        intent_appropriate = True
-                        inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for {role}."
-                    else:
-                        intent_appropriate = False
-                        inference_details = f"Impolite refusal is not appropriate for {role}."
-                        failures.append("T_POLITE")
+        constraints = onto_eval.get("constraints", {})
+        goal_satisfied = onto_eval.get("goal_satisfied", False)
+        intent_appropriate = onto_eval.get("is_appropriate", False)
+        inference_details = onto_eval.get("inference_details", "")
+
+        # Check for ontology violations
+        if onto_eval.get("is_violation"):
+            if "stranger" in role_clean:
+                violations.append("S_SAFETY_CRITICAL")
+            elif "teacher" in role_clean:
+                violations.append("T_DECORUM")
+            elif "peer" in role_clean:
+                violations.append("F_HOSTILE")
+            else:
+                violations.append("SOCIAL_VIOLATION")
+
+        # Refusal without politeness for authority figures check
+        if intent == "social_refusal" and role_clean in ("parent", "teacher", "father"):
+            if not has_politeness:
+                intent_appropriate = False
+                inference_details = f"Impolite refusal is not appropriate for {role}."
+                failures.append("T_POLITE")
 
         # Synthesize Intent + Semantic Similarity:
-        if intent_appropriate:
-            # When intent matches scenario goal or is socially appropriate for this role,
-            # verify it doesn't wildly contradict context
-            if semantic_similarity is None or semantic_similarity >= 0.45 or goal_satisfied:
+        if intent_appropriate and not onto_eval.get("is_violation"):
+            # When intent matches scenario goal or is an accepted alternative in ontology,
+            # verify it aligns with context
+            if semantic_similarity is None or semantic_similarity >= 0.45 or goal_satisfied or onto_eval.get("alternative_accepted"):
                 is_appropriate = True
             else:
                 is_appropriate = False
                 inference_details = f"Intent '{intent}' detected but semantic context does not match scenario."
-        elif semantic_similarity and semantic_similarity >= 0.88:
+        elif semantic_similarity and semantic_similarity >= 0.88 and not onto_eval.get("is_violation"):
             # Strongly equivalent response where embeddings show clear semantic equivalence
             is_appropriate = True
             inference_details = "Inferred AppropriateSocialResponse via strong semantic equivalence (>= 0.88)."
         else:
             is_appropriate = False
-            if intent == "unknown":
+            if intent in ("unknown", None):
                 inference_details = "Utterance intent is unverified for this scenario; semantic similarity alone is insufficient."
 
         # Rule 1: Politeness & Formal Greetings
@@ -212,6 +176,10 @@ class SocialOntologyReasoner:
             "owlready2_active": OWLREADY2_AVAILABLE and self.onto is not None,
             "target_role": role,
             "target_context": context,
+            "scenario_individual": constraints.get("scenario_individual"),
+            "context_individual": constraints.get("context_individual"),
+            "goal_satisfied": goal_satisfied,
+            "alternative_accepted": onto_eval.get("alternative_accepted", False),
             "input_text": utterance_text,
             "inferred_intent": intent,
             "is_appropriate": is_appropriate,

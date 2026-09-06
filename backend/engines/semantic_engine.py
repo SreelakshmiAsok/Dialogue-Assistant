@@ -115,17 +115,101 @@ def is_no_answer(text):
     return any(word in tokens for word in ["illa", "no", "nope"])
 
 
-def is_eating_answer(text):
+def is_question_directed_at_interlocutor(text):
+    """
+    Detect if utterance contains a 2nd-person question directed at the interlocutor.
+    Examples in Tamil/Tanglish:
+      - 'neenga saaptiya?', 'saaptiya paa?', 'saaptingala?', 'saaptengala?'
+      - 'neenga variya?', 'nee variya?'
+      - 'did you eat?', 'have you eaten?'
+    """
     normalized = normalize_text(text)
-    eating_words = [
-        "saap", "saptaen", "saaptaen", "saapten", "saapitten",
-        "saaptuten", "saaptutten", "chaap", "chaappidden", "chaapidden",
-        "ate", "eaten", "eating",
-        "food", "lunch", "dinner", "breakfast"
+    tokens = set(normalized.split())
+
+    has_second_person_pronoun = bool(tokens & {"neenga", "ninga", "nee", "you"})
+
+    # 2nd person interrogative verbal inflections: -iya, -ingala, -eengala
+    has_second_person_verb = any(
+        t.endswith("iya") or t.endswith("ingala") or t.endswith("eengala") or t.endswith("engala")
+        for t in tokens
+    )
+
+    has_question_word = bool(tokens & {"did", "have", "are", "enna", "eppadi", "enga", "why", "what", "where"})
+    has_question_mark = "?" in text
+
+    if (has_second_person_pronoun and has_second_person_verb) or (has_second_person_verb and (has_question_mark or has_second_person_pronoun)):
+        return True
+    if has_second_person_pronoun and (has_question_word or has_question_mark):
+        return True
+
+    question_back_phrases = [
+        "neenga saaptiya", "neenga saaptingala", "neenga saaptengala",
+        "saaptiya appa", "saaptiya paa", "saaptingala appa", "saaptiya",
+        "did you eat", "have you eaten", "what about you"
     ]
-    for word in eating_words:
-        if word in normalized:
+    return any(p in normalized for p in question_back_phrases)
+
+
+def has_first_person_eating_statement(text):
+    """
+    Detect if utterance contains a 1st-person statement about own eating status.
+    Examples in Tamil/Tanglish:
+      - 'saaptaen', 'saapten', 'saapitten', 'saptaen', 'saaptuten', 'saaptutten'
+      - 'naan saaptaen', 'naan saapitten'
+      - 'i ate', 'already ate', 'had lunch', 'had food', 'finished lunch'
+      - negative eating status: 'innum illa', 'innum saapala', 'saapala', 'haven't eaten'
+    """
+    normalized = normalize_text(text)
+    tokens = set(normalized.split())
+
+    first_person_eating_tokens = {
+        "saaptaen", "saapten", "saapitten", "saptaen", "saaptuten", "saaptutten",
+        "chaaptaen", "chaapitten", "chaapidden", "ate", "saapala", "sapala"
+    }
+    if bool(tokens & first_person_eating_tokens):
+        return True
+
+    first_person_eating_phrases = [
+        "naan saap", "i ate", "already ate", "had food", "had lunch", "had dinner",
+        "finished food", "finished lunch", "finished eating", "innum saapala",
+        "innum illa"
+    ]
+    return any(p in normalized for p in first_person_eating_phrases)
+
+
+def is_pure_question_back(text):
+    """
+    Returns True if the utterance is purely asking the interlocutor a question
+    WITHOUT answering their own state (e.g. 'neenga saaptiya?' vs 'Naan saapitten paa, neenga saaptiya?').
+    """
+    if not is_question_directed_at_interlocutor(text):
+        return False
+    if has_first_person_eating_statement(text):
+        return False
+    if is_yes_answer(text) or is_no_answer(text):
+        return False
+    return True
+
+
+def is_eating_answer(text):
+    """
+    Determines if text validly indicates own eating status.
+    Rejects pure questions directed at interlocutor ('neenga saaptiya?')
+    and unrelated requests ('5 min appa').
+    """
+    normalized = normalize_text(text)
+    tokens = set(normalized.split())
+
+    if is_pure_question_back(text):
+        return False
+
+    if has_first_person_eating_statement(text):
+        return True
+
+    if is_yes_answer(text) or is_no_answer(text):
+        if not any(w in tokens for w in ["min", "mins", "minutes", "wait", "irunga"]):
             return True
+
     return False
 
 
@@ -225,6 +309,27 @@ def extract_linguistic_features(text):
     request_tokens = {"min", "mins", "minutes", "wait", "irunga", "time"}
     has_request = bool(tokens & request_tokens) or "5 min" in normalized or "five min" in normalized
 
+    # --- Polite Interruption markers (e.g. 'Excuse me', 'Oru nimisham') ---
+    has_polite_interruption = (
+        "excuse me" in normalized
+        or "oru nimisham" in normalized
+        or "sorry to interrupt" in normalized
+        or "oru minute" in normalized
+    )
+
+    # --- Greeting markers ---
+    greeting_tokens = ["good morning", "good afternoon", "good evening", "vanakkam", "namaskaram", "hello", "hi"]
+    has_greeting = any(g in normalized for g in greeting_tokens)
+
+    # --- Hostile / Disrespectful markers ---
+    hostile_phrases = ["get lost", "shut up", "no way", "go away", "it is mine", "its mine", "move", "stupid"]
+    has_hostile = any(h in normalized for h in hostile_phrases)
+
+    # --- Interlocutor Question vs First-Person State ---
+    is_q_back = is_question_directed_at_interlocutor(text)
+    is_pure_q_back = is_pure_question_back(text)
+    has_first_person_eating = has_first_person_eating_statement(text)
+
     return {
         "has_affirmative": has_affirmative,
         "has_come_marker": has_come_marker,
@@ -235,6 +340,12 @@ def extract_linguistic_features(text):
         "has_refusal": has_refusal,
         "has_uncertainty": has_uncertainty,
         "has_request": has_request,
+        "has_polite_interruption": has_polite_interruption,
+        "has_greeting": has_greeting,
+        "has_hostile": has_hostile,
+        "is_question_back": is_q_back,
+        "is_pure_question_back": is_pure_q_back,
+        "has_first_person_eating": has_first_person_eating,
     }
 
 
@@ -248,13 +359,32 @@ def classify_response_intent(text):
     Possible return values:
       "task_completion"    — child confirms task is finished/done
       "incomplete_task"    — child indicates task is not finished
-      "social_acceptance"  — child is accepting/agreeing to engage
+      "social_acceptance"  — child is accepting/agreeing to engage or greeting
       "social_refusal"     — child is politely declining
+      "hostile_refusal"    — child is aggressively/rudely refusing
       "uncertainty"        — child indicates they do not know
       "contextual_request" — child asks for time/clarification
+      "AnswerQuestion"     — child answers the question directly about self
+      "PoliteInterruption" — child uses polite interruption phrase
+      "question_back"      — child asks a question directed at interlocutor
       "unknown"            — cannot determine intent
     """
     features = extract_linguistic_features(text)
+
+    if features.get("has_hostile"):
+        return "hostile_refusal"
+
+    if features.get("is_pure_question_back"):
+        return "question_back"
+
+    if features.get("has_polite_interruption"):
+        return "PoliteInterruption"
+
+    if features.get("has_first_person_eating"):
+        return "AnswerQuestion"
+
+    if features.get("has_greeting"):
+        return "social_acceptance"
 
     affirmative_signals = (
         features["has_affirmative"]
@@ -302,10 +432,15 @@ def aligns_with_required_meaning(text, meaning, intent=""):
     if is_meaning_refusal(text):
         return False
 
-    if _eating_meaning(meaning) or (
-        intent == "AnswerQuestion" and _eating_meaning(meaning)
-    ):
-        return True
+    normalized = normalize_text(text)
+
+    # Eating status meaning check (e.g. father_02 "Indicate whether they have eaten.")
+    if _eating_meaning(meaning):
+        return is_eating_answer(normalized)
+
+    # Polite interruption meaning check
+    if "interruption" in (meaning or "").lower() or "excuse" in (meaning or "").lower() or intent == "PoliteInterruption":
+        return "excuse me" in normalized or "oru nimisham" in normalized or "sorry to interrupt" in normalized
 
     return False
 
@@ -375,7 +510,7 @@ def semantic_match(user_response, scenario):
     #   → MATCH
     # --------------------------------------------------------
 
-    if response_type in ("social_acceptance", "peer_cooperation", "peer_invitation"):
+    if response_type in ("social_acceptance", "peer_cooperation", "peer_invitation", "SocialAcceptance"):
         response_intent = classify_response_intent(normalized_response)
 
         if response_intent == "social_acceptance":
@@ -398,6 +533,15 @@ def semantic_match(user_response, scenario):
                 "inferred_intent": "social_refusal"
             }
 
+        if response_intent == "hostile_refusal":
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": False,
+                "semantic_score": 0.0,
+                "inferred_intent": "hostile_refusal"
+            }
+
         # Intent unclear — not matched
         return {
             "normalized": normalized_response,
@@ -405,6 +549,30 @@ def semantic_match(user_response, scenario):
             "matched": False,
             "semantic_score": 0.0,
             "inferred_intent": "unknown"
+        }
+
+    # --------------------------------------------------------
+    # STRANGER SAFETY REFUSAL MATCHING
+    # --------------------------------------------------------
+
+    if response_type in ("safety_refusal", "SafetyRefusal", "safe_refusal", "uncertainty"):
+        response_intent = classify_response_intent(normalized_response)
+
+        if response_intent in ("safety_refusal", "uncertainty", "social_refusal"):
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": True,
+                "semantic_score": 0.88,
+                "inferred_intent": response_intent
+            }
+
+        return {
+            "normalized": normalized_response,
+            "expected": expected,
+            "matched": False,
+            "semantic_score": 0.0,
+            "inferred_intent": response_intent
         }
 
     # --------------------------------------------------------
