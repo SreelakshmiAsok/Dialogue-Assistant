@@ -1,4 +1,4 @@
-﻿export const setToken = (token: string, role: string) => {
+export const setToken = (token: string, role: string) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("access_token", token);
     localStorage.setItem("user_role", role);
@@ -26,7 +26,7 @@ export const clearAuth = () => {
   }
 };
 
-export const getAuthHeaders = () => {
+export const getAuthHeaders = (): Record<string, string> => {
   const token = getToken();
   return token ? { Authorization: `Bearer ${token}` } : {};
 };

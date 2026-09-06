@@ -120,6 +120,7 @@ export default function Profiles() {
           No children linked. Please link a child in the Parent Dashboard.
         </p>
       )}
+      </div>
     </div>
   );
 }
