@@ -560,39 +560,41 @@ function Tier2SessionContent() {
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const playTTS = useCallback((tamilText: string, fallbackTanglish?: string) => {
-    // Cancel any ongoing speech or audio
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current.currentTime = 0;
-      currentAudioRef.current = null;
-    }
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+  const playAudioSequence = useCallback(
+    async (items: { text: string; character: string }[]) => {
+      // Cancel any ongoing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current.src = "";
+        currentAudioRef.current = null;
+      }
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
 
-    const textToSpeak = (tamilText || fallbackTanglish || "").trim();
-    if (!textToSpeak) return;
-
-    try {
-      const url = getTtsAudioUrl(textToSpeak, characterName);
-      const audio = new Audio(url);
-      currentAudioRef.current = audio;
-      const playPromise = audio.play();
-      if (playPromise && typeof playPromise.catch === "function") {
-        playPromise.catch((err) => {
-          console.warn("Neural audio play prevented or failed, falling back to browser synthesis", err);
-          if ("speechSynthesis" in window) {
-            const utterance = new SpeechSynthesisUtterance(fallbackTanglish || textToSpeak);
-            utterance.rate = 0.85;
-            window.speechSynthesis.speak(utterance);
+      for (const item of items) {
+        if (!item.text?.trim()) continue;
+        const url = getTtsAudioUrl(item.text, item.character);
+        await new Promise<void>((resolve) => {
+          const audio = new Audio(url);
+          currentAudioRef.current = audio;
+          audio.onended = () => resolve();
+          audio.onerror = (e) => {
+            console.warn("Neural audio error:", e);
+            resolve();
+          };
+          const p = audio.play();
+          if (p && typeof p.catch === "function") {
+            p.catch((err) => {
+              console.warn("Autoplay blocked (user gesture required):", err);
+              resolve();
+            });
           }
         });
       }
-    } catch (e) {
-      console.error("Failed to play TTS audio", e);
-    }
-  }, [characterName]);
+    },
+    []
+  );
 
   // Load Tier 2 Lesson
   useEffect(() => {
@@ -616,7 +618,12 @@ function Tier2SessionContent() {
                   englishText: (firstTurn.prompt as any).english || fullLesson.initial_prompt?.english,
                 },
               ]);
-              playTTS(firstTurn.prompt.tamil || firstTurn.prompt.tanglish, firstTurn.prompt.tanglish);
+
+              // Read out scenario context first (Narrator), then character dialogue (Character)
+              playAudioSequence([
+                { text: fullLesson.scenario, character: "Narrator" },
+                { text: firstTurn.prompt.tamil || firstTurn.prompt.tanglish, character: characterName },
+              ]);
             }
           });
         }
@@ -635,7 +642,7 @@ function Tier2SessionContent() {
         clearTimeout(audioTimeoutRef.current);
       }
     };
-  }, [characterName, lessonId, playTTS]);
+  }, [characterName, lessonId, playAudioSequence]);
 
   const submitAnswer = useCallback(
     async (answer: string) => {
@@ -668,10 +675,12 @@ function Tier2SessionContent() {
                   englishText: (result.next_character_reply as any).english,
                 },
               ]);
-              playTTS(
-                result.next_character_reply!.tamil || result.next_character_reply!.tanglish,
-                result.next_character_reply!.tanglish
-              );
+              playAudioSequence([
+                {
+                  text: result.next_character_reply!.tamil || result.next_character_reply!.tanglish,
+                  character: characterName,
+                },
+              ]);
               setCurrentTurnId(result.next_turn_id);
               setEvaluation(null);
               setRetryCount(0);
@@ -702,7 +711,7 @@ function Tier2SessionContent() {
         setIsEvaluating(false);
       }
     },
-    [lesson, currentTurnId, retryCount, characterName, router, playTTS]
+    [lesson, currentTurnId, retryCount, characterName, router, playAudioSequence]
   );
 
   // STT Handlers
@@ -806,16 +815,26 @@ function Tier2SessionContent() {
       <main className="flex-1 flex flex-col w-full max-w-3xl mx-auto px-4 py-2 relative z-10 overflow-hidden min-h-0">
         {/* Scenario Context Card (Compact & Readable) */}
         {lesson.scenario && (
-          <div className="shrink-0 w-full bg-surface-container-low/95 border-l-4 border-secondary rounded-2xl px-4 py-2.5 mb-2 shadow-sm flex items-start gap-2 text-left">
-            <span className="text-[18px] select-none">📖</span>
-            <div className="flex-1 min-w-0">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-secondary block leading-none mb-1">
-                Scenario Context
-              </span>
-              <p className="text-[14px] leading-snug text-on-surface font-medium line-clamp-2">
-                {lesson.scenario}
-              </p>
+          <div className="shrink-0 w-full bg-surface-container-low/95 border-l-4 border-secondary rounded-2xl px-4 py-2.5 mb-2 shadow-sm flex items-center justify-between gap-3 text-left">
+            <div className="flex items-start gap-2.5 min-w-0">
+              <span className="text-[18px] select-none shrink-0 mt-0.5">📖</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-secondary block leading-none mb-1">
+                  Scenario Context
+                </span>
+                <p className="text-[14px] leading-snug text-on-surface font-medium">
+                  {lesson.scenario}
+                </p>
+              </div>
             </div>
+            <button
+              onClick={() => playAudioSequence([{ text: lesson.scenario, character: "Narrator" }])}
+              className="shrink-0 p-2 text-secondary hover:bg-secondary/10 active:scale-95 rounded-full transition-all flex items-center justify-center cursor-pointer"
+              title="Read scenario aloud"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[22px]">volume_up</span>
+            </button>
           </div>
         )}
 
@@ -853,8 +872,15 @@ function Tier2SessionContent() {
 
                 {msg.speaker === "character" && (
                   <button
-                    onClick={() => playTTS(msg.tamilText || msg.text, msg.text)}
-                    className="p-1.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors self-center shrink-0"
+                    onClick={() =>
+                      playAudioSequence([
+                        {
+                          text: msg.tamilText || msg.text,
+                          character: characterName,
+                        },
+                      ])
+                    }
+                    className="p-1.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors self-center shrink-0 cursor-pointer"
                     title="Replay neural audio"
                     aria-label="Replay audio"
                   >

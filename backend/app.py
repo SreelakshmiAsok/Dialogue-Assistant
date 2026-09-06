@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import subprocess
+import hashlib
 from core.db import get_tier2_lessons_for_character, get_tier2_lesson_by_id
 from engines.tier2_engine import evaluate_tier2_turn
 
@@ -264,7 +265,7 @@ def api_audio(question_id):
 @app.route("/api/tts", methods=["GET", "POST"])
 def api_tts():
     """
-    Generate and return Neural Tamil TTS audio dynamically via edge-tts.
+    Generate and return Neural TTS audio dynamically via edge-tts.
     Supports GET /api/tts?text=...&character=...
     or POST { "text": "...", "character": "..." }
     """
@@ -281,19 +282,38 @@ def api_tts():
     if not text:
         return jsonify({"error": "No text provided"}), 400
 
-    # Pick neural voice by character
-    voice = "ta-IN-PallaviNeural"  # Default female (Teacher, etc.)
-    if character in ["Father", "Stranger", "Friend"]:
-        voice = "ta-IN-ValluvarNeural"
+    # Clean out parenthesized stage directions like "(Talking on phone)" or "(போனில் பேசுகிறார்)"
+    spoken_text = re.sub(r'\(.*?\)', '', text).strip()
+    if not spoken_text:
+        spoken_text = text.strip()
 
-    # Cache by hash of voice + text
-    h = hashlib.md5(f"{voice}_{text}".encode("utf-8")).hexdigest()
+    # Determine voice:
+    if character == "Narrator":
+        voice = "en-IN-NeerjaExpressiveNeural"
+    elif has_tamil(spoken_text):
+        if character in ["Father", "Stranger", "Friend"]:
+            voice = "ta-IN-ValluvarNeural"
+        else:
+            voice = "ta-IN-PallaviNeural"
+    else:
+        if character in ["Father", "Stranger", "Friend"]:
+            voice = "en-IN-PrabhatNeural"
+        elif character == "Teacher":
+            voice = "en-IN-NeerjaNeural"
+        else:
+            voice = "en-IN-NeerjaExpressiveNeural"
+
+    # Cache by hash of voice + spoken_text
+    h = hashlib.md5(f"{voice}_{spoken_text}".encode("utf-8")).hexdigest()
     audio_dir = os.path.join(os.path.dirname(__file__), "static", "audio")
     os.makedirs(audio_dir, exist_ok=True)
     filepath = os.path.join(audio_dir, f"tts_{h}.mp3")
 
     if not os.path.exists(filepath):
-        subprocess.run(["edge-tts", "--voice", voice, "--text", text, "--write-media", filepath])
+        res = subprocess.run(["edge-tts", "--voice", voice, "--text", spoken_text, "--write-media", filepath], capture_output=True, text=True)
+        if res.returncode != 0:
+            print(f"TTS generation failed: {res.stderr}")
+            return jsonify({"error": "Failed to generate TTS audio", "details": res.stderr}), 500
 
     return send_file(filepath, mimetype="audio/mpeg")
 
