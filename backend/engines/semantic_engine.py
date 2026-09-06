@@ -89,21 +89,18 @@ def is_dont_know_answer(text):
 
 def is_homework_completed(text):
     normalized = normalize_text(text)
+    tokens = set(normalized.split())
 
-    completion_words = [
-        "aama",
-        "seri",
-        "mudichiten",
-        "mudichitten",
-        "mudichuten",
-        "mudichen"
-    ]
+    completion_tokens = {
+        "aama", "seri", "ok", "yes", "mudichiten", "mudichitten", "mudichuten",
+        "mudichen", "mudichachu", "mudichaachu", "mudichchaachu",
+        "mudichchaachchu", "finished", "done", "completed", "panniten", "panniyachu"
+    }
 
-    for word in completion_words:
-        if word in normalized:
-            return True
+    if any(t in completion_tokens or t.startswith("mudich") for t in tokens):
+        return True
 
-    return False
+    return any(word in normalized for word in ["mudich", "finished", "done", "completed", "aama", "seri"])
 
 
 def is_yes_answer(text):
@@ -194,8 +191,23 @@ def extract_linguistic_features(text):
     uses_peer_register = bool(tokens & peer_register_tokens)
 
     # --- Formal address register ---
-    formal_tokens = {"appa", "sir", "teacher", "mam", "madam", "miss"}
+    formal_tokens = {
+        "appa", "amma", "sir", "teacher", "mam", "ma'am", "maam",
+        "madam", "medam", "miss", "missy", "uncle", "aunty"
+    }
     uses_formal_register = bool(tokens & formal_tokens)
+
+    # --- Completion / Confirmation markers ---
+    completion_tokens = {
+        "finished", "done", "completed", "ready", "aachu", "aayiduchu", "panniyachu"
+    }
+    has_completion = any(
+        token in completion_tokens
+        or token.startswith("mudich")
+        or token.startswith("mudinj")
+        or token.startswith("pannit")
+        for token in tokens
+    )
 
     # --- Refusal markers ---
     # Detecting a polite refusal is also important:
@@ -217,6 +229,7 @@ def extract_linguistic_features(text):
         "has_affirmative": has_affirmative,
         "has_come_marker": has_come_marker,
         "has_activity_verb": has_activity_verb,
+        "has_completion": has_completion,
         "uses_peer_register": uses_peer_register,
         "uses_formal_register": uses_formal_register,
         "has_refusal": has_refusal,
@@ -230,19 +243,19 @@ def classify_response_intent(text):
     Classify the pragmatic intent of a response using extracted features.
 
     Returns an intent label that can be matched against the scenario's
-    required_communication.intent. This is intent-to-intent matching,
-    not word-to-word matching.
+    required_communication.intent or inferred scenario goal.
 
     Possible return values:
+      "task_completion"    — child confirms task is finished/done
+      "incomplete_task"    — child indicates task is not finished
       "social_acceptance"  — child is accepting/agreeing to engage
       "social_refusal"     — child is politely declining
+      "uncertainty"        — child indicates they do not know
+      "contextual_request" — child asks for time/clarification
       "unknown"            — cannot determine intent
     """
     features = extract_linguistic_features(text)
 
-    # A response is classified as social_acceptance if it has any
-    # affirmative signal (come-marker, agreement word, or activity verb)
-    # without a clear refusal override.
     affirmative_signals = (
         features["has_affirmative"]
         or features["has_come_marker"]
@@ -255,8 +268,14 @@ def classify_response_intent(text):
     if features["has_request"]:
         return "contextual_request"
 
-    if features["has_refusal"] and not affirmative_signals:
-        return "social_refusal"
+    if features["has_refusal"]:
+        if features.get("has_completion"):
+            return "incomplete_task"
+        if not affirmative_signals:
+            return "social_refusal"
+
+    if features.get("has_completion"):
+        return "task_completion"
 
     if affirmative_signals:
         return "social_acceptance"
@@ -387,6 +406,31 @@ def semantic_match(user_response, scenario):
             "semantic_score": 0.0,
             "inferred_intent": "unknown"
         }
+
+    # --------------------------------------------------------
+    # TASK COMPLETION / CONFIRMATION MATCHING
+    # --------------------------------------------------------
+
+    if response_type in ("task_completion", "homework_completed", "completion"):
+        response_intent = classify_response_intent(normalized_response)
+
+        if response_intent == "task_completion":
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": True,
+                "semantic_score": 0.90,
+                "inferred_intent": "task_completion"
+            }
+
+        if response_intent == "incomplete_task":
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": True,
+                "semantic_score": 0.75,
+                "inferred_intent": "incomplete_task"
+            }
 
     # --------------------------------------------------------
     # REQUIRED COMMUNICATION GOAL (intent + meaning)

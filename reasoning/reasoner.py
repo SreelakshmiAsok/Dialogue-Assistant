@@ -35,10 +35,10 @@ class SocialOntologyReasoner:
         self.root = self.tree.getroot()
         print(f"[Ontology] Loaded via XML parser from {self.owl_file_path}")
 
-    def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None):
+    def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None, expected_goal: str = None):
         """
         Evaluates an utterance against social communication rules defined in the ontology.
-        Uses NLP-extracted features (intent, politeness, similarity) to infer AppropriateSocialResponse.
+        Uses NLP-extracted features (intent, politeness, similarity) and scenario goal to infer AppropriateSocialResponse.
         """
         role_clean = role.lower()
         text_clean = utterance_text.lower().strip()
@@ -53,8 +53,33 @@ class SocialOntologyReasoner:
         is_appropriate = False
         inference_details = "Not enough semantic/intent evidence to infer appropriateness."
 
-        # Intent + Context mapping (The Ontology Reasoning)
-        intent_appropriate = False
+        # 1. Communicative Goal Alignment (Scenario-driven generalization)
+        goal_satisfied = False
+        if expected_goal and intent and intent != "unknown":
+            if expected_goal in ("task_completion", "homework_completed", "completion"):
+                if intent in ("task_completion", "confirmation"):
+                    goal_satisfied = True
+                    inference_details = f"Inferred AppropriateSocialResponse: Confirmed completion for '{expected_goal}' goal."
+                elif intent == "incomplete_task":
+                    goal_satisfied = True
+                    inference_details = "Inferred AppropriateSocialResponse: Honestly reported incomplete task."
+            elif expected_goal in ("peer_cooperation", "social_acceptance", "peer_invitation"):
+                if intent in ("social_acceptance", "peer_cooperation", "peer_invitation"):
+                    goal_satisfied = True
+                    inference_details = "Inferred AppropriateSocialResponse: Accepted peer activity."
+                elif intent == "social_refusal":
+                    goal_satisfied = True
+                    inference_details = "Inferred AppropriateSocialResponse: Polite refusal to peer."
+            elif expected_goal in ("safe_refusal", "uncertainty"):
+                if intent in ("social_refusal", "uncertainty"):
+                    goal_satisfied = True
+                    inference_details = "Inferred AppropriateSocialResponse: Safe refusal or uncertainty with Stranger."
+            elif intent == expected_goal:
+                goal_satisfied = True
+                inference_details = f"Inferred AppropriateSocialResponse: Matched expected communicative goal '{expected_goal}'."
+
+        # 2. Intent + Context mapping (The Ontology Reasoning)
+        intent_appropriate = goal_satisfied
         if intent and intent != "unknown":
             if role_clean == "stranger":
                 if intent in ("social_refusal", "uncertainty"):
@@ -74,7 +99,7 @@ class SocialOntologyReasoner:
                     inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for Peer."
             
             elif role_clean in ("parent", "teacher", "father"):
-                if intent in ("social_acceptance", "contextual_request", "AnswerQuestion", "homework_completed", "yes"):
+                if intent in ("task_completion", "confirmation", "social_acceptance", "contextual_request", "AnswerQuestion", "homework_completed", "yes"):
                     intent_appropriate = True
                     inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for {role}."
                 elif intent == "social_refusal":
@@ -88,8 +113,9 @@ class SocialOntologyReasoner:
 
         # Synthesize Intent + Semantic Similarity:
         if intent_appropriate:
-            # When intent is socially appropriate for this role, verify it supports the scenario context
-            if semantic_similarity is None or semantic_similarity >= 0.50:
+            # When intent matches scenario goal or is socially appropriate for this role,
+            # verify it doesn't wildly contradict context
+            if semantic_similarity is None or semantic_similarity >= 0.45 or goal_satisfied:
                 is_appropriate = True
             else:
                 is_appropriate = False
@@ -105,7 +131,10 @@ class SocialOntologyReasoner:
 
         # Rule 1: Politeness & Formal Greetings
         if "teacher" in role_clean or "doctor" in role_clean:
-            has_polite = any(w in text_clean for w in ["teacher", "mr", "ms", "mrs", "good morning", "please", "excuse me"])
+            has_polite = any(w in text_clean for w in [
+                "teacher", "mr", "ms", "mrs", "good morning", "please", "excuse me",
+                "mam", "ma'am", "maam", "madam", "medam", "miss", "missy"
+            ])
             has_rude = any(w in text_clean for w in ["hey man", "shut up", "gimme", "stupid", "whatever"])
 
             if has_rude:

@@ -318,6 +318,63 @@ def api_tts():
     return send_file(filepath, mimetype="audio/mpeg")
 
 
+def infer_scenario_goal(question):
+    """
+    Infers the expected communicative goal from question/lesson context.
+    Generalizes across scenarios instead of hardcoding individual questions.
+    """
+    req_comm = question.get("required_communication") or {}
+    if req_comm.get("intent"):
+        return req_comm["intent"]
+
+    lesson = (question.get("lesson") or "").lower()
+    q_tanglish = (question.get("question_tanglish") or "").lower()
+    model = (question.get("model_answer") or "").lower()
+    accepted = [a.lower() for a in question.get("expected_answers") or []]
+    character = question.get("character", "")
+
+    # 1. Task Completion (e.g. homework check, chores, eating)
+    if (
+        "homework" in lesson
+        or "mudich" in q_tanglish
+        or any(a.startswith("mudich") for a in accepted)
+        or "mudich" in model
+        or "saaptacha" in q_tanglish
+    ):
+        return "task_completion"
+
+    # 2. Peer cooperation / Invitation acceptance (e.g. sports, games, coming along)
+    if (
+        character == "Friend"
+        or "vilayaad" in q_tanglish
+        or "aadalaa" in q_tanglish
+        or "variya" in q_tanglish
+        or "polaam" in model
+        or any(a in ("va da", "vaa da", "vilayaadalaam") for a in accepted)
+    ):
+        return "peer_cooperation"
+
+    # 3. Stranger safety (refusal / uncertainty)
+    if character == "Stranger":
+        return "safe_refusal"
+
+    # 4. Apology
+    if "sorry" in q_tanglish or "apology" in lesson or "sorry" in model:
+        return "apology"
+
+    # 5. Greeting / Farewell
+    if "bye" in q_tanglish or "goodbye" in lesson:
+        return "farewell"
+    if "morning" in q_tanglish or "vanakkam" in q_tanglish:
+        return "greeting"
+
+    # 6. Contextual compliance (giving items / helping)
+    if "kudu" in q_tanglish or "kudunga" in q_tanglish or "eduthu" in q_tanglish:
+        return "contextual_compliance"
+
+    return "general_dialogue"
+
+
 @app.route("/api/evaluate", methods=["POST"])
 def api_evaluate():
     """
@@ -415,8 +472,8 @@ def api_evaluate():
     # --------------------------------------------------------
     rule_result = check_pragmatics(
         response,
-        scenario_id=None,
-        expected_answers=expected_answers,
+        expected_answers,
+        model_answer,
         character=character
     )
 
@@ -447,20 +504,23 @@ def api_evaluate():
     respect_ok = not missing_preferred_vocative
 
     # --------------------------------------------------------
-    # Step 3: Semantic goal (required_communication)
+    # Step 3: Semantic goal & Communicative Goal Alignment
     # --------------------------------------------------------
+    expected_goal = infer_scenario_goal(question)
+
     semantic_scenario = {
         "expected": model_answer,
         "accepted_answers": expected_answers,
         "response_type": (
             required_communication.get("intent")
-            if required_communication else ""
+            if required_communication else expected_goal
         ),
         "required_communication": required_communication,
         "meaning": (
             required_communication.get("meaning", "")
             if required_communication else ""
-        )
+        ),
+        "expected_goal": expected_goal
     }
     semantic_result = semantic_match(response, semantic_scenario)
     matched = bool(semantic_result.get("matched"))
@@ -473,7 +533,7 @@ def api_evaluate():
             if score > best_semantic:
                 best_semantic = score
         if not matched and (
-            rule_result.get("preferred_phrase_used") or best_semantic >= 0.75
+            rule_result.get("preferred_phrase_used") or best_semantic >= 0.78
         ):
             matched = True
 
@@ -490,15 +550,19 @@ def api_evaluate():
     # Step 3b: Ontology Inference (Combined Evidence)
     # --------------------------------------------------------
     # Query the ontology to reason if this response is socially appropriate
+    from engines.semantic_engine import classify_response_intent
     inferred_intent = semantic_result.get("inferred_intent") or "unknown"
-    
+    if inferred_intent == "unknown":
+        inferred_intent = classify_response_intent(normalized)
+
     ontology_eval = ontology_reasoner.evaluate_utterance(
         role=character,
         context=question.get("context", "General"),
         utterance_text=response,
         intent=inferred_intent,
         has_politeness=respect_ok,
-        semantic_similarity=nlp_similarity
+        semantic_similarity=nlp_similarity,
+        expected_goal=expected_goal
     )
     
     # Combined evidence evaluation:
@@ -677,7 +741,7 @@ def api_tier2_evaluate_turn():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🌟 Social Skills Dialogue Assistant")
+    print("[*] Social Skills Dialogue Assistant")
     print("   For autistic children")
     print("=" * 60)
     print("Open http://localhost:5001 in your browser")

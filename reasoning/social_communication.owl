@@ -186,6 +186,11 @@
   <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
 </owl:Class>
 
+<owl:Class rdf:about="#TaskCompletionConfirmation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Confirming completion of an assigned task, chore, or homework</rdfs:comment>
+</owl:Class>
+
 <owl:Class rdf:about="#HonorifcMarker">
   <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
 </owl:Class>
