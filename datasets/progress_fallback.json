@@ -1,0 +1,11 @@
+[
+    {
+        "user_id": "85bd70dd-2d2e-4d01-96f8-e2c26aa4eec2",
+        "interaction_id": "teacher_01",
+        "response": "Good morning ma'am",
+        "correct": "True",
+        "stars": "5",
+        "tier": 1,
+        "timestamp": "2026-09-06T10:35:58.380875+00:00"
+    }
+]
