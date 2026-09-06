@@ -64,51 +64,91 @@ def index():
 
 @app.route("/api/auth/register", methods=["POST"])
 def api_auth_register():
-    """Register a new user (student or parent)."""
+    """Register a new parent and their child."""
+    data = request.get_json(force=True)
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
     try:
-        body = RegisterRequest(**request.get_json(force=True))
-    except (ValidationError, Exception) as e:
+        validated_data = RegisterRequest.model_validate(data)
+    except ValidationError as e:
+        return jsonify({"error": "Validation Error", "details": e.errors()}), 422
+    except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-    user = create_user(body.email, body.password, body.role, body.name)
-    if not user:
-        return jsonify({"error": "Email already registered"}), 409
+    parent_user = create_user(validated_data.email, validated_data.password, role="parent", name=validated_data.parent_name)
+    if not parent_user:
+        return jsonify({"error": "User with this email already exists"}), 409
 
-    token = create_access_token(user["id"], user["role"])
-    return jsonify({"token": token, "role": user["role"], "name": user.get("name", "")}), 201
+    import uuid
+    import random
+    import string
+
+    # Create child user
+    random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+    child_email = f"{validated_data.child_name.lower().replace(' ', '')}_{random_suffix}@navil.com"
+    child_password = str(uuid.uuid4()) # child doesn't log in directly
+
+    child_user = create_user(child_email, child_password, role="student", name=validated_data.child_name)
+
+    if child_user:
+        link_child_to_parent(parent_user["id"], child_email)
+
+    return jsonify({"message": "Parent and child registered successfully"}), 201
 
 
 @app.route("/api/auth/login", methods=["POST"])
 def api_auth_login():
     """Login and receive a JWT token."""
+    data = request.get_json(force=True)
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
     try:
-        body = LoginRequest(**request.get_json(force=True))
-    except (ValidationError, Exception) as e:
+        validated_data = LoginRequest.model_validate(data)
+    except ValidationError as e:
+        return jsonify({"error": "Validation Error", "details": e.errors()}), 422
+    except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-    user = get_user_by_email(body.email)
-    if not user or not check_password_hash(user["password_hash"], body.password):
+    user = get_user_by_email(validated_data.email)
+    if not user or not check_password_hash(user["password_hash"], validated_data.password):
         return jsonify({"error": "Invalid email or password"}), 401
 
     token = create_access_token(user["id"], user["role"])
-    return jsonify({"token": token, "role": user["role"], "name": user.get("name", "")}), 200
+    return jsonify({
+        "access_token": token,
+        "token": token,
+        "role": user["role"],
+        "name": user.get("name", "")
+    }), 200
 
 
 @app.route("/api/auth/assume-child", methods=["POST"])
 @require_roles("parent")
 def api_auth_assume_child():
     """Allow a parent to get a token acting as one of their children."""
-    import uuid
-    body = request.get_json(force=True) or {}
-    child_id = body.get("child_id")
+    data = request.get_json(force=True)
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    try:
+        validated = AssumeChildRequest.model_validate(data)
+    except ValidationError as e:
+        return jsonify({"error": "Validation Error", "details": e.errors()}), 422
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
     parent_id = request.user.get("user_id")
+    child_id = validated.child_id
 
     children = get_children_for_parent(parent_id)
     if not any(c["id"] == child_id for c in children):
-        return jsonify({"error": "Child not linked to this parent"}), 403
+        return jsonify({"error": "Child not linked to this parent account"}), 403
 
     token = create_access_token(child_id, "student")
-    return jsonify({"token": token, "role": "student"}), 200
+    return jsonify({
+        "access_token": token,
+        "token": token,
+        "role": "student"
+    }), 200
 
 
 @app.route("/api/parents/link-child", methods=["POST"])
