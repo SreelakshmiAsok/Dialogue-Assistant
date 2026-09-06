@@ -75,7 +75,7 @@ export default function RoadmapPage({ params }: { params: Promise<{ character: s
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none transition-opacity duration-1000" 
         style={{ 
           backgroundImage: `url(${charMeta.backgroundPath})`,
-          opacity: 0.12 
+          opacity: 0.22 
         }}
       />
 
@@ -94,7 +94,11 @@ export default function RoadmapPage({ params }: { params: Promise<{ character: s
           </div>
           <div>
             <h1 className="text-lg font-bold text-on-surface leading-tight">{charMeta.displayName} Roadmap</h1>
-            <p className="text-xs text-on-surface-variant">{completedCount}/5 Tier-1 lessons completed</p>
+            <p className="text-xs text-on-surface-variant">
+              {isTier2Unlocked 
+                ? `${completedCount} lessons completed • Tier 2 Unlocked` 
+                : `${Math.min(completedCount, 5)}/5 lessons to unlock Tier 2`}
+            </p>
           </div>
         </div>
 

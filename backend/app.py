@@ -28,7 +28,7 @@ import sys
 from pydantic import ValidationError
 from schemas.requests import EvaluateRequest, Tier2EvaluateTurnRequest, LinkChildRequest
 from schemas.auth import RegisterRequest, LoginRequest, AssumeChildRequest
-from core.users import create_user, get_user_by_email, link_child_to_parent, get_children_for_parent
+from core.users import create_user, get_user_by_email, get_user_by_id, link_child_to_parent, get_children_for_parent
 from core.auth import create_access_token, require_auth, require_roles
 from werkzeug.security import check_password_hash
 
@@ -149,6 +149,23 @@ def api_auth_assume_child():
         "token": token,
         "role": "student"
     }), 200
+
+
+@app.route("/api/auth/verify-password", methods=["POST"])
+@require_roles("parent")
+def api_auth_verify_password():
+    """Re-authenticate parent by verifying their password before entering dashboard/settings."""
+    data = request.get_json(force=True) or {}
+    password = data.get("password")
+    if not password:
+        return jsonify({"error": "Password is required"}), 400
+
+    parent_id = request.user.get("user_id")
+    user = get_user_by_id(parent_id)
+    if not user or not check_password_hash(user["password_hash"], password):
+        return jsonify({"error": "Incorrect password"}), 401
+
+    return jsonify({"success": True, "message": "Password verified"}), 200
 
 
 @app.route("/api/parents/link-child", methods=["POST"])

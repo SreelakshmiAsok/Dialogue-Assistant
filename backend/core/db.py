@@ -2,6 +2,12 @@ import json
 import os
 import glob
 try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+try:
     from pymongo import MongoClient
     from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
     HAS_PYMONGO = True

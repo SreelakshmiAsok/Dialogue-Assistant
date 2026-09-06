@@ -322,7 +322,7 @@ useEffect(() => {
       <main className="flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 md:px-8 relative z-0 min-h-0">
         
         {/* Scene Background */}
-        <div className="absolute inset-0 opacity-10 z-0 rounded-[32px] overflow-hidden mx-4">
+        <div className="absolute inset-0 opacity-25 z-0 rounded-[32px] overflow-hidden mx-4">
           <img src={charMeta.backgroundPath} alt="" className="w-full h-full object-cover" />
         </div>
 
@@ -756,7 +756,7 @@ function Tier2SessionContent() {
     <div className="bg-background text-on-background h-screen h-[100dvh] max-h-[100dvh] flex flex-col font-sans overflow-hidden antialiased relative selection:bg-primary-container">
       {/* Background Environment Image */}
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-10"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-25"
         style={{ backgroundImage: `url(${charMeta.backgroundPath})` }}
       />
 

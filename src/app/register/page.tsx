@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -47,9 +47,21 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6">
-      <div className="bg-surface p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6 text-primary">Parent Sign Up</h1>
+    <div className="flex flex-col min-h-screen bg-background text-on-background p-6">
+      {/* Back to Home Button */}
+      <div className="w-full max-w-md mx-auto mb-2">
+        <button
+          onClick={() => router.push("/")}
+          className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-[15px] font-semibold py-2 px-1"
+        >
+          <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+          <span>Back to Home</span>
+        </button>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center">
+        <div className="bg-surface p-8 rounded-2xl shadow-xl w-full max-w-md border border-outline-variant/30">
+          <h1 className="text-3xl font-bold text-center mb-6 text-primary">Parent Sign Up</h1>
         
         {error && <div className="bg-error-container text-on-error-container p-3 rounded-md mb-4">{error}</div>}
         {success && <div className="bg-green-100 text-green-800 p-3 rounded-md mb-4 font-semibold text-center">Registration successful! Redirecting to login...</div>}

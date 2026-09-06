@@ -52,7 +52,9 @@ export default function ChooseAFriend() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl mx-auto">
           {CHARACTERS.map((char) => {
             const completedCount = progressData[char.id] || 0;
-            const progressText = `${completedCount}/5 lessons completed`;
+            const progressText = completedCount > 0 
+              ? `${completedCount} lesson${completedCount === 1 ? '' : 's'} completed` 
+              : "0 lessons completed";
             
             return (
               <button

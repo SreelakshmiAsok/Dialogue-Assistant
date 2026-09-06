@@ -1,12 +1,23 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getToken, getRole } from "@/lib/auth";
+import { getToken, getRole, clearAuth } from "@/lib/auth";
 
 export default function WelcomeHome() {
   const router = useRouter();
   const [isStarting, setIsStarting] = useState(false);
+  const [authInfo, setAuthInfo] = useState<{ token: string | null; role: string | null }>({
+    token: null,
+    role: null,
+  });
+
+  useEffect(() => {
+    setAuthInfo({
+      token: getToken(),
+      role: getRole(),
+    });
+  }, []);
 
   const handleStart = () => {
     setIsStarting(true);
@@ -24,11 +35,16 @@ export default function WelcomeHome() {
     }, 180);
   };
 
+  const handleSignOut = () => {
+    clearAuth();
+    setAuthInfo({ token: null, role: null });
+  };
+
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-background text-on-background font-sans selection:bg-primary-container selection:text-on-primary-container">
       {/* Background Soft Gradients & Pattern */}
       <div
-        className="absolute inset-0 z-0 opacity-25 pointer-events-none transition-opacity"
+        className="absolute inset-0 z-0 opacity-35 pointer-events-none transition-opacity"
         style={{
           backgroundImage: "url(/images/sky_clouds_bg.png)",
           backgroundSize: "cover",
@@ -50,14 +66,46 @@ export default function WelcomeHome() {
           </div>
         </div>
 
-        <button
-          aria-label="Parent and Educator Dashboard"
-          onClick={() => router.push("/parent-access")}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
-        >
-          <span className="material-symbols-outlined text-[20px] text-primary">admin_panel_settings</span>
-          <span className="hidden sm:inline">Parent &amp; Educator</span>
-        </button>
+        {authInfo.token ? (
+          <div className="flex items-center gap-2 sm:gap-3">
+            {authInfo.role === "parent" ? (
+              <button
+                aria-label="Parent and Educator Dashboard"
+                onClick={() => router.push("/parent-access")}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[20px] text-primary">admin_panel_settings</span>
+                <span className="hidden sm:inline">Parent &amp; Educator</span>
+              </button>
+            ) : (
+              <button
+                aria-label="Child Profile"
+                onClick={() => router.push("/choose-friend")}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[20px] text-primary">face</span>
+                <span className="hidden sm:inline">Child Profile</span>
+              </button>
+            )}
+
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all text-[13px] font-semibold"
+              title="Sign Out"
+            >
+              <span className="material-symbols-outlined text-[18px]">logout</span>
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => router.push("/login")}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-surface-tint transition-all font-semibold text-[14px] shadow-sm active:scale-95"
+          >
+            <span className="material-symbols-outlined text-[20px]">login</span>
+            <span>Sign In</span>
+          </button>
+        )}
       </header>
 
       {/* Main Hero Content */}

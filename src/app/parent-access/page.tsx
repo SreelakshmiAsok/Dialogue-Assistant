@@ -1,107 +1,150 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getToken, getRole, getAuthHeaders } from "@/lib/auth";
 
 export default function ParentAccess() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
-  const [error, setError] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Generate a simple math problem
-  const [num1] = useState(() => Math.floor(Math.random() * 6) + 2);
-  const [num2] = useState(() => Math.floor(Math.random() * 6) + 2);
-  const correctAnswer = num1 + num2;
-
-  const handleVerify = useCallback(() => {
-    if (parseInt(answer) === correctAnswer) {
-      setError(false);
-      router.push("/dashboard");
-    } else {
-      setError(true);
-      setAnswer("");
+  useEffect(() => {
+    const role = getRole();
+    const token = getToken();
+    if (!token || role !== "parent") {
+      router.push("/login");
     }
-  }, [answer, correctAnswer, router]);
+  }, [router]);
+
+  const handleVerifyPassword = useCallback(async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!password.trim()) {
+      setError("Please enter your password.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("http://127.0.0.1:5001/api/auth/verify-password", {
+        method: "POST",
+        headers: {
+          ...getAuthHeaders(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Incorrect password");
+      }
+
+      // Granted access
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Incorrect password");
+      setPassword("");
+    } finally {
+      setLoading(false);
+    }
+  }, [password, router]);
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-sans antialiased">
-      {/* Cancel button */}
-      <header className="p-6">
+      {/* Navigation header */}
+      <header className="p-6 flex items-center justify-between w-full max-w-4xl mx-auto">
         <button
-          onClick={() => router.push("/")}
-          className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-[16px] font-semibold"
+          onClick={() => router.push("/profiles")}
+          className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-[15px] font-semibold"
         >
           <span className="material-symbols-outlined text-[22px]">arrow_back</span>
-          Cancel
+          <span>Back to Profiles</span>
+        </button>
+
+        <button
+          onClick={() => router.push("/")}
+          className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors text-[14px] font-semibold"
+        >
+          <span className="material-symbols-outlined text-[20px]">home</span>
+          <span>Home</span>
         </button>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-6">
+      <main className="flex-1 flex items-center justify-center px-6 pb-12">
         <div className="bg-surface-container-lowest rounded-[32px] shadow-ambient p-8 md:p-12 max-w-md w-full text-center">
           {/* Shield icon */}
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-container-high flex items-center justify-center">
-            <span className="material-symbols-outlined text-[32px] text-on-surface-variant" style={{ fontVariationSettings: "'FILL' 1" }}>
+            <span className="material-symbols-outlined text-[32px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
               admin_panel_settings
             </span>
           </div>
 
-          <h1 className="text-[28px] md:text-[36px] font-bold text-on-surface mb-3">
-            For Parents
+          <h1 className="text-[28px] md:text-[34px] font-bold text-on-surface mb-2">
+            Parent Access
           </h1>
-          <p className="text-[16px] md:text-[18px] text-on-surface-variant leading-[28px] mb-8">
-            Please solve this simple math problem to access account settings.
+          <p className="text-[15px] md:text-[16px] text-on-surface-variant leading-relaxed mb-6">
+            Please enter your account password to unlock parent controls and settings.
           </p>
 
-          {/* Math Problem Card */}
-          <div className="bg-surface-container rounded-2xl p-6 mb-6">
-            <div className="flex items-center justify-center gap-4">
-              <span className="text-[48px] font-bold text-on-surface">{num1}</span>
-              <span className="text-[36px] font-medium text-on-surface-variant">+</span>
-              <span className="text-[48px] font-bold text-primary">{num2}</span>
-              <span className="text-[36px] font-medium text-on-surface-variant">=</span>
+          <form onSubmit={handleVerifyPassword} className="flex flex-col gap-4">
+            {/* Password input card */}
+            <div className="relative">
               <input
-                type="number"
-                value={answer}
-                onChange={(e) => { setAnswer(e.target.value); setError(false); }}
-                onKeyDown={(e) => e.key === "Enter" && handleVerify()}
-                className="w-[72px] h-[72px] text-[36px] font-bold text-center bg-surface-container-lowest border-2 border-outline-variant rounded-2xl text-on-surface focus:border-primary focus:outline-none transition-colors"
-                placeholder="?"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (error) setError("");
+                }}
+                className="w-full h-[56px] px-4 pr-12 text-[16px] bg-surface-container border-2 border-outline-variant rounded-2xl text-on-surface focus:border-primary focus:outline-none transition-colors"
+                placeholder="Enter parent password"
                 autoFocus
+                required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface text-sm font-medium"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
             </div>
+
+            {/* Error banner */}
+            {error && (
+              <div className="bg-error-container text-on-error-container rounded-xl px-4 py-3 text-[14px] font-semibold text-left flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px]">error</span>
+                <span>{error}</span>
+              </div>
+            )}
 
             {/* Verify Button */}
             <button
-              onClick={handleVerify}
-              className="mt-6 w-full h-[56px] bg-primary text-on-primary rounded-2xl text-[18px] font-bold flex items-center justify-center gap-2 hover:bg-surface-tint active:scale-95 transition-all shadow-sm"
+              type="submit"
+              disabled={loading}
+              className="mt-2 w-full h-[54px] bg-primary text-on-primary rounded-2xl text-[17px] font-bold flex items-center justify-center gap-2 hover:bg-surface-tint active:scale-95 transition-all shadow-sm disabled:opacity-60"
             >
-              Verify
-              <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+              {loading ? (
+                <span>Verifying...</span>
+              ) : (
+                <>
+                  <span>Verify Password</span>
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    lock_open
+                  </span>
+                </>
+              )}
             </button>
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div className="bg-error-container text-on-error-container rounded-xl px-4 py-3 mb-4 text-[15px] font-semibold">
-              ❌ Incorrect answer. Please try again.
-            </div>
-          )}
-
-          {/* Explanation Link */}
-          <button
-            onClick={() => setShowExplanation(!showExplanation)}
-            className="flex items-center justify-center gap-2 mx-auto text-on-surface-variant hover:text-on-surface text-[15px] font-medium transition-colors"
-          >
-            <span className="material-symbols-outlined text-[18px]">help_outline</span>
-            Why is this here?
-          </button>
-
-          {showExplanation && (
-            <p className="mt-3 text-[14px] text-on-surface-variant leading-[22px] bg-surface-container rounded-xl p-4">
-              This simple verification prevents children from accidentally accessing parent settings and controls. Only an adult who can solve this math problem will be granted access.
-            </p>
-          )}
+          </form>
         </div>
       </main>
     </div>

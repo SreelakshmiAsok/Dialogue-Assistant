@@ -8,3 +8,5 @@ __pycache__/
 static/audio/*.mp3
 SemanticDialogueAssistant_datasets/static/audio/*.mp3
 users.json
+.env
+backend/.env
