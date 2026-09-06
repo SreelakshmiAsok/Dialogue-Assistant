@@ -1,0 +1,84 @@
+{
+  "_id": "t2_father_02",
+  "id": "t2_father_02",
+  "character": "Father",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Polite Interruption",
+  "learning_objective": "Child practices waiting for a pause and using a polite interruption phrase.",
+  "curriculum": {
+    "source": "Carol Gray's Social Stories™",
+    "module": "Polite Interruption",
+    "target_rules": [
+      "Wait for a pause in the conversation.",
+      "Use a polite phrase like 'Excuse me' before speaking."
+    ]
+  },
+  "scenario": "You need help finding a book, but Appa is busy talking on the phone.",
+  "initial_prompt": {
+    "tanglish": "(Talking on phone) Aama, adhu naalaiki anupren... (Pauses)",
+    "tamil": "(போனில் பேசுகிறார்) ஆமா, அது நாளைக்கு அனுப்புறேன்... (நிறுத்துகிறார்)",
+    "english": "(Talking on phone) Yes, I will send it tomorrow... (Pauses)"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "(Talking on phone) Aama, adhu naalaiki anupren... (Pauses)",
+        "tamil": "(போனில் பேசுகிறார்) ஆமா, அது நாளைக்கு அனுப்புறேன்... (நிறுத்துகிறார்)"
+      },
+      "target_intent": "PoliteInterruption",
+      "required_features": ["ExcuseMeKeyword"],
+      "expected_responses": [
+        "Excuse me appa",
+        "Appa, oru nimisham",
+        "Sorry to interrupt appa"
+      ],
+      "model_answer": "Excuse me appa",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Appa is on the phone. Say excuse me to interrupt politely.",
+        "gentle_correction": "Try saying: 'Excuse me appa'"
+      },
+      "next_character_reply": {
+        "tanglish": "(To you) Sollu kanna, enna venum?",
+        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "(To you) Sollu kanna, enna venum?",
+        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?"
+      },
+      "target_intent": "RequestHelp",
+      "required_features": ["HelpKeyword"],
+      "expected_responses": [
+        "Enaku oru help venum, book thedi thareengala?",
+        "En book enga iruku?",
+        "Can you help me find my book?"
+      ],
+      "model_answer": "Enaku oru help venum, book thedi thareengala?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask Appa politely to help you find your book.",
+        "gentle_correction": "Try saying: 'Enaku oru help venum, book thedi thareengala?'"
+      },
+      "next_character_reply": {
+        "tanglish": "Seri kanna, idho varen.",
+        "tamil": "சரி கண்ணா, இதோ வரேன்."
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Very Polite! 🗣️",
+    "success_message": "Great job! You waited for a pause and interrupted politely!",
+    "stars": 3
+  }
+}

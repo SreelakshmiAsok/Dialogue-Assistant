@@ -1,0 +1,84 @@
+{
+  "_id": "t2_teacher_02",
+  "id": "t2_teacher_02",
+  "character": "Teacher",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Self-Advocacy & Clarification",
+  "learning_objective": "Child practices politely asking the teacher for clarification when they don't understand.",
+  "curriculum": {
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Self-Advocacy & Asking for Clarification",
+    "target_rules": [
+      "Signal that you have a question politely.",
+      "State what you don't understand."
+    ]
+  },
+  "scenario": "The teacher explains a homework assignment, but you didn't understand what to do.",
+  "initial_prompt": {
+    "tanglish": "Ellarukum purinjidha? Any doubts?",
+    "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?",
+    "english": "Did everyone understand? Any doubts?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Ellarukum purinjidha? Any doubts?",
+        "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?"
+      },
+      "target_intent": "RaiseDoubt",
+      "required_features": ["DoubtKeyword"],
+      "expected_responses": [
+        "Mam, enaku oru doubt.",
+        "Yes mam, enaku doubt iruku.",
+        "Excuse me mam, oru doubt."
+      ],
+      "model_answer": "Mam, enaku oru doubt.",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Tell the teacher that you have a doubt.",
+        "gentle_correction": "Try saying: 'Mam, enaku oru doubt.'"
+      },
+      "next_character_reply": {
+        "tanglish": "Sollu thambi, enna doubt?",
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Sollu thambi, enna doubt?",
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
+      },
+      "target_intent": "AskClarification",
+      "required_features": ["ClarificationKeyword"],
+      "expected_responses": [
+        "Idhu enaku puriyala, thirumba solreengala?",
+        "Homework eppadi pannanum nu puriyala.",
+        "Can you explain it again mam?"
+      ],
+      "model_answer": "Idhu enaku puriyala, thirumba solreengala?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask the teacher to explain the homework again.",
+        "gentle_correction": "Try saying: 'Idhu enaku puriyala, thirumba solreengala?'"
+      },
+      "next_character_reply": {
+        "tanglish": "Kandippa, naan thirumba explain panren.",
+        "tamil": "கண்டிப்பா, நான் திரும்ப எக்ஸ்பிளைன் பண்றேன்."
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Great Question! ✋",
+    "success_message": "Awesome! You asked for help when you didn't understand!",
+    "stars": 3
+  }
+}

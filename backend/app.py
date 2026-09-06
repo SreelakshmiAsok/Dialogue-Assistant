@@ -25,6 +25,12 @@ from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
 import re
 import sys
+from pydantic import ValidationError
+from schemas.requests import EvaluateRequest, Tier2EvaluateTurnRequest, LinkChildRequest
+from schemas.auth import RegisterRequest, LoginRequest, AssumeChildRequest
+from core.users import create_user, get_user_by_email, link_child_to_parent, get_children_for_parent
+from core.auth import create_access_token, require_auth, require_roles
+from werkzeug.security import check_password_hash
 
 # Ensure reasoning package is accessible
 reasoning_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reasoning')
@@ -50,6 +56,89 @@ CORS(app)
 def index():
     """Serve the main application page."""
     return render_template("index.html")
+
+
+# ============================================================
+# AUTH ENDPOINTS
+# ============================================================
+
+@app.route("/api/auth/register", methods=["POST"])
+def api_auth_register():
+    """Register a new user (student or parent)."""
+    try:
+        body = RegisterRequest(**request.get_json(force=True))
+    except (ValidationError, Exception) as e:
+        return jsonify({"error": str(e)}), 400
+
+    user = create_user(body.email, body.password, body.role, body.name)
+    if not user:
+        return jsonify({"error": "Email already registered"}), 409
+
+    token = create_access_token(user["id"], user["role"])
+    return jsonify({"token": token, "role": user["role"], "name": user.get("name", "")}), 201
+
+
+@app.route("/api/auth/login", methods=["POST"])
+def api_auth_login():
+    """Login and receive a JWT token."""
+    try:
+        body = LoginRequest(**request.get_json(force=True))
+    except (ValidationError, Exception) as e:
+        return jsonify({"error": str(e)}), 400
+
+    user = get_user_by_email(body.email)
+    if not user or not check_password_hash(user["password_hash"], body.password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    token = create_access_token(user["id"], user["role"])
+    return jsonify({"token": token, "role": user["role"], "name": user.get("name", "")}), 200
+
+
+@app.route("/api/auth/assume-child", methods=["POST"])
+@require_roles("parent")
+def api_auth_assume_child():
+    """Allow a parent to get a token acting as one of their children."""
+    import uuid
+    body = request.get_json(force=True) or {}
+    child_id = body.get("child_id")
+    parent_id = request.user.get("user_id")
+
+    children = get_children_for_parent(parent_id)
+    if not any(c["id"] == child_id for c in children):
+        return jsonify({"error": "Child not linked to this parent"}), 403
+
+    token = create_access_token(child_id, "student")
+    return jsonify({"token": token, "role": "student"}), 200
+
+
+@app.route("/api/parents/link-child", methods=["POST"])
+@require_roles("parent")
+def api_link_child():
+    """Link a child account to this parent by the child's email."""
+    try:
+        body = LinkChildRequest(**request.get_json(force=True))
+    except (ValidationError, Exception) as e:
+        return jsonify({"error": str(e)}), 400
+
+    result = link_child_to_parent(request.user["user_id"], body.child_email)
+    if "error" in result:
+        return jsonify(result), 404
+    return jsonify(result), 200
+
+
+@app.route("/api/parents/children", methods=["GET"])
+@require_roles("parent")
+def api_get_children():
+    """Get all children linked to this parent."""
+    children = get_children_for_parent(request.user["user_id"])
+    return jsonify({"children": children}), 200
+
+
+@app.route("/api/admin/system", methods=["GET"])
+@require_roles("admin")
+def api_admin_system():
+    """Admin-only system status."""
+    return jsonify({"status": "ok", "service": "Navil Backend"}), 200
 
 
 # ============================================================

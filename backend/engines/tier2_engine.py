@@ -78,6 +78,36 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
         "MentionAdult": [
             "amma", "appa", "parent", "teacher", "mom", "dad", "theduvanga", "kitta", 
             "police", "poren", "kupduven", "solluven"
+        ],
+
+        # --- New Empathy scenario (Friend - hurt) ---
+        "EmpathyKeyword": [
+            "ennachu", "valikudha", "okay", "괜찮아", "sorry", "onnum", "ok va",
+            "are you okay", "hurt", "valikudhu", "enna achu"
+        ],
+        "HelpKeyword": [
+            "help", "kupudren", "kupudrava", "teacher", "solluven", "poi", "kuppidu",
+            "kaapaten", "irunga", "announcement", "kanom"
+        ],
+
+        # --- New Polite Interruption scenario (Father - phone) ---
+        "ExcuseMeKeyword": [
+            "excuse", "excuse me", "sorry", "oru nimisham", "interrupt", "wait", "appa"
+        ],
+
+        # --- New Safe Stranger / Lost scenario ---
+        "LostKeyword": [
+            "kanom", "tholanjiten", "lost", "appava", "announcement", "mic", "find",
+            "theduren", "thedra"
+        ],
+
+        # --- New Teacher Clarification scenario ---
+        "DoubtKeyword": [
+            "doubt", "doubt iruku", "puriyala", "question", "enna doubt"
+        ],
+        "ClarificationKeyword": [
+            "puriyala", "thirumba", "explain", "again", "understand", "homework",
+            "solreengala", "panreengala"
         ]
     }
     

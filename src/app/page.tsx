@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getToken, getRole } from "@/lib/auth";
 
 export default function WelcomeHome() {
   const router = useRouter();
@@ -11,7 +12,15 @@ export default function WelcomeHome() {
     setIsStarting(true);
     setTimeout(() => {
       setIsStarting(false);
-      router.push("/choose-friend");
+      const token = getToken();
+      const role = getRole();
+      if (!token) {
+        router.push("/login");
+      } else if (role === "parent") {
+        router.push("/profiles");
+      } else {
+        router.push("/choose-friend");
+      }
     }, 180);
   };
 

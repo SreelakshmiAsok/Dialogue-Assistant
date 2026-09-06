@@ -1,0 +1,87 @@
+{
+  "_id": "t2_friend_02",
+  "id": "t2_friend_02",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Empathy & Perspective Taking",
+  "learning_objective": "Child practices showing empathy and offering help to a peer in distress.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)",
+    "module": "Empathy & Perspective Taking",
+    "target_rules": [
+      "Acknowledge the peer's distress without laughing or ignoring.",
+      "Ask a question to show care (e.g., Are you okay? Does it hurt?)",
+      "Offer help or find an adult."
+    ]
+  },
+  "scenario": "Your friend trips and falls while running, and starts crying because their knee hurts.",
+  "initial_prompt": {
+    "tanglish": "(Crying) Ahh! En mutti adippatiduchu!",
+    "tamil": "(அழுகிறான்) ஆஆ! என் முட்டி அடிபட்டுடுச்சு!",
+    "english": "(Crying) Ahh! I hurt my knee!"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "(Crying) Ahh! En mutti adippatiduchu!",
+        "tamil": "(அழுகிறான்) ஆஆ! என் முட்டி அடிபட்டுடுச்சு!"
+      },
+      "target_intent": "ShowEmpathy",
+      "required_features": ["EmpathyKeyword"],
+      "expected_responses": [
+        "Ennachu da? Valikudha?",
+        "Are you okay?",
+        "Sorry da, valikudha?",
+        "Onnum illa da"
+      ],
+      "model_answer": "Ennachu da? Valikudha?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask your friend if they are okay or if it hurts.",
+        "gentle_correction": "Try asking: 'Ennachu da? Valikudha?' (What happened? Does it hurt?)"
+      },
+      "next_character_reply": {
+        "tanglish": "Aama da, romba valikudhu. Ratham varudhu.",
+        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது."
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Aama da, romba valikudhu. Ratham varudhu.",
+        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது."
+      },
+      "target_intent": "OfferHelp",
+      "required_features": ["HelpKeyword"],
+      "expected_responses": [
+        "Naan poi help kupudrava?",
+        "Idho teacher ah kupudren.",
+        "I will get help",
+        "Irunga naan help kupudren"
+      ],
+      "model_answer": "Naan poi help kupudrava?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Offer to get help from a teacher or adult.",
+        "gentle_correction": "A friendly reply is: 'Naan poi help kupudrava?'"
+      },
+      "next_character_reply": {
+        "tanglish": "Seri da, seekiram koopidu.",
+        "tamil": "சரி டா, சீக்கிரம் கூப்பிடு."
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Good Friend! \ud83e\udd1d",
+    "success_message": "Awesome! You showed empathy and helped your friend!",
+    "stars": 3
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "_id": "t2_stranger_02",
+  "id": "t2_stranger_02",
+  "character": "Stranger",
+  "tier": 2,
+  "difficulty": 2,
+  "skill": "Finding a Safe Stranger",
+  "learning_objective": "Child identifies a safe stranger (a store worker) and asks for help when lost.",
+  "curriculum": {
+    "source": "National Crime Prevention Council (NCPC) / Kidpower",
+    "module": "Finding a Safe Stranger",
+    "target_rules": [
+      "Identify a safe stranger, like a cashier or police officer.",
+      "Ask for help politely.",
+      "Explain the situation clearly."
+    ]
+  },
+  "scenario": "You are lost in a supermarket and cannot find your parent. You go to the cashier at the counter.",
+  "initial_prompt": {
+    "tanglish": "(Cashier) Hello thambi, enna venum?",
+    "tamil": "(பணியாளர்) ஹலோ தம்பி, என்ன வேணும்?",
+    "english": "(Cashier) Hello little one, what do you want?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "(Cashier) Hello thambi, enna venum?",
+        "tamil": "(பணியாளர்) ஹலோ தம்பி, என்ன வேணும்?"
+      },
+      "target_intent": "RequestHelp",
+      "required_features": ["HelpKeyword"],
+      "expected_responses": [
+        "Excuse me, enaku help pannunga.",
+        "Enaku help venum.",
+        "Please help me."
+      ],
+      "model_answer": "Excuse me, enaku help pannunga.",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask the store worker for help politely.",
+        "gentle_correction": "Try saying: 'Excuse me, enaku help pannunga.'"
+      },
+      "next_character_reply": {
+        "tanglish": "Ennachu pa? Yaara thedura?",
+        "tamil": "என்னச்சு பா? யார தேடுற?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Ennachu pa? Yaara thedura?",
+        "tamil": "என்னச்சு பா? யார தேடுற?"
+      },
+      "target_intent": "ExplainSituation",
+      "required_features": ["LostKeyword"],
+      "expected_responses": [
+        "Enga appava kanom, announcement kudukareengala?",
+        "Naan tholanjiten, appava theduren.",
+        "I lost my dad, please make an announcement."
+      ],
+      "model_answer": "Enga appava kanom, announcement kudukareengala?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Tell the worker that you can't find your dad.",
+        "gentle_correction": "Try saying: 'Enga appava kanom, announcement kudukareengala?'"
+      },
+      "next_character_reply": {
+        "tanglish": "Bayapadadha, naan mic la anounce panren.",
+        "tamil": "பயப்படாத, நான் மைக்-ல அனவுன்ஸ் பண்றேன்."
+      },
+      "next_turn_id": null,
+      "is_terminal": true
+    }
+  ],
+  "completion": {
+    "success_title": "Safe Choice! 🛡️",
+    "success_message": "Awesome! You safely asked for help from a store worker!",
+    "stars": 3
+  }
+}
