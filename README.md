@@ -1,11 +1,11 @@
-# SocialBuddy: Semantic Dialogue Assistant for Social Communication Training in Autism
+# Navil: Semantic Dialogue Assistant for Social Communication Training in Autism
 
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![OWLready2](https://img.shields.io/badge/Ontology-OWL%20%2F%20SWRL-orange.svg)](https://owlready2.readthedocs.io/)
 [![MediaPipe](https://img.shields.io/badge/Perception-MediaPipe%20FaceMesh-brightgreen.svg)](https://developers.google.com/mediapipe)
 
-**SocialBuddy** (Semantic Dialogue Assistant) is an interactive, application-based assistive platform designed to support children with Autism Spectrum Disorder (ASD) in developing real-time social communication skills.
+**Navil** (Semantic Dialogue Assistant) is an interactive, application-based assistive platform designed to support children with Autism Spectrum Disorder (ASD) in developing real-time social communication skills.
 
 Children with ASD often encounter challenges in recognizing social contexts, understanding the role of their interlocutor (e.g., Teacher, Parent, Friend, or Stranger), and formulating appropriate verbal responses. **SocialBuddy** bridges this gap by combining real-time multimodal perception, ontology-based semantic web reasoning (OWL/SWRL), RAG vector similarity matching, visual AAC (Augmentative and Alternative Communication) cards, and eye-contact attention tracking.
 

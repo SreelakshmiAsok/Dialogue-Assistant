@@ -32,6 +32,9 @@ class ReasoningRequest(BaseModel):
     userText: str
     role: Optional[str] = "Teacher"
     context: Optional[str] = "Classroom"
+    intent: Optional[str] = None
+    has_politeness: Optional[bool] = None
+    semantic_similarity: Optional[float] = None
 
 class ReasoningResponse(BaseModel):
     status: str
@@ -68,7 +71,10 @@ def reason_endpoint(req: ReasoningRequest):
     evaluation = reasoner.evaluate_utterance(
         role=role,
         context=req.context or "General",
-        utterance_text=req.userText
+        utterance_text=req.userText,
+        intent=req.intent,
+        has_politeness=req.has_politeness,
+        semantic_similarity=req.semantic_similarity
     )
 
     # Determine feedback summary based on ontology status

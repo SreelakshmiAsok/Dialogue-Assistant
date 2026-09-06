@@ -38,6 +38,7 @@ function Tier1SessionContent() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const playCounterRef = useRef(0);
 
   const currentQuestion = questions[currentIndex] || null;
   const progress = questions.length > 0 ? ((currentIndex) / questions.length) * 100 : 0;
@@ -96,6 +97,8 @@ function Tier1SessionContent() {
 
 const handlePlayAudio = useCallback(async () => {
   if (!currentQuestion) return;
+  const currentPlayId = ++playCounterRef.current;
+  
   // Cancel any in‑progress speech or audio before starting new
   window.speechSynthesis.cancel();
   if (audioRef.current) {
@@ -132,6 +135,7 @@ const handlePlayAudio = useCallback(async () => {
         if (preferred) utterance.voice = preferred;
         utterance.pitch = isMale ? 0.75 : 1.1;
         utterance.onend = () => resolve();
+        utterance.onerror = () => resolve(); // Resolve immediately on cancel/error so we don't hang
         window.speechSynthesis.speak(utterance);
       } else {
         resolve();
@@ -143,12 +147,17 @@ const handlePlayAudio = useCallback(async () => {
     if (currentQuestion.social_story) {
       await speak(currentQuestion.social_story);
     }
+    
+    // Abort if another play was requested while we were speaking the story
+    if (currentPlayId !== playCounterRef.current) return;
+    
     // 2. Play dialogue – try pre‑recorded audio first, fallback to TTS
     const audio = new Audio(getAudioUrl(currentQuestion.id));
     audioRef.current = audio;
     await new Promise<void>((resolve) => {
       const onEnd = () => resolve();
       const onError = () => {
+        if (currentPlayId !== playCounterRef.current) return resolve();
         // fallback to TTS for the dialogue text
         speak(currentQuestion.question_tanglish).then(() => resolve());
       };
@@ -160,7 +169,9 @@ const handlePlayAudio = useCallback(async () => {
       }
     });
   } finally {
-    setIsPlaying(false);
+    if (currentPlayId === playCounterRef.current) {
+      setIsPlaying(false);
+    }
   }
 }, [currentQuestion, characterName]);
 
@@ -168,6 +179,15 @@ useEffect(() => {
   if (currentQuestion) {
     handlePlayAudio();
   }
+  
+  // Cleanup to ensure we don't get overlapping audio on unmount or question change
+  return () => {
+    playCounterRef.current++; // Invalidates any running async audio promises
+    window.speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
 }, [currentQuestion, handlePlayAudio]);
 
 

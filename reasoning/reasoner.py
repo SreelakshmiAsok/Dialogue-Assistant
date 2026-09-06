@@ -35,9 +35,10 @@ class SocialOntologyReasoner:
         self.root = self.tree.getroot()
         print(f"[Ontology] Loaded via XML parser from {self.owl_file_path}")
 
-    def evaluate_utterance(self, role: str, context: str, utterance_text: str):
+    def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None):
         """
         Evaluates an utterance against social communication rules defined in the ontology.
+        Uses NLP-extracted features (intent, politeness, similarity) to infer AppropriateSocialResponse.
         """
         role_clean = role.lower()
         text_clean = utterance_text.lower().strip()
@@ -45,6 +46,45 @@ class SocialOntologyReasoner:
         rule_evaluations = []
         violations = []
         failures = []
+        
+        # Ontology Inference: Is this an AppropriateSocialResponse?
+        is_appropriate = False
+        inference_details = "Not enough semantic evidence to infer appropriateness."
+
+        # High NLP similarity provides a baseline semantic appropriateness
+        if semantic_similarity and semantic_similarity >= 0.70:
+            is_appropriate = True
+            inference_details = "Inferred AppropriateSocialResponse via high semantic similarity."
+
+        # Intent + Context mapping (The Ontology Reasoning)
+        if intent:
+            if role_clean == "stranger":
+                if intent == "social_refusal" or intent == "uncertainty":
+                    is_appropriate = True
+                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Stranger."
+                elif intent == "social_acceptance":
+                    is_appropriate = False
+                    inference_details = "Safety Violation: Cannot accept invitations from a Stranger."
+                    violations.append("S_SAFETY_CRITICAL")
+            
+            elif role_clean == "peer" or role_clean == "friend":
+                if intent == "social_acceptance" or intent == "peer_cooperation":
+                    is_appropriate = True
+                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Peer."
+            
+            elif role_clean == "parent" or role_clean == "teacher":
+                if intent == "social_acceptance" or intent == "contextual_request":
+                    is_appropriate = True
+                    inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for {role}."
+                elif intent == "social_refusal":
+                    # A polite refusal to a parent/teacher can be socially appropriate if polite.
+                    if has_politeness:
+                        is_appropriate = True
+                        inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for {role}."
+                    else:
+                        is_appropriate = False
+                        inference_details = f"Impolite refusal is not appropriate for {role}."
+                        failures.append("T_POLITE")
 
         # Rule 1: Politeness & Formal Greetings
         if "teacher" in role_clean or "doctor" in role_clean:
@@ -127,6 +167,9 @@ class SocialOntologyReasoner:
             "target_role": role,
             "target_context": context,
             "input_text": utterance_text,
+            "inferred_intent": intent,
+            "is_appropriate": is_appropriate,
+            "inference_details": inference_details,
             "rules": rule_evaluations,
             "has_violations": len(violations) > 0,
             "has_failures": len(failures) > 0

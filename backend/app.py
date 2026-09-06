@@ -24,6 +24,16 @@ from nlp.preprocessing import normalize_text
 from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
 import re
+import sys
+
+# Ensure reasoning package is accessible
+reasoning_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reasoning')
+if reasoning_path not in sys.path:
+    sys.path.append(reasoning_path)
+from reasoner import SocialOntologyReasoner
+
+# Initialize global reasoner
+ontology_reasoner = SocialOntologyReasoner()
 
 def has_tamil(text):
     return bool(re.search(r'[\u0B80-\u0BFF]', text))
@@ -274,19 +284,24 @@ def api_evaluate():
     nlp_similarity = nlp_semantic_similarity(response, target_text)
 
     # --------------------------------------------------------
-    # Step 3b: Combined Evidence Evaluation
+    # Step 3b: Ontology Inference (Combined Evidence)
     # --------------------------------------------------------
-    # If the response wasn't matched by exact/fuzzy checks or linguistic rules,
-    # but the NLP model sees a very strong semantic overlap (> 0.80) 
-    # AND the linguistic intent extractor didn't flag it as a refusal, 
-    # we accept it based on combined strong evidence.
-    if not matched and nlp_similarity >= 0.80:
-        inferred = semantic_result.get("inferred_intent")
-        if inferred != "social_refusal" and respect_ok:
-            matched = True
-            # Boost semantic score so they get a passing amount of stars
-            if best_semantic < 0.75:
-                best_semantic = 0.75
+    # Query the ontology to reason if this response is socially appropriate
+    inferred_intent = semantic_result.get("inferred_intent") or "unknown"
+    
+    ontology_eval = ontology_reasoner.evaluate_utterance(
+        role=character,
+        context=question.get("context", "General"),
+        utterance_text=response,
+        intent=inferred_intent,
+        has_politeness=respect_ok,
+        semantic_similarity=nlp_similarity
+    )
+    
+    if ontology_eval["is_appropriate"]:
+        matched = True
+        if best_semantic < 0.75:
+            best_semantic = 0.75
 
     # --------------------------------------------------------
     # Step 4: Sentiment

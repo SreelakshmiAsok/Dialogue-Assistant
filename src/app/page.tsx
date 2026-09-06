@@ -36,7 +36,7 @@ export default function WelcomeHome() {
             <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
           </div>
           <div>
-            <h2 className="text-[22px] font-bold tracking-tight text-primary leading-tight">Samvaad</h2>
+            <h2 className="text-[22px] font-bold tracking-tight text-primary leading-tight">Navil</h2>
             <p className="text-[12px] font-semibold text-on-surface-variant uppercase tracking-wider">Social Skills Assistant</p>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function WelcomeHome() {
 
         {/* Hero Title & Subtitle */}
         <h1 className="text-[40px] leading-[50px] sm:text-[56px] sm:leading-[66px] md:text-[68px] md:leading-[78px] font-bold text-on-surface tracking-tight max-w-3xl">
-          Welcome to <span className="text-primary font-extrabold">Samvaad</span>
+          Welcome to <span className="text-primary font-extrabold">Navil</span>
         </h1>
         <p className="text-[18px] leading-[28px] sm:text-[22px] sm:leading-[34px] text-on-surface-variant max-w-2xl mt-4 font-medium">
           A gentle, speech-powered companion helping children practice everyday conversations, social etiquette, and confidence through fun roleplay.

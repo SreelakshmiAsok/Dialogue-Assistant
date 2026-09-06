@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCharacterByBackendName } from "@/lib/characters";
 import { saveLessonCompletion } from "@/lib/progress";
-import { fetchQuestions } from "@/lib/api";
+import { fetchQuestions, fetchTier2Lessons } from "@/lib/api";
 
 function SessionCompleteContent() {
   const router = useRouter();
@@ -53,9 +53,18 @@ function SessionCompleteContent() {
       saveLessonCompletion(characterName, lessonId, stars);
     }
 
-    // Resolve next lesson from the lesson list (Tier 1 only for now)
+    // Resolve next lesson from the lesson list
     if (tier === "1" || !tier) {
       fetchQuestions(characterName)
+        .then((qs) => {
+          const idx = qs.findIndex((q) => q.id === lessonId);
+          if (idx !== -1 && idx < qs.length - 1) {
+            setNextLessonId(qs[idx + 1].id);
+          }
+        })
+        .catch(() => {});
+    } else if (tier === "2") {
+      fetchTier2Lessons(characterName)
         .then((qs) => {
           const idx = qs.findIndex((q) => q.id === lessonId);
           if (idx !== -1 && idx < qs.length - 1) {

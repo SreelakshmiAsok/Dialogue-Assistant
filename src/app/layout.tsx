@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Serene Path — Social Skills Dialogue Assistant",
+  title: "Navil",
   description: "A semantic dialogue assistant for autistic children to practice social conversations with familiar characters in Tamil and English.",
 };
 

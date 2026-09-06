@@ -94,7 +94,8 @@ RESPECT_MISSING_MESSAGES = {
 
 def generate_feedback(character, matched, error_type=None,
                       model_answer="", respect_required=True,
-                      missing_preferred_vocative=False):
+                      missing_preferred_vocative=False,
+                      ontology_context=None):
     """
     Generate gentle, encouraging feedback for autistic children.
 

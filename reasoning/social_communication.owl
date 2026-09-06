@@ -170,6 +170,22 @@
   <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
 </owl:Class>
 
+<owl:Class rdf:about="#UncertaintyResponse">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PeerInvitationAcceptance">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ContextualRequest">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PoliteRefusal">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
 <owl:Class rdf:about="#HonorifcMarker">
   <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
 </owl:Class>
@@ -230,6 +246,10 @@
       </owl:intersectionOf>
     </owl:Class>
   </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#AppropriateSocialResponse">
+  <rdfs:subClassOf rdf:resource="#Utterance"/>
 </owl:Class>
 
 <owl:NamedIndividual rdf:about="#ChildUser">

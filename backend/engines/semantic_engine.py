@@ -200,8 +200,18 @@ def extract_linguistic_features(text):
     # --- Refusal markers ---
     # Detecting a polite refusal is also important:
     # "Illa" = no/not, "vendam" = don't want, "mudiyaadhu" = can't
-    refusal_tokens = {"illa", "vendam", "mudiyaadhu", "mudiyadhu", "vendum illai"}
+    refusal_tokens = {"illa", "vendam", "mudiyaadhu", "mudiyadhu", "vendum illai", "no"}
     has_refusal = bool(tokens & refusal_tokens)
+
+    # --- Uncertainty markers ---
+    # "theriyadhu", "therila", "dont know", "not sure"
+    uncertainty_tokens = {"theriyadhu", "therila", "theriyathu"}
+    has_uncertainty = bool(tokens & uncertainty_tokens) or "don't know" in normalized or "dont know" in normalized or "not sure" in normalized
+
+    # --- Contextual Request markers ---
+    # "5 min", "wait", "irunga"
+    request_tokens = {"min", "mins", "minutes", "wait", "irunga", "time"}
+    has_request = bool(tokens & request_tokens) or "5 min" in normalized or "five min" in normalized
 
     return {
         "has_affirmative": has_affirmative,
@@ -210,6 +220,8 @@ def extract_linguistic_features(text):
         "uses_peer_register": uses_peer_register,
         "uses_formal_register": uses_formal_register,
         "has_refusal": has_refusal,
+        "has_uncertainty": has_uncertainty,
+        "has_request": has_request,
     }
 
 
@@ -236,6 +248,12 @@ def classify_response_intent(text):
         or features["has_come_marker"]
         or features["has_activity_verb"]
     )
+
+    if features["has_uncertainty"]:
+        return "uncertainty"
+
+    if features["has_request"]:
+        return "contextual_request"
 
     if features["has_refusal"] and not affirmative_signals:
         return "social_refusal"
@@ -389,7 +407,8 @@ def semantic_match(user_response, scenario):
             "normalized": normalized_response,
             "expected": expected,
             "matched": False,
-            "semantic_score": 0.0
+            "semantic_score": 0.0,
+            "inferred_intent": classify_response_intent(normalized_response)
         }
 
 
@@ -505,7 +524,8 @@ def semantic_match(user_response, scenario):
         "normalized": normalized_response,
         "expected": expected,
         "matched": False,
-        "semantic_score": round(best_score, 3)
+        "semantic_score": round(best_score, 3),
+        "inferred_intent": classify_response_intent(normalized_response)
     }
 
 
