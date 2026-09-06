@@ -48,43 +48,60 @@ class SocialOntologyReasoner:
         failures = []
         
         # Ontology Inference: Is this an AppropriateSocialResponse?
+        # Requires Intent/Context agreement combined with Semantic evidence.
+        # High semantic similarity alone != Correct/Appropriate answer.
         is_appropriate = False
-        inference_details = "Not enough semantic evidence to infer appropriateness."
-
-        # High NLP similarity provides a baseline semantic appropriateness
-        if semantic_similarity and semantic_similarity >= 0.70:
-            is_appropriate = True
-            inference_details = "Inferred AppropriateSocialResponse via high semantic similarity."
+        inference_details = "Not enough semantic/intent evidence to infer appropriateness."
 
         # Intent + Context mapping (The Ontology Reasoning)
-        if intent:
+        intent_appropriate = False
+        if intent and intent != "unknown":
             if role_clean == "stranger":
-                if intent == "social_refusal" or intent == "uncertainty":
-                    is_appropriate = True
+                if intent in ("social_refusal", "uncertainty"):
+                    intent_appropriate = True
                     inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Stranger."
                 elif intent == "social_acceptance":
-                    is_appropriate = False
+                    intent_appropriate = False
                     inference_details = "Safety Violation: Cannot accept invitations from a Stranger."
                     violations.append("S_SAFETY_CRITICAL")
             
-            elif role_clean == "peer" or role_clean == "friend":
-                if intent == "social_acceptance" or intent == "peer_cooperation":
-                    is_appropriate = True
+            elif role_clean in ("peer", "friend"):
+                if intent in ("social_acceptance", "peer_cooperation", "peer_invitation"):
+                    intent_appropriate = True
                     inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for Peer."
+                elif intent == "social_refusal":
+                    intent_appropriate = True
+                    inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for Peer."
             
-            elif role_clean == "parent" or role_clean == "teacher":
-                if intent == "social_acceptance" or intent == "contextual_request":
-                    is_appropriate = True
+            elif role_clean in ("parent", "teacher", "father"):
+                if intent in ("social_acceptance", "contextual_request", "AnswerQuestion", "homework_completed", "yes"):
+                    intent_appropriate = True
                     inference_details = f"Inferred AppropriateSocialResponse: {intent} is appropriate for {role}."
                 elif intent == "social_refusal":
-                    # A polite refusal to a parent/teacher can be socially appropriate if polite.
                     if has_politeness:
-                        is_appropriate = True
+                        intent_appropriate = True
                         inference_details = f"Inferred AppropriateSocialResponse: Polite refusal is acceptable for {role}."
                     else:
-                        is_appropriate = False
+                        intent_appropriate = False
                         inference_details = f"Impolite refusal is not appropriate for {role}."
                         failures.append("T_POLITE")
+
+        # Synthesize Intent + Semantic Similarity:
+        if intent_appropriate:
+            # When intent is socially appropriate for this role, verify it supports the scenario context
+            if semantic_similarity is None or semantic_similarity >= 0.50:
+                is_appropriate = True
+            else:
+                is_appropriate = False
+                inference_details = f"Intent '{intent}' detected but semantic context does not match scenario."
+        elif semantic_similarity and semantic_similarity >= 0.88:
+            # Strongly equivalent response where embeddings show clear semantic equivalence
+            is_appropriate = True
+            inference_details = "Inferred AppropriateSocialResponse via strong semantic equivalence (>= 0.88)."
+        else:
+            is_appropriate = False
+            if intent == "unknown":
+                inference_details = "Utterance intent is unverified for this scenario; semantic similarity alone is insufficient."
 
         # Rule 1: Politeness & Formal Greetings
         if "teacher" in role_clean or "doctor" in role_clean:

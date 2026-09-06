@@ -170,39 +170,45 @@ def generate_feedback(character, matched, error_type=None,
 # ============================================================
 
 def calculate_stars(matched, semantic_score=0.0, respect_ok=True,
-                    language_ok=True):
+                    language_ok=True, nlp_similarity=0.0, intent_verified=False):
     """
-    Calculate stars (0-5) for a response.
+    Calculate stars (0-5) based on combined evidence:
+    - Semantic similarity (tokens & NLP embeddings)
+    - Intent / Context agreement
+    - Politeness & Respect constraints
+    - Safety & Clean language
 
-    - 5 stars: Perfect match + respectful + clean language
-    - 4 stars: Close match + respectful
-    - 3 stars: Acceptable match
-    - 2 stars: Partial understanding
-    - 1 star: Tried but needs improvement (always give at least 1 for trying)
-    - 0 stars: Empty/no response only
+    Expected Mapping:
+    - 4–5 ⭐: Exact / strongly equivalent intended response
+    - 4–5 ⭐: Clearly valid alternative expressing intended intent
+    - 2–3 ⭐: Reasonable but incomplete/ambiguous response (e.g. missing honorific or moderate match)
+    - 1–2 ⭐: Related words but wrong/unclear intent (effort recognized without false pass)
+    - 1 ⭐: Low similarity or safety violation
     """
-
-    if not matched and semantic_score < 0.3:
-        # Still give 1 star for trying
-        return 1
-
     if not language_ok:
         return 1
 
-    if matched and respect_ok and language_ok:
-        if semantic_score >= 0.95:
+    combined_score = max(semantic_score, nlp_similarity)
+
+    # 1. Matched responses (Communicative intent satisfied)
+    if matched:
+        if not respect_ok:
+            # Missing respect marker for authority figure (e.g. forgot 'appa' or 'teacher')
+            return 3
+
+        if combined_score >= 0.90 or (semantic_score >= 0.85 and intent_verified):
             return 5
-        elif semantic_score >= 0.85:
+        elif combined_score >= 0.72 or intent_verified:
             return 4
         else:
             return 3
 
-    if matched and not respect_ok:
-        return 3
-
-    if semantic_score >= 0.6:
+    # 2. Not matched (Did not satisfy expected intent)
+    # Give 2 stars for reasonable attempt / related words with partial semantic understanding
+    if combined_score >= 0.50:
         return 2
 
+    # Give 1 star for low-scoring attempt (always encourage trying)
     return 1
 
 

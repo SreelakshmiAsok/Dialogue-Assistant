@@ -501,10 +501,26 @@ def api_evaluate():
         semantic_similarity=nlp_similarity
     )
     
-    if ontology_eval["is_appropriate"]:
+    # Combined evidence evaluation:
+    # High semantic similarity alone != Correct answer.
+    # Acceptance requires intent/context agreement, ontology appropriateness,
+    # or strong semantic equivalence (>= 0.88).
+    intent_verified = False
+    if ontology_eval.get("is_appropriate") and inferred_intent != "unknown":
         matched = True
-        if best_semantic < 0.75:
-            best_semantic = 0.75
+        intent_verified = True
+        best_semantic = max(best_semantic, nlp_similarity, 0.82)
+    elif ontology_eval.get("is_appropriate") and nlp_similarity >= 0.88:
+        matched = True
+        intent_verified = True
+        best_semantic = max(best_semantic, nlp_similarity)
+    elif matched and not ontology_eval.get("has_violations"):
+        intent_verified = True
+
+    # Critical safety or decorum violation overrides match
+    if ontology_eval.get("has_violations"):
+        matched = False
+        intent_verified = False
 
     # --------------------------------------------------------
     # Step 4: Sentiment
@@ -513,17 +529,19 @@ def api_evaluate():
     sentiment = sentiment_result["sentiment"]
 
     # --------------------------------------------------------
-    # Step 5: Calculate stars
+    # Step 5: Calculate stars (Multi-Signal Combined Evidence)
     # --------------------------------------------------------
     stars = calculate_stars(
         matched,
-        best_semantic,
-        respect_ok,
-        not bad_check["is_inappropriate"]
+        semantic_score=best_semantic,
+        respect_ok=respect_ok,
+        language_ok=not bad_check["is_inappropriate"],
+        nlp_similarity=nlp_similarity,
+        intent_verified=intent_verified
     )
 
     if matched and missing_preferred_vocative:
-        stars = max(stars, 3)
+        stars = min(stars, 3)
 
     # --------------------------------------------------------
     # Step 6: Generate feedback
