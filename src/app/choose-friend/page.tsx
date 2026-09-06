@@ -61,7 +61,7 @@ export default function ChooseAFriend() {
                 key={char.id}
                 aria-label={`Open roadmap for ${char.displayName}`}
                 onClick={() => handleSelectCharacter(char.backendName)}
-                className="group flex flex-col items-center p-6 rounded-[32px] transition-all duration-300 active:scale-95 bg-surface-container hover:bg-surface-container-high hover:-translate-y-1.5 shadow-sm hover:shadow-xl border-2 border-transparent hover:border-primary/40 relative text-center"
+                className="group flex flex-col items-center p-6 rounded-[32px] transition-all duration-300 active:scale-95 bg-surface-container-lowest dark:bg-surface-container hover:bg-surface-container-high hover:-translate-y-1.5 shadow-sm hover:shadow-xl border border-outline-variant/60 hover:border-primary/50 relative text-center"
               >
                 {/* Character Image */}
                 <div className="w-28 h-28 sm:w-32 sm:h-32 mb-4 relative overflow-hidden rounded-full border-4 border-surface group-hover:border-primary shadow-ambient transition-all group-hover:scale-105">

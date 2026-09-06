@@ -20,7 +20,16 @@ function SessionCompleteContent() {
   const tier = searchParams.get("tier");
 
   const charMeta = getCharacterByBackendName(characterName);
-  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+  // Accuracy calculation:
+  // Accuracy represents the performance mastery score based on stars earned out of max possible stars,
+  // providing a smooth, meaningful gradient (e.g. 20%, 40%, 60%, 80%, 100%) rather than a blunt binary 0% vs 100%.
+  const maxPossibleStars = (tier === "2" ? 3 : 5) * (total > 0 ? total : 1);
+  const accuracy =
+    maxPossibleStars > 0 && stars > 0
+      ? Math.min(100, Math.max(0, Math.round((stars / maxPossibleStars) * 100)))
+      : total > 0 && correct > 0
+      ? Math.min(100, Math.max(0, Math.round((correct / total) * 100)))
+      : 0;
 
   const speakReward = () => {
     if ("speechSynthesis" in window) {
@@ -81,8 +90,8 @@ function SessionCompleteContent() {
   }, [lessonId, characterName, stars]);
 
   const getMessage = () => {
-    if (accuracy >= 80) return { title: "Amazing! 🎉", subtitle: "You're a social skills superstar!" };
-    if (accuracy >= 50) return { title: "Great Job! 🌟", subtitle: "You're learning so well! Keep practicing!" };
+    if (accuracy >= 80 || stars >= 4) return { title: "Amazing! 🎉", subtitle: "You're a social skills superstar!" };
+    if (accuracy >= 50 || stars >= 3) return { title: "Great Job! 🌟", subtitle: "You're learning so well! Keep practicing!" };
     return { title: "Good Try! 💪", subtitle: "Every practice makes you better!" };
   };
 
@@ -147,29 +156,41 @@ function SessionCompleteContent() {
           </p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards with crisp contrast and distinct card boundaries */}
         <div className="grid grid-cols-3 gap-3 w-full max-w-sm">
-          <div className="bg-surface-container rounded-2xl py-3 px-2 flex flex-col items-center">
+          <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/70 rounded-2xl py-3.5 px-2 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
             <span className="material-symbols-outlined text-[24px] text-primary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-            <span className="text-[22px] font-bold text-on-surface">{stars}</span>
-            <span className="text-[12px] font-semibold text-on-surface-variant">Stars</span>
+            <span className="text-[22px] font-bold text-on-surface leading-tight">{stars}</span>
+            <span className="text-[12px] font-semibold text-on-surface-variant mt-0.5">Stars</span>
           </div>
-          <div className="bg-surface-container rounded-2xl py-3 px-2 flex flex-col items-center">
-            <span className="material-symbols-outlined text-[24px] text-secondary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            <span className="text-[22px] font-bold text-on-surface">{correct}/{total}</span>
-            <span className="text-[12px] font-semibold text-on-surface-variant">Correct</span>
-          </div>
-          <div className="bg-surface-container rounded-2xl py-3 px-2 flex flex-col items-center">
+          {total === 1 ? (
+            <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/70 rounded-2xl py-3.5 px-2 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+              <span className="material-symbols-outlined text-[24px] text-secondary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>
+                {stars >= 3 ? "check_circle" : "trending_up"}
+              </span>
+              <span className="text-[20px] font-bold text-on-surface leading-tight">
+                {stars >= 4 ? "Mastered" : stars >= 3 ? "Completed" : "Practiced"}
+              </span>
+              <span className="text-[12px] font-semibold text-on-surface-variant mt-0.5">Status</span>
+            </div>
+          ) : (
+            <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/70 rounded-2xl py-3.5 px-2 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+              <span className="material-symbols-outlined text-[24px] text-secondary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+              <span className="text-[22px] font-bold text-on-surface leading-tight">{correct}/{total}</span>
+              <span className="text-[12px] font-semibold text-on-surface-variant mt-0.5">Correct</span>
+            </div>
+          )}
+          <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/70 rounded-2xl py-3.5 px-2 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
             <span className="material-symbols-outlined text-[24px] text-tertiary mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>percent</span>
-            <span className="text-[22px] font-bold text-on-surface">{accuracy}%</span>
-            <span className="text-[12px] font-semibold text-on-surface-variant">Accuracy</span>
+            <span className="text-[22px] font-bold text-on-surface leading-tight">{accuracy}%</span>
+            <span className="text-[12px] font-semibold text-on-surface-variant mt-0.5">Accuracy</span>
           </div>
         </div>
 
         {/* Play Again compact */}
         <button
           onClick={() => router.push(`/session?character=${characterName}&lessonId=${lessonId || ""}&tier=${tier || 1}`)}
-          className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-surface-container text-on-surface text-[15px] font-semibold hover:bg-surface-container-high transition-all active:scale-95 shadow-sm"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/70 text-on-surface text-[15px] font-semibold hover:bg-surface-container-high transition-all active:scale-95 shadow-sm hover:shadow-md"
         >
           <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>replay</span>
           Play Again

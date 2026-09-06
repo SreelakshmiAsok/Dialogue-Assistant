@@ -339,7 +339,7 @@ useEffect(() => {
           
           {/* Social story */}
           {currentQuestion.social_story && (
-            <div className="w-full max-w-lg mx-auto bg-surface-container-low border-l-4 border-secondary rounded-xl px-4 py-2.5 mb-2 shadow-sm text-left">
+            <div className="w-full max-w-lg mx-auto bg-surface-container-lowest/90 dark:bg-surface-container-low border border-outline-variant/40 border-l-4 border-l-secondary rounded-xl px-4 py-2.5 mb-2 shadow-sm text-left backdrop-blur-sm">
               <p className="text-[11px] font-bold uppercase tracking-widest text-secondary mb-0.5">📖 Scenario</p>
               <p className="text-[14px] leading-[20px] text-on-surface font-medium line-clamp-2">
                 {currentQuestion.social_story}
@@ -348,7 +348,7 @@ useEffect(() => {
           )}
 
           {/* Dialogue Bubble */}
-          <div className="flex items-center gap-3 bg-surface-container px-4 py-3 rounded-2xl shadow-sm max-w-lg w-full">
+          <div className="flex items-center gap-3 bg-surface-container-lowest/95 dark:bg-surface-container border border-outline-variant/60 px-4 py-3 rounded-2xl shadow-sm max-w-lg w-full backdrop-blur-sm">
             <div className="flex-1">
               <p className="text-[13px] font-bold text-primary mb-0.5">{charMeta.displayName} says:</p>
               <h2 className="text-[18px] font-semibold leading-[26px] text-on-surface tracking-[0.02em]">
@@ -384,7 +384,7 @@ useEffect(() => {
         {/* Evaluation Result */}
         {evaluation && (
           <section className="flex flex-col items-center justify-center flex-1 px-2 py-2">
-            <div className={`rounded-3xl p-4 shadow-ambient w-full max-w-lg ${evaluation.correct ? 'bg-secondary-container' : 'bg-surface-container-high'}`}>
+            <div className={`rounded-3xl p-4 shadow-ambient w-full max-w-lg border ${evaluation.correct ? 'bg-secondary-container/95 border-secondary/30' : 'bg-surface-container-lowest dark:bg-surface-container-high border-outline-variant/60'}`}>
               {/* Stars */}
               <div className="flex justify-center gap-1 mb-2">
                 {[1, 2, 3, 4, 5].map((i) => (

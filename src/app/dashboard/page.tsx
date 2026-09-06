@@ -55,21 +55,21 @@ export default function DashboardOverview() {
           {/* Top Stats Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {/* Total Stars */}
-            <div className="bg-surface-container rounded-3xl p-6 flex flex-col items-center text-center">
+            <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6 flex flex-col items-center text-center hover:shadow-md transition-all">
               <span className="material-symbols-outlined text-[36px] text-primary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
               <p className="text-[14px] font-semibold text-on-surface-variant mb-1">Total Stars</p>
               <p className="text-[40px] font-bold text-on-surface leading-tight">{progress?.total_stars || 0}</p>
             </div>
 
             {/* Accuracy */}
-            <div className="bg-surface-container rounded-3xl p-6 flex flex-col items-center text-center">
+            <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6 flex flex-col items-center text-center hover:shadow-md transition-all">
               <span className="material-symbols-outlined text-[36px] text-secondary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>target</span>
               <p className="text-[14px] font-semibold text-on-surface-variant mb-1">Accuracy</p>
               <p className="text-[40px] font-bold text-on-surface leading-tight">{progress?.accuracy || 0}<span className="text-[20px] text-on-surface-variant">%</span></p>
             </div>
 
             {/* Total Sessions */}
-            <div className="bg-surface-container rounded-3xl p-6 flex flex-col items-center text-center">
+            <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6 flex flex-col items-center text-center hover:shadow-md transition-all">
               <span className="material-symbols-outlined text-[36px] text-tertiary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
               <p className="text-[14px] font-semibold text-on-surface-variant mb-1">Questions Attempted</p>
               <p className="text-[40px] font-bold text-on-surface leading-tight">{progress?.total_attempts || 0}</p>
@@ -79,7 +79,7 @@ export default function DashboardOverview() {
 
           {/* Recent Activity */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-            <div className="md:col-span-3 bg-surface-container rounded-3xl p-6">
+            <div className="md:col-span-3 bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[20px] font-bold text-on-surface">Recent Activity</h2>
                 <button
@@ -92,7 +92,7 @@ export default function DashboardOverview() {
 
               {(progress?.total_attempts ?? 0) > 0 ? (
                 <div className="space-y-3">
-                  <div className="flex items-center gap-4 bg-surface-container-low rounded-2xl p-4">
+                  <div className="flex items-center gap-4 bg-surface-container-low/60 border border-outline-variant/30 rounded-2xl p-4">
                     <div className="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
                       <span className="material-symbols-outlined text-[20px] text-on-secondary-container">chat</span>
                     </div>
@@ -117,7 +117,7 @@ export default function DashboardOverview() {
 
             {/* Current Streak */}
             <div className="md:col-span-2 space-y-4">
-              <div className="bg-surface-container rounded-3xl p-6 text-center">
+              <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6 text-center">
                 <span className="material-symbols-outlined text-[32px] text-primary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
                 <p className="text-[14px] font-semibold text-on-surface-variant mb-1">Current Streak</p>
                 <p className="text-[40px] font-bold text-on-surface leading-tight">
@@ -136,7 +136,7 @@ export default function DashboardOverview() {
           </div>
 
           {/* Progress Chart */}
-          <div className="bg-surface-container rounded-3xl p-6">
+          <div className="bg-surface-container-lowest dark:bg-surface-container border border-outline-variant/60 shadow-sm rounded-3xl p-6">
             <div className="flex items-center justify-between mb-2">
               <div>
                 <h2 className="text-[20px] font-bold text-on-surface">Progress Overview</h2>
