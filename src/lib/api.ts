@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // API CLIENT ΓÇö Connects to Flask backend via Next.js proxy
 // ============================================================
 
@@ -111,6 +111,10 @@ export async function evaluateAnswer(
 
 export function getAudioUrl(questionId: string): string {
   return `${API_BASE}/audio/${questionId}`;
+}
+
+export function getTtsAudioUrl(text: string, character: string): string {
+  return `${API_BASE}/tts?text=${encodeURIComponent(text)}&character=${encodeURIComponent(character)}`;
 }
 
 export async function fetchProgress(studentId?: string): Promise<ProgressData> {

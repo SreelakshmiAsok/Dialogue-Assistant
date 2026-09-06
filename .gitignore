@@ -6,6 +6,7 @@ __pycache__/
 .DS_Store
 *.log
 static/audio/*.mp3
+backend/static/audio/*.mp3
 SemanticDialogueAssistant_datasets/static/audio/*.mp3
 users.json
 .env

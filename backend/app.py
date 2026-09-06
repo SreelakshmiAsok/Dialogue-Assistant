@@ -261,6 +261,43 @@ def api_audio(question_id):
     return send_file(filepath, mimetype="audio/mpeg")
 
 
+@app.route("/api/tts", methods=["GET", "POST"])
+def api_tts():
+    """
+    Generate and return Neural Tamil TTS audio dynamically via edge-tts.
+    Supports GET /api/tts?text=...&character=...
+    or POST { "text": "...", "character": "..." }
+    """
+    import hashlib
+
+    if request.method == "POST":
+        data = request.get_json(force=True) or {}
+        text = data.get("text", "")
+        character = data.get("character", "Friend")
+    else:
+        text = request.args.get("text", "")
+        character = request.args.get("character", "Friend")
+
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+
+    # Pick neural voice by character
+    voice = "ta-IN-PallaviNeural"  # Default female (Teacher, etc.)
+    if character in ["Father", "Stranger", "Friend"]:
+        voice = "ta-IN-ValluvarNeural"
+
+    # Cache by hash of voice + text
+    h = hashlib.md5(f"{voice}_{text}".encode("utf-8")).hexdigest()
+    audio_dir = os.path.join(os.path.dirname(__file__), "static", "audio")
+    os.makedirs(audio_dir, exist_ok=True)
+    filepath = os.path.join(audio_dir, f"tts_{h}.mp3")
+
+    if not os.path.exists(filepath):
+        subprocess.run(["edge-tts", "--voice", voice, "--text", text, "--write-media", filepath])
+
+    return send_file(filepath, mimetype="audio/mpeg")
+
+
 @app.route("/api/evaluate", methods=["POST"])
 def api_evaluate():
     """

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchQuestions, evaluateAnswer, getAudioUrl } from "@/lib/api";
+import { fetchQuestions, evaluateAnswer, getAudioUrl, getTtsAudioUrl } from "@/lib/api";
 import { getCharacterByBackendName } from "@/lib/characters";
 import type { Question, EvaluationResult } from "@/lib/api";
 import type { CharacterMeta } from "@/lib/characters";
@@ -558,37 +558,39 @@ function Tier2SessionContent() {
     }
   }, [conversationHistory, evaluation, isEvaluating]);
 
-  const playTTS = useCallback((text: string) => {
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playTTS = useCallback((tamilText: string, fallbackTanglish?: string) => {
+    // Cancel any ongoing speech or audio
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+      currentAudioRef.current = null;
+    }
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.85;
+    }
 
-      const voices = window.speechSynthesis.getVoices();
-      const isMale = ["Father", "Stranger", "Friend"].includes(characterName);
-      const preferred =
-        voices.find(
-          (v) =>
-            v.lang.startsWith("ta") &&
-            (isMale
-              ? v.name.toLowerCase().includes("male") || v.name.includes("Valluvar")
-              : v.name.toLowerCase().includes("female") || v.name.includes("Pallavi"))
-        ) ||
-        voices.find(
-          (v) =>
-            v.lang.startsWith("en") &&
-            (isMale
-              ? v.name.toLowerCase().includes("male") ||
-                v.name.toLowerCase().includes("david") ||
-                v.name.toLowerCase().includes("mark")
-              : v.name.toLowerCase().includes("female") ||
-                v.name.toLowerCase().includes("zira") ||
-                v.name.toLowerCase().includes("susan"))
-        );
+    const textToSpeak = (tamilText || fallbackTanglish || "").trim();
+    if (!textToSpeak) return;
 
-      if (preferred) utterance.voice = preferred;
-      utterance.pitch = isMale ? 0.75 : 1.1;
-      speechSynthesis.speak(utterance);
+    try {
+      const url = getTtsAudioUrl(textToSpeak, characterName);
+      const audio = new Audio(url);
+      currentAudioRef.current = audio;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch((err) => {
+          console.warn("Neural audio play prevented or failed, falling back to browser synthesis", err);
+          if ("speechSynthesis" in window) {
+            const utterance = new SpeechSynthesisUtterance(fallbackTanglish || textToSpeak);
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+          }
+        });
+      }
+    } catch (e) {
+      console.error("Failed to play TTS audio", e);
     }
   }, [characterName]);
 
@@ -614,7 +616,7 @@ function Tier2SessionContent() {
                   englishText: (firstTurn.prompt as any).english || fullLesson.initial_prompt?.english,
                 },
               ]);
-              playTTS(firstTurn.prompt.tanglish);
+              playTTS(firstTurn.prompt.tamil || firstTurn.prompt.tanglish, firstTurn.prompt.tanglish);
             }
           });
         }
@@ -622,6 +624,10 @@ function Tier2SessionContent() {
       .catch(console.error);
 
     return () => {
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
@@ -662,7 +668,10 @@ function Tier2SessionContent() {
                   englishText: (result.next_character_reply as any).english,
                 },
               ]);
-              playTTS(result.next_character_reply!.tanglish);
+              playTTS(
+                result.next_character_reply!.tamil || result.next_character_reply!.tanglish,
+                result.next_character_reply!.tanglish
+              );
               setCurrentTurnId(result.next_turn_id);
               setEvaluation(null);
               setRetryCount(0);
@@ -841,6 +850,17 @@ function Tier2SessionContent() {
                     </p>
                   )}
                 </div>
+
+                {msg.speaker === "character" && (
+                  <button
+                    onClick={() => playTTS(msg.tamilText || msg.text, msg.text)}
+                    className="p-1.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors self-center shrink-0"
+                    title="Replay neural audio"
+                    aria-label="Replay audio"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">volume_up</span>
+                  </button>
+                )}
               </div>
 
               {/* Subtitle Translation Dropdown for Character Messages */}
