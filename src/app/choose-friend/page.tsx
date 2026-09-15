@@ -4,12 +4,22 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CHARACTERS } from "@/lib/characters";
 import { getCharacterProgress } from "@/lib/progress";
+import { getAppSettings } from "@/lib/settings";
+import ParentTeacherModal from "@/components/ParentTeacherModal";
 
 export default function ChooseAFriend() {
   const router = useRouter();
   const [progressData, setProgressData] = useState<Record<string, number>>({});
+  const [childName, setChildName] = useState("Friend");
+  const [enabledModules, setEnabledModules] = useState<string[]>([]);
+  const [showParentModal, setShowParentModal] = useState(false);
 
   useEffect(() => {
+    // Load app settings (Child Name & Enabled Modules)
+    const settings = getAppSettings();
+    setChildName(settings.childName || "Friend");
+    setEnabledModules(settings.enabledModules || []);
+
     // Load progress for all characters on mount
     const newProgress: Record<string, number> = {};
     CHARACTERS.forEach((char) => {
@@ -23,34 +33,49 @@ export default function ChooseAFriend() {
     router.push(`/roadmap/${backendName}`);
   };
 
+  // Filter characters based on Parent Settings (Scenario Library Access)
+  const visibleCharacters = CHARACTERS.filter((char) =>
+    enabledModules.length === 0 || enabledModules.includes(char.id)
+  );
+
   return (
     <div className="bg-background text-on-background min-h-screen font-sans antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
       <main className="min-h-screen flex flex-col items-center justify-center relative px-6 md:px-20 py-12">
         {/* Back button */}
         <button
           onClick={() => router.push("/")}
-          className="absolute top-6 left-6 md:top-10 md:left-12 w-14 h-14 flex items-center justify-center rounded-full bg-surface-container text-primary hover:bg-surface-container-high transition-colors active:scale-95 shadow-sm z-50"
+          className="absolute top-6 left-6 md:top-10 md:left-12 w-14 h-14 flex items-center justify-center rounded-full bg-surface-container text-primary hover:bg-surface-container-high transition-colors active:scale-95 shadow-sm z-30"
           aria-label="Back to home"
         >
           <span className="material-symbols-outlined text-[28px]">arrow_back</span>
         </button>
 
+        {/* Small Parent & Educator button in the corner */}
+        <button
+          onClick={() => setShowParentModal(true)}
+          className="absolute top-6 right-6 md:top-10 md:right-12 flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-all text-[13px] font-semibold shadow-sm border border-outline-variant/50 active:scale-95 z-30"
+          aria-label="Open Parent and Teacher Mode"
+        >
+          <span className="material-symbols-outlined text-[20px] text-primary">admin_panel_settings</span>
+          <span>Parent &amp; Educator</span>
+        </button>
+
         <header className="text-center mb-10 w-full max-w-4xl mx-auto flex flex-col items-center gap-2 mt-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-container/60 text-on-primary-container text-[13px] font-bold mb-2">
             <span className="material-symbols-outlined text-[18px]">explore</span>
-            <span>Choose Your Companion</span>
+            <span>Welcome, {childName}!</span>
           </div>
           <h1 className="text-[32px] leading-[44px] md:text-[48px] md:leading-[64px] font-bold text-on-surface">
-            Who would you like to speak with?
+            Who would you like to speak with today?
           </h1>
           <p className="text-[18px] leading-[30px] md:text-[20px] text-on-surface-variant max-w-2xl">
             Tap any character below to open their learning roadmap and begin practicing.
           </p>
         </header>
 
-        {/* Character Grid */}
+        {/* Character Grid filtered by Scenario Library Access */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl mx-auto">
-          {CHARACTERS.map((char) => {
+          {visibleCharacters.map((char) => {
             const completedCount = progressData[char.id] || 0;
             const progressText = completedCount > 0 
               ? `${completedCount} lesson${completedCount === 1 ? '' : 's'} completed` 
@@ -104,7 +129,12 @@ export default function ChooseAFriend() {
           })}
         </div>
       </main>
+
+      {/* Quick Parent/Educator Unlock Modal */}
+      <ParentTeacherModal
+        isOpen={showParentModal}
+        onClose={() => setShowParentModal(false)}
+      />
     </div>
   );
 }
-

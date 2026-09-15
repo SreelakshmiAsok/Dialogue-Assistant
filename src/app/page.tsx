@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getToken, getRole, clearAuth } from "@/lib/auth";
+import ParentTeacherModal from "@/components/ParentTeacherModal";
 
 export default function WelcomeHome() {
   const router = useRouter();
   const [isStarting, setIsStarting] = useState(false);
+  const [showParentModal, setShowParentModal] = useState(false);
   const [authInfo, setAuthInfo] = useState<{ token: string | null; role: string | null }>({
     token: null,
     role: null,
@@ -71,21 +73,32 @@ export default function WelcomeHome() {
             {authInfo.role === "parent" ? (
               <button
                 aria-label="Parent and Educator Dashboard"
-                onClick={() => router.push("/parent-access")}
+                onClick={() => setShowParentModal(true)}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
               >
                 <span className="material-symbols-outlined text-[20px] text-primary">admin_panel_settings</span>
                 <span className="hidden sm:inline">Parent &amp; Educator</span>
               </button>
             ) : (
-              <button
-                aria-label="Child Profile"
-                onClick={() => router.push("/choose-friend")}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[14px] shadow-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[20px] text-primary">face</span>
-                <span className="hidden sm:inline">Child Profile</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  aria-label="Parent and Educator Access"
+                  onClick={() => setShowParentModal(true)}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-all text-on-surface font-semibold text-[13px] shadow-sm active:scale-95"
+                  title="Parent & Teacher Mode"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-primary">admin_panel_settings</span>
+                  <span className="hidden sm:inline">Parent Mode</span>
+                </button>
+                <button
+                  aria-label="Child Profile"
+                  onClick={() => router.push("/choose-friend")}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary-container text-on-primary-container hover:bg-primary-container/80 transition-all font-semibold text-[14px] shadow-sm active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-[20px] text-primary">face</span>
+                  <span className="hidden sm:inline">Child Profile</span>
+                </button>
+              </div>
             )}
 
             <button
@@ -140,6 +153,12 @@ export default function WelcomeHome() {
           </button>
         </div>
       </main>
+
+      {/* Quick Parent/Educator Unlock Modal */}
+      <ParentTeacherModal
+        isOpen={showParentModal}
+        onClose={() => setShowParentModal(false)}
+      />
     </div>
   );
 }

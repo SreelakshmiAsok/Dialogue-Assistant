@@ -2,7 +2,23 @@ export const setToken = (token: string, role: string) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("access_token", token);
     localStorage.setItem("user_role", role);
+    if (role === "parent") {
+      localStorage.setItem("parent_access_token", token);
+    }
   }
+};
+
+export const setParentToken = (token: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("parent_access_token", token);
+  }
+};
+
+export const getParentToken = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("parent_access_token");
+  }
+  return null;
 };
 
 export const getToken = () => {
@@ -23,6 +39,7 @@ export const clearAuth = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_role");
+    localStorage.removeItem("parent_access_token");
   }
 };
 

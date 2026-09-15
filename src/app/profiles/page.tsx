@@ -42,7 +42,11 @@ export default function Profiles() {
       });
       if (!res.ok) throw new Error("Failed");
       const data = await res.json();
-      // Overwrite token with student token
+      const currentParentToken = getToken();
+      if (currentParentToken) {
+        localStorage.setItem("parent_access_token", currentParentToken);
+      }
+      // Set active session token to student token
       setToken(data.access_token, "student");
       router.push("/choose-friend");
     } catch (e) {
