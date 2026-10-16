@@ -545,11 +545,13 @@ function Tier2SessionContent() {
   const [evaluation, setEvaluation] = useState<Tier2EvaluationResult | null>(null);
   const [sessionStars, setSessionStars] = useState(0);
   const [expandedTranslations, setExpandedTranslations] = useState<number[]>([]);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const recognitionRef = useRef<any>(null);
   const starsAccumulatedRef = useRef<number>(0);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const audioTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hasInteractedRef = useRef<boolean>(false);
 
   // Auto scroll chat to bottom on new messages
   useEffect(() => {
@@ -572,25 +574,39 @@ function Tier2SessionContent() {
         window.speechSynthesis.cancel();
       }
 
-      for (const item of items) {
-        if (!item.text?.trim()) continue;
-        const url = getTtsAudioUrl(item.text, item.character);
-        await new Promise<void>((resolve) => {
-          const audio = new Audio(url);
-          currentAudioRef.current = audio;
-          audio.onended = () => resolve();
-          audio.onerror = (e) => {
-            console.warn("Neural audio error:", e);
-            resolve();
-          };
-          const p = audio.play();
-          if (p && typeof p.catch === "function") {
-            p.catch((err) => {
-              console.warn("Autoplay blocked (user gesture required):", err);
-              resolve();
-            });
-          }
-        });
+      setIsPlayingAudio(true);
+      try {
+        for (const item of items) {
+          if (!item.text?.trim()) continue;
+          const url = getTtsAudioUrl(item.text, item.character);
+          await new Promise<void>((resolve) => {
+            const audio = new Audio(url);
+            currentAudioRef.current = audio;
+            audio.onended = () => resolve();
+            audio.onerror = (e) => {
+              console.warn("Neural audio error, using speech synthesis fallback:", e);
+              if ("speechSynthesis" in window) {
+                const u = new SpeechSynthesisUtterance(item.text);
+                u.lang = item.character === "Narrator" ? "en-IN" : "ta-IN";
+                u.rate = 0.9;
+                u.onend = () => resolve();
+                u.onerror = () => resolve();
+                window.speechSynthesis.speak(u);
+              } else {
+                resolve();
+              }
+            };
+            const p = audio.play();
+            if (p && typeof p.catch === "function") {
+              p.catch((err) => {
+                console.warn("Autoplay blocked (user gesture required):", err);
+                resolve();
+              });
+            }
+          });
+        }
+      } finally {
+        setIsPlayingAudio(false);
       }
     },
     []
@@ -619,10 +635,10 @@ function Tier2SessionContent() {
                 },
               ]);
 
-              // Read out scenario context first (Narrator), then character dialogue (Character)
+              // Read out character dialogue directly (using authentic Tamil text so words are pronounced properly)
+              const promptText = firstTurn.prompt.tamil || firstTurn.prompt.tanglish;
               playAudioSequence([
-                { text: fullLesson.scenario, character: "Narrator" },
-                { text: firstTurn.prompt.tamil || firstTurn.prompt.tanglish, character: characterName },
+                { text: promptText, character: characterName },
               ]);
             }
           });
@@ -644,9 +660,28 @@ function Tier2SessionContent() {
     };
   }, [characterName, lessonId, playAudioSequence]);
 
+  // First user interaction listener to unblock audio autoplay
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!hasInteractedRef.current && lesson && lesson.turns.length > 0) {
+        hasInteractedRef.current = true;
+        const firstTurn = lesson.turns[0];
+        const promptText = firstTurn.prompt.tamil || firstTurn.prompt.tanglish;
+        playAudioSequence([{ text: promptText, character: characterName }]);
+      }
+    };
+    window.addEventListener("click", handleFirstInteraction, { once: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+  }, [lesson, characterName, playAudioSequence]);
+
   const submitAnswer = useCallback(
     async (answer: string) => {
       if (!lesson || !currentTurnId || !answer.trim()) return;
+      hasInteractedRef.current = true;
       setIsEvaluating(true);
       setEvaluation(null);
 
@@ -704,6 +739,12 @@ function Tier2SessionContent() {
           }
         } else {
           setRetryCount((prev) => prev + 1);
+          // Let whatever the character says (hint or gentle correction) be a voice output too!
+          if (result.feedback) {
+            playAudioSequence([
+              { text: result.feedback, character: characterName },
+            ]);
+          }
         }
       } catch (err) {
         console.error("Tier 2 evaluation error:", err);
@@ -872,19 +913,21 @@ function Tier2SessionContent() {
 
                 {msg.speaker === "character" && (
                   <button
-                    onClick={() =>
+                    onClick={() => {
+                      hasInteractedRef.current = true;
                       playAudioSequence([
                         {
                           text: msg.tamilText || msg.text,
                           character: characterName,
                         },
-                      ])
-                    }
-                    className="p-1.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors self-center shrink-0 cursor-pointer"
-                    title="Replay neural audio"
+                      ]);
+                    }}
+                    className="p-2 rounded-full text-primary hover:bg-primary/15 active:scale-95 transition-all self-center shrink-0 cursor-pointer flex items-center justify-center border border-primary/30 bg-surface-container shadow-xs"
+                    title="Listen to character voice"
                     aria-label="Replay audio"
+                    type="button"
                   >
-                    <span className="material-symbols-outlined text-[18px]">volume_up</span>
+                    <span className="material-symbols-outlined text-[20px]">volume_up</span>
                   </button>
                 )}
               </div>
