@@ -128,6 +128,10 @@
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
 </owl:Class>
 
+<owl:Class rdf:about="#CommunicationScenario">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
 <owl:Class rdf:about="#Teacher">
   <rdfs:subClassOf rdf:resource="#SocialRole"/>
 </owl:Class>
@@ -275,6 +279,10 @@
   </owl:equivalentClass>
 </owl:Class>
 
+<owl:Class rdf:about="#HonorificMarker">
+  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
+</owl:Class>
+
 <owl:Class rdf:about="#StrangerSafetyUtterance">
   <rdfs:subClassOf rdf:resource="#Utterance"/>
   <owl:equivalentClass>
@@ -310,10 +318,6 @@
   <rdfs:subClassOf rdf:resource="#PeerContext"/>
 </owl:Class>
 
-<owl:Class rdf:about="#CommunicationScenario">
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-</owl:Class>
-
 <owl:Class rdf:about="#AnswerQuestion">
   <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
 </owl:Class>
@@ -336,10 +340,6 @@
 
 <owl:Class rdf:about="#DisrespectfulInformal">
   <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
-</owl:Class>
-
-<owl:Class rdf:about="#HonorificMarker">
-  <rdfs:subClassOf rdf:resource="#LinguisticFeature"/>
 </owl:Class>
 
 <owl:Class rdf:about="#ExcuseMeMarker">
@@ -602,6 +602,1505 @@
   <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
   <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
   <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_TaskCompletionConfirmation">
+  <rdf:type rdf:resource="#TaskCompletionConfirmation"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_RespectWord">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_10">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_11">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_12">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_13">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_14">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_15">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_16">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_17">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_18">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_19">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+  <allowsAlternativeIntent rdf:resource="#intent_ContextualRequest"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_20">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_21">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_HonestApology"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_HonestApology">
+  <rdf:type rdf:resource="#HonestApology"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_22">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_23">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_24">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_25">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_PoliteRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_06">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_07">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_08">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_PoliteRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_father_09">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_HonestApology"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PlaygroundContextInd">
+  <rdf:type rdf:resource="#PlaygroundContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_10">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_11">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_12">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_13">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_14">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_15">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_16">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_17">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_18">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_19">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_20">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_21">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_22">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_23">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_24">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_25">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_06">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_07">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_08">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_friend_09">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <allowsAlternativeIntent rdf:resource="#intent_CooperativeSuggestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_UncertaintyResponse">
+  <rdf:type rdf:resource="#UncertaintyResponse"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_Honorific">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_10">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_11">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_12">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_13">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_14">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_15">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_16">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_17">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_18">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_19">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_20">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_21">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_22">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SafetyRefusal"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_FirmNo"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_FirmNo">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_23">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_24">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_25">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_06">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_07">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_08">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_stranger_09">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ClassroomContextInd">
+  <rdf:type rdf:resource="#ClassroomContext"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_10">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_11">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_12">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_PoliteRequest"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_13">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_PoliteRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_14">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_15">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <expectsIntent rdf:resource="#intent_HonestApology"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_16">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_17">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_18">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_19">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_20">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_21">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <expectsIntent rdf:resource="#intent_HonestApology"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_22">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_23">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_24">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_25">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_PoliteRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_06">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_07">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_08">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_teacher_09">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_father_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <expectsIntent rdf:resource="#intent_NegotiationIntent"/>
+  <requiresFeature rdf:resource="#feat_TimeExtension"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_NegotiationIntent">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_TimeExtension">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_father_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <expectsIntent rdf:resource="#intent_PoliteInterruption"/>
+  <requiresFeature rdf:resource="#feat_ExcuseMeKeyword"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_ExcuseMeKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_father_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_OfferAssistance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_OfferAssistance">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_father_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#MealContextInd"/>
+  <expectsIntent rdf:resource="#intent_PoliteNegotiation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PoliteNegotiation">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_father_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#ParentRoleInd"/>
+  <inSocialContext rdf:resource="#ParentContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_GreetingPolite"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <requiresFeature rdf:resource="#feat_RespectWord"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_GreetingPolite">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_friend_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_RequestToJoin"/>
+  <requiresFeature rdf:resource="#feat_JoinIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RequestToJoin">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_JoinIntent">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_friend_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_ShowEmpathy"/>
+  <requiresFeature rdf:resource="#feat_EmpathyKeyword"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ShowEmpathy">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_EmpathyKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_friend_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_OfferCompliment"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_OfferCompliment">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_friend_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_ShareInterest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ShareInterest">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_friend_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#PeerRoleInd"/>
+  <inSocialContext rdf:resource="#PeerContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <inSocialContext rdf:resource="#PlaygroundContextInd"/>
+  <expectsIntent rdf:resource="#intent_ShowSportsmanship"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ShowSportsmanship">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_stranger_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
+  <violatesScenario rdf:resource="#intent_SocialAcceptance"/>
+  <expectsIntent rdf:resource="#intent_RefusalAndEscape"/>
+  <requiresFeature rdf:resource="#feat_MentionAdult"/>
+  <requiresFeature rdf:resource="#feat_FirmNo"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RefusalAndEscape">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_MentionAdult">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_stranger_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_RequestHelp"/>
+  <requiresFeature rdf:resource="#feat_HelpKeyword"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RequestHelp">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_HelpKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_stranger_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <expectsIntent rdf:resource="#intent_PoliteRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
+  <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_stranger_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <expectsIntent rdf:resource="#intent_PrivacyProtection"/>
+  <allowsAlternativeIntent rdf:resource="#intent_FirmRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PrivacyProtection">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_FirmRefusal">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_stranger_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#StrangerRoleInd"/>
+  <inSocialContext rdf:resource="#StrangerContextInd"/>
+  <expectsIntent rdf:resource="#intent_EscapeDanger"/>
+  <allowsAlternativeIntent rdf:resource="#intent_FirmRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <requiresFeature rdf:resource="#feat_FirmNo"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_EscapeDanger">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_teacher_01">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <expectsIntent rdf:resource="#intent_RequestPermission"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+  <requiresFeature rdf:resource="#feat_RestroomIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RequestPermission">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_RestroomIntent">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_teacher_02">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <expectsIntent rdf:resource="#intent_RaiseDoubt"/>
+  <requiresFeature rdf:resource="#feat_DoubtKeyword"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RaiseDoubt">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_DoubtKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_teacher_03">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_PoliteApology"/>
+  <allowsAlternativeIntent rdf:resource="#intent_HonestApology"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PoliteApology">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_teacher_04">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <expectsIntent rdf:resource="#intent_AnswerQuestion"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Scenario_t2_teacher_05">
+  <rdf:type rdf:resource="#CommunicationScenario"/>
+  <hasSocialRole rdf:resource="#TeacherRoleInd"/>
+  <inSocialContext rdf:resource="#TeacherContextInd"/>
+  <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
+  <inSocialContext rdf:resource="#ClassroomContextInd"/>
+  <violatesScenario rdf:resource="#intent_HostileRefusal"/>
+  <expectsIntent rdf:resource="#intent_SelfAdvocacyRequest"/>
+  <allowsAlternativeIntent rdf:resource="#intent_PoliteRequest"/>
+  <requiresFeature rdf:resource="#feat_Honorific"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_SelfAdvocacyRequest">
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
 </owl:NamedIndividual>
 
 

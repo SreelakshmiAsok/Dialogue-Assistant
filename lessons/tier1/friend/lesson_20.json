@@ -16,5 +16,47 @@
   "model_answer": "Seri da, thanks",
   "respect_required": false,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Idhu nalla book da, padikuriya?",
+        "tamil": "இது நல்ல புக் டா, படிக்குறியா?"
+      },
+      "target_intent": "CooperativeSuggestion",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Seri da kudu",
+        "Aama da",
+        "Padikuren da",
+        "Thanks da",
+        "Kudu da"
+      ],
+      "model_answer": "Seri da, thanks",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Seri da, thanks'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "CooperativeSuggestion"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend has a storybook. They ask if you want to borrow it.",
+  "topic": "Book Exchange"
 }

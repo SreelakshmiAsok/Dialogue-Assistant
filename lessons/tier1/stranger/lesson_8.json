@@ -17,5 +17,52 @@
   "model_answer": "Anga irukku sir",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Hotel enga iruku?",
+        "tamil": "ஹோட்டல் எங்க இருக்கு?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse",
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Opposite la sir",
+        "Ethir pakkam sir",
+        "Straight sir",
+        "Theriyadhu sir",
+        "Anga sir",
+        "Near bus stand sir"
+      ],
+      "model_answer": "Anga irukku sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Anga irukku sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "A hungry person asks you where a hotel (restaurant) is.",
+  "topic": "Directions - Hotel"
 }

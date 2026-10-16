@@ -16,5 +16,47 @@
   "model_answer": "Polaam da",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Serndhu veettukku polaama?",
+        "tamil": "சேர்ந்து வீட்டுக்கு போலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Polaam da",
+        "Seri da",
+        "Va da",
+        "Aama da",
+        "Ok da"
+      ],
+      "model_answer": "Polaam da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Polaam da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "After school, your friend asks if you want to walk home together.",
+  "topic": "Walk"
 }

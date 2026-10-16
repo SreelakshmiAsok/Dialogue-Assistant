@@ -16,5 +16,50 @@
   "model_answer": "Indha question puriyala teacher",
   "respect_required": true,
   "difficulty": 3,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Enna doubt?",
+        "tamil": "என்ன டவுட்?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Indha question puriyala teacher",
+        "Idhu puriyala teacher",
+        "Innum oru thara sollunga teacher",
+        "Doubt irukku teacher",
+        "Please explain teacher"
+      ],
+      "model_answer": "Indha question puriyala teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Indha question puriyala teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You have a doubt about the lesson. Teacher asks what your doubt is.",
+  "topic": "Doubt"
 }

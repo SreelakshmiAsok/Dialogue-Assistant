@@ -17,5 +17,51 @@
   "model_answer": "Purinjuthu teacher",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Question purinjutha?",
+        "tamil": "கேள்வி புரிஞ்சுதா?"
+      },
+      "target_intent": "PoliteRequest",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Purinjuthu teacher",
+        "Purinjudhu teacher",
+        "Aama teacher",
+        "Puriyala teacher",
+        "Innum oru thara sollunga teacher",
+        "Purinjuchu teacher"
+      ],
+      "model_answer": "Purinjuthu teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Purinjuthu teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "PoliteRequest"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher just explained a math problem. She asks if you understood.",
+  "topic": "Understanding"
 }

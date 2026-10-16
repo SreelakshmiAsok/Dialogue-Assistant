@@ -6,7 +6,13 @@
   "skill": "Offering help",
   "learning_objective": "Child offers assistance.",
   "curriculum": {
-    "source": "Carol Gray's Social Stories™"
+    "source": "Carol Gray's Social Stories™",
+    "module": "Helping Family and Prosocial Actions",
+    "target_rules": [
+      "Recognize when parent needs help",
+      "Offer assistance politely with respect word",
+      "Accept the task assigned"
+    ]
   },
   "scenario": "Appa is coming home with heavy grocery bags.",
   "initial_prompt": {
@@ -37,7 +43,28 @@
         "english": "Thank you, hold this small bag."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "OfferAssistance",
+      "allowed_intents": [
+        "PoliteRequest",
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Offer to help Appa carry a bag!",
+        "gentle_correction": "Try saying: 'Naan help panren appa'"
+      },
+      "expected_intents": [
+        "OfferAssistance"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +87,28 @@
         "tamil": "சூப்பர், உள்ள வச்சிரு.",
         "english": "Super, put it inside."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "AcknowledgeInstructions",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Politely accept the bag and say yes to Appa.",
+        "gentle_correction": "Try saying: 'Seri appa'"
+      },
+      "expected_intents": [
+        "AcknowledgeInstructions"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

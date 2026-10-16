@@ -16,5 +16,51 @@
   "model_answer": "Nalla irundhudhu appa",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Saapadu epdi irundhuchu?",
+        "tamil": "சாப்பாடு எப்படி இருந்துச்சு?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Nalla irundhudhu appa",
+        "Super appa",
+        "Romba nalla appa",
+        "Nallaa irundhudhu appa",
+        "Tasty appa"
+      ],
+      "model_answer": "Nalla irundhudhu appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Nalla irundhudhu appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You ate dinner. Appa asks if you liked the food.",
+  "topic": "Manners"
 }

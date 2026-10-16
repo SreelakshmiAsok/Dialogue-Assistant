@@ -6,7 +6,12 @@
   "skill": "Emergency response",
   "learning_objective": "Child responds to an emergency correctly.",
   "curriculum": {
-    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+    "source": "National Crime Prevention Council (NCPC) / Kidpower",
+    "module": "Emergency Response & Active Vocal Defense",
+    "target_rules": [
+      "Immediately back away when an adult tries to pull your hand",
+      "Yell for help loudly to alert bystanders"
+    ]
   },
   "scenario": "A stranger is following you while you are walking.",
   "initial_prompt": {
@@ -38,7 +43,26 @@
         "english": "Stop, one minute."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "EscapeDanger",
+      "allowed_intents": [
+        "SafetyRefusal",
+        "FirmRefusal"
+      ],
+      "violating_intents": [
+        "StrangerCompliance"
+      ],
+      "feedback": {
+        "hint": "Say NO loudly and pull your hand away!",
+        "gentle_correction": "Try saying: 'No! Vidu en kaiya!'"
+      },
+      "expected_intents": [
+        "EscapeDanger"
+      ],
+      "violates": [
+        "StrangerCompliance"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -59,7 +83,26 @@
         "tamil": "(மக்கள் வருகிறார்கள், ஸ்ட்ரேஞ்சர் ஓடுகிறார்).",
         "english": "(People come, stranger runs away)."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "CallForHelp",
+      "allowed_intents": [
+        "SafetyRefusal"
+      ],
+      "violating_intents": [
+        "StrangerCompliance"
+      ],
+      "feedback": {
+        "hint": "Scream for help as loud as you can!",
+        "gentle_correction": "Try shouting: 'Help! Yarachum kaapathunga!'"
+      },
+      "expected_intents": [
+        "CallForHelp"
+      ],
+      "violates": [
+        "StrangerCompliance"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

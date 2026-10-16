@@ -16,5 +16,50 @@
   "model_answer": "Ready teacher",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Class aarambikkalaama?",
+        "tamil": "கிளாஸ் ஆரம்பிக்கலாமா?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Ready teacher",
+        "Aama teacher",
+        "Seri teacher",
+        "Ready miss",
+        "Yes teacher"
+      ],
+      "model_answer": "Ready teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Ready teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is the start of a new period. Teacher asks if everyone is ready.",
+  "topic": "Class Start"
 }

@@ -16,5 +16,50 @@
   "model_answer": "Nalla varudhu teacher",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Project epdi varudhu?",
+        "tamil": "ப்ராஜெக்ட் எப்படி வருது?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Nalla varudhu teacher",
+        "Pannikkitu irukken teacher",
+        "Almost ready teacher",
+        "Mudiyum teacher",
+        "Konjam help venum teacher"
+      ],
+      "model_answer": "Nalla varudhu teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Nalla varudhu teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher asks about your science project progress.",
+  "topic": "Project"
 }

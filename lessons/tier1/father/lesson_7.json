@@ -16,5 +16,51 @@
   "model_answer": "Seri appa",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Late aagidathe.",
+        "tamil": "லேட் ஆகிடாதே."
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Seri appa",
+        "Aama appa",
+        "Ok appa",
+        "Aagamaaten appa",
+        "Ready appa"
+      ],
+      "model_answer": "Seri appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Seri appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is morning. You are getting ready for school. Appa tells you not to be late.",
+  "topic": "Punctuality"
 }

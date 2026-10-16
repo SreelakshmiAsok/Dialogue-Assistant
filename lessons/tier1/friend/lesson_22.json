@@ -16,5 +16,47 @@
   "model_answer": "Seri da, wait pannuren",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "School mudinja wait pannu da.",
+        "tamil": "ஸ்கூல் முடிஞ்சா வெயிட் பண்ணு டா."
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Seri da",
+        "Pannuren da",
+        "Ok da",
+        "Aama da",
+        "Wait pannuren da"
+      ],
+      "model_answer": "Seri da, wait pannuren",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Seri da, wait pannuren'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend asks you to wait for them after school.",
+  "topic": "Waiting"
 }

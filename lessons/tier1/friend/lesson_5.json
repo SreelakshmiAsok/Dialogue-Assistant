@@ -17,5 +17,48 @@
   "model_answer": "Polaam da",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Cycle ottalaama?",
+        "tamil": "சைக்கிள் ஓட்டலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Polaam da",
+        "Va da",
+        "Seri da",
+        "Ottalaama",
+        "Aama da",
+        "Ok da"
+      ],
+      "model_answer": "Polaam da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Polaam da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is evening. Your friend asks if you want to go cycling.",
+  "topic": "Cycle"
 }

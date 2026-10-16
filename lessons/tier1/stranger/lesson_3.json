@@ -16,5 +16,48 @@
   "model_answer": "Paravala sir",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Nandri, thank you.",
+        "tamil": "நன்றி, தேங்க் யூ."
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Paravala sir",
+        "Parava illa sir",
+        "Welcome sir",
+        "Ok sir",
+        "Mention not sir"
+      ],
+      "model_answer": "Paravala sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Paravala sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You helped someone with directions. They say thank you.",
+  "topic": "Thank You Response"
 }

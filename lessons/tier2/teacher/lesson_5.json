@@ -6,7 +6,13 @@
   "skill": "Requesting sensory break",
   "learning_objective": "Child politely requests a sensory break.",
   "curriculum": {
-    "source": "Social Thinking® (Michelle Garcia Winner)"
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Neurodivergent Self-Advocacy & Sensory Regulation",
+    "target_rules": [
+      "Recognize sensory overwhelm early",
+      "Ask for quiet time politely instead of having a meltdown",
+      "Confirm teacher's check-in"
+    ]
   },
   "scenario": "The classroom is very noisy and you feel overwhelmed. You want 5 minutes of quiet time.",
   "initial_prompt": {
@@ -37,7 +43,27 @@
         "english": "What happened? Is it too noisy?"
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "SelfAdvocacyRequest",
+      "allowed_intents": [
+        "PoliteRequest"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Tell Teacher politely that you need a little quiet time.",
+        "gentle_correction": "Try saying: 'Miss, enaku konjam quiet time venum'"
+      },
+      "expected_intents": [
+        "SelfAdvocacyRequest"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +86,26 @@
         "tamil": "சரி, 5 மினிட்ஸ் வெளிய இருந்துட்டு வாங்க.",
         "english": "Ok, stay outside for 5 minutes and come back."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "ConfirmationResponse",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Confirm politely that you are feeling better.",
+        "gentle_correction": "Try saying: 'Aama miss, ippo better ah irukku'"
+      },
+      "expected_intents": [
+        "ConfirmationResponse"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

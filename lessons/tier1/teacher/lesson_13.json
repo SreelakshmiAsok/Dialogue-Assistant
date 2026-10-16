@@ -17,5 +17,51 @@
   "model_answer": "Theriyum teacher",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Ivukku answer theriyuma?",
+        "tamil": "இதுக்கு ஆன்சர் தெரியுமா?"
+      },
+      "target_intent": "PoliteRequest",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Theriyum teacher",
+        "Theriyum miss",
+        "Theriyadhu teacher",
+        "Theriyadhu miss",
+        "Aama teacher",
+        "Yes teacher"
+      ],
+      "model_answer": "Theriyum teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Theriyum teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "PoliteRequest"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher asks a question in class. She asks if you know the answer.",
+  "topic": "Answer"
 }
