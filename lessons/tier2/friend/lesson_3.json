@@ -6,7 +6,12 @@
   "skill": "Giving a compliment",
   "learning_objective": "Child gives a sincere compliment.",
   "curriculum": {
-    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+    "source": "PEERS® Curriculum for School-Age Children",
+    "module": "Peer Social Validation & Positive Praise",
+    "target_rules": [
+      "Praise a friend's drawing or achievement",
+      "Show enthusiasm for peer sharing"
+    ]
   },
   "scenario": "Your friend shows you a drawing they made.",
   "initial_prompt": {
@@ -28,16 +33,32 @@
         "Very nice"
       ],
       "model_answer": "Super ah irukku da",
-      "required_features": [
-        "Acceptance"
-      ],
+      "required_features": [],
       "next_character_reply": {
         "tanglish": "Thanks da! Idhu oru superhero.",
         "tamil": "தேங்க்ஸ் டா! இது ஒரு சூப்பர் ஹீரோ.",
         "english": "Thanks! It's a superhero."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "OfferCompliment",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Compliment your friend's drawing!",
+        "gentle_correction": "Try saying: 'Super ah irukku da'"
+      },
+      "expected_intents": [
+        "OfferCompliment"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -58,7 +79,26 @@
         "tamil": "வா ரெண்டு பேரும் சேர்ந்து வரையலாம்.",
         "english": "Come let's draw together."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "EnthusiasticAgreement",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Express enthusiasm for their favorite character.",
+        "gentle_correction": "Try saying: 'Wow super'"
+      },
+      "expected_intents": [
+        "EnthusiasticAgreement"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

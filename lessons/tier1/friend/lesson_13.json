@@ -17,5 +17,47 @@
   "model_answer": "Paravala da",
   "respect_required": false,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Sorry da, unoda pencil odanjiduchu.",
+        "tamil": "ஸாரி டா, உனோட பென்சில் ஒடைஞ்சிடுச்சு."
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Paravala da",
+        "Parava illa da",
+        "Ok da",
+        "Pothum da",
+        "No problem da",
+        "Its ok da"
+      ],
+      "model_answer": "Paravala da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Paravala da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend accidentally broke your pencil. They say sorry.",
+  "topic": "Sorry"
 }

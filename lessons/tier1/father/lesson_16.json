@@ -15,5 +15,50 @@
   "model_answer": "Aama appa, padikkuren",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Nalla padikkuriya?",
+        "tamil": "நல்லா படிக்குறியா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Aama appa",
+        "Padikkuren appa",
+        "Nalla padikkuren appa",
+        "Seri appa"
+      ],
+      "model_answer": "Aama appa, padikkuren",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Aama appa, padikkuren'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Exam is coming next week. Appa asks if you are studying well.",
+  "topic": "Studies"
 }

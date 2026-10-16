@@ -28,9 +28,9 @@ SEVERE_WORDS = [
 
 # Moderate: Rude/dismissive words
 MODERATE_WORDS = [
-    "poi", "poira", "poiru",
+    "poira", "poiru",
     "pesaadhe", "pesathe",
-    "venaam", "venaam da",
+    "venaam da", "venam da",
     "tholla", "thollai",
     "bore", "boree",
     "ugly", "bad", "worst"
@@ -75,11 +75,10 @@ RUDE_PHRASES = [
     "po da", "po di", "poda",
     "vena da", "vena di",
     "nee yaar", "nee yaaru",
-    "enakku venam", "venam da",
+    "venam da",
     "pesaadhe da", "pesathe da",
     "shut up da", "shut up",
-    "i dont care", "i don't care",
-    "leave me", "go away"
+    "i dont care", "i don't care"
 ]
 
 

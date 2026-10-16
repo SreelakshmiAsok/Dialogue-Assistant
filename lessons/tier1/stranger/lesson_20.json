@@ -17,5 +17,51 @@
   "model_answer": "School sir",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Enga ponum?",
+        "tamil": "எங்க போணும்?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "School sir",
+        "Veetukku sir",
+        "Bus stand sir",
+        "Hospital sir",
+        "Kovil sir",
+        "Market sir"
+      ],
+      "model_answer": "School sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'School sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You need to take an auto. The auto driver asks where you want to go.",
+  "topic": "Auto"
 }

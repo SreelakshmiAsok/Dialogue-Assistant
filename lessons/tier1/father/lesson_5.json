@@ -19,5 +19,54 @@
   "model_answer": "Mudichiten appa",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Homework mudichacha?",
+        "tamil": "ஹோம்வொர்க் முடிச்சாச்சா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Aama appa",
+        "Mudichiten appa",
+        "Mudichitten appa",
+        "Mudichutten appa",
+        "Seri appa",
+        "Illa appa",
+        "Pannuren appa",
+        "Illai appa"
+      ],
+      "model_answer": "Mudichiten appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Mudichiten appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You come home from school. Appa asks if you finished your homework.",
+  "topic": "Homework"
 }

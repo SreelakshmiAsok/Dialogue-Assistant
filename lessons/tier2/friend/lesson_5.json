@@ -6,7 +6,12 @@
   "skill": "Handling a disagreement",
   "learning_objective": "Child handles losing gracefully.",
   "curriculum": {
-    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+    "source": "PEERS® Curriculum for School-Age Children",
+    "module": "Emotion Regulation in Games",
+    "target_rules": [
+      "Congratulate friend on winning the race",
+      "Suggest playing another round together"
+    ]
   },
   "scenario": "You were playing a running race and your friend won.",
   "initial_prompt": {
@@ -36,7 +41,25 @@
         "english": "Thanks! You ran well too."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "ShowSportsmanship",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Congratulate your friend on their race!",
+        "gentle_correction": "Try saying: 'Congrats da, super ah odina'"
+      },
+      "expected_intents": [
+        "ShowSportsmanship"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -57,7 +80,26 @@
         "tamil": "சரி வா, இன்னொரு ரவுண்ட் போவோம்!",
         "english": "Okay come, let's go for another round!"
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "ProposeActivity",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Ask if they want to play another game or race again.",
+        "gentle_correction": "Try saying: 'Innoru match polama?'"
+      },
+      "expected_intents": [
+        "ProposeActivity"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

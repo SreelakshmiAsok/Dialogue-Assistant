@@ -17,5 +17,51 @@
   "model_answer": "Pencil venum sir",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Enna venum?",
+        "tamil": "என்ன வேணும்?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Pencil venum sir",
+        "Notebook venum sir",
+        "Water venum sir",
+        "Chocolate venum sir",
+        "Biscuit venum sir",
+        "Idhu venum sir"
+      ],
+      "model_answer": "Pencil venum sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Pencil venum sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You are at a shop. The shopkeeper asks what you want.",
+  "topic": "Shop"
 }

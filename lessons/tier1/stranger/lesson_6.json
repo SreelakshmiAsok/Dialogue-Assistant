@@ -17,5 +17,52 @@
   "model_answer": "Right la sir",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Railway station enga?",
+        "tamil": "ரெயில்வே ஸ்டேஷன் எங்க?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse",
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Right la sir",
+        "Right sir",
+        "Left la sir",
+        "Straight sir",
+        "Theriyadhu sir",
+        "Anga sir"
+      ],
+      "model_answer": "Right la sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Right la sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "A traveler with bags asks you for the railway station.",
+  "topic": "Directions - Railway"
 }

@@ -1,68 +1,108 @@
 {
+  "_id": "t2_father_01",
   "id": "t2_father_01",
   "character": "Father",
   "tier": 2,
-  "difficulty": 2,
-  "skill": "Negotiating screen time transition",
-  "learning_objective": "Child negotiates properly and accepts limits.",
+  "difficulty": 1,
+  "skill": "Respectful Transition Negotiation & Agreement Fulfillment",
+  "learning_objective": "Child handles transition by politely negotiating a 5-minute buffer, then confirms the agreement.",
   "curriculum": {
-    "source": "Carol Gray's Social Stories™"
+    "source": "Carol Gray's Social Stories™",
+    "module": "Managing Transitions and Screen Time Routines",
+    "target_rules": [
+      "Do not ignore or yell when asked to stop an activity",
+      "If more time is needed, ask politely with a specific small duration",
+      "When the parent sets a condition, make a clear promise"
+    ]
   },
-  "scenario": "It is 7:00 PM. Appa asks you to turn off the TV for study time. Practice asking for 5 more minutes politely.",
+  "scenario": "Appa enters the living room at 7:00 PM (study time) and asks you to turn off the television.",
   "initial_prompt": {
-    "tanglish": "TV off pannu, padikka neram aachu.",
-    "tamil": "டிவி ஆஃப் பண்ணு, படிக்க நேரம் ஆச்சு.",
-    "english": "Turn off the TV, it's time to study."
+    "tanglish": "Kanna, TV off pannuva? Study time achu.",
+    "tamil": "கண்ணா, டிவி ஆஃப் பண்ணுவா? ஸ்டடி டைம் ஆச்சு.",
+    "english": "Dear, will you turn off the TV? It's study time."
   },
   "turns": [
     {
       "turn_id": "turn_1",
+      "step_number": 1,
       "prompt": {
-        "tanglish": "TV off pannu, padikka neram aachu.",
-        "tamil": "டிவி ஆஃப் பண்ணு, படிக்க நேரம் ஆச்சு.",
-        "english": "Turn off the TV, it's time to study."
+        "tanglish": "Kanna, TV off pannuva? Study time achu.",
+        "tamil": "கண்ணா, டிவி ஆஃப் பண்ணுவா? ஸ்டடி டைம் ஆச்சு."
       },
-      "expected_responses": [
-        "Appa, 5 minutes pls",
-        "Konjam neram appa",
-        "Oru 5 nimisham appa pls"
-      ],
-      "model_answer": "Appa, innum 5 minutes please?",
+      "target_intent": "NegotiationIntent",
       "required_features": [
         "RespectWord",
         "TimeExtension"
       ],
+      "expected_responses": [
+        "Innum 5 minutes pa",
+        "Oru 5 minutes appa",
+        "Konjam neram pa, please",
+        "Just 5 minutes appa",
+        "Please appa 5 minutes"
+      ],
+      "model_answer": "Innum 5 minutes pa",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask Appa politely for a little more time, like 5 minutes.",
+        "gentle_correction": "Try saying: 'Innum 5 minutes pa' (Just 5 more minutes, dad)"
+      },
       "next_character_reply": {
-        "tanglish": "Seri, aana 5 mins mudinjona off pannanum, promise?",
-        "tamil": "சரி, ஆனா 5 மினிட்ஸ் முடிஞ்சோன ஆஃப் பண்ணனும், ப்ராமிஸ்?",
-        "english": "Ok, but after 5 mins you must turn it off, promise?"
+        "tanglish": "Seri, 5 minutes apram kandippa padikanum. Promise-ah?",
+        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?"
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "expected_intents": [
+        "NegotiationIntent"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
+      "step_number": 2,
       "prompt": {
-        "tanglish": "Seri, aana 5 mins mudinjona off pannanum, promise?",
-        "tamil": "சரி, ஆனா 5 மினிட்ஸ் முடிஞ்சோன ஆஃப் பண்ணனும், ப்ராமிஸ்?",
-        "english": "Ok, but after 5 mins you must turn it off, promise?"
+        "tanglish": "Seri, 5 minutes apram kandippa padikanum. Promise-ah?",
+        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?"
       },
-      "expected_responses": [
-        "Promise appa",
-        "Kandippa appa",
-        "Seri appa off panren"
-      ],
-      "model_answer": "Promise appa!",
+      "target_intent": "PromiseConfirmation",
       "required_features": [
-        "RespectWord",
         "PromiseKeyword"
       ],
-      "next_character_reply": {
-        "tanglish": "Good, naan wait panren.",
-        "tamil": "குட், நான் வெயிட் பண்றேன்.",
-        "english": "Good, I will wait."
+      "expected_responses": [
+        "Promise appa!",
+        "Kandippa pa",
+        "Promise panren pa",
+        "Ok pa promise",
+        "Sathiyama pa"
+      ],
+      "model_answer": "Promise appa!",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Confirm your agreement by making a promise to Appa.",
+        "gentle_correction": "A good way to agree is saying: 'Promise appa!'"
       },
-      "is_terminal": true
+      "next_character_reply": {
+        "tanglish": "Good boy! 5 minutes timer vechiko.",
+        "tamil": "குட் பாய்! 5 நிமிஷம் டைமர் வச்சுக்கோ."
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "PromiseConfirmation"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": null
     }
-  ]
+  ],
+  "completion": {
+    "success_title": "Transition Handled Well! ⏱️",
+    "success_message": "Great job! You politely asked for a little more time and made a promise.",
+    "stars": 3
+  }
 }

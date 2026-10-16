@@ -15,5 +15,49 @@
   "model_answer": "Idho appa",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Phone kudu.",
+        "tamil": "போன் குடு."
+      },
+      "target_intent": "PoliteRequest",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Idho appa",
+        "Seri appa",
+        "Kudukuren appa",
+        "Aama appa"
+      ],
+      "model_answer": "Idho appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Idho appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "PoliteRequest"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You are playing with Appa's phone. He asks you to give it back.",
+  "topic": "Phone"
 }

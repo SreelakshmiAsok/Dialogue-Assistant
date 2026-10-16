@@ -17,5 +17,48 @@
   "model_answer": "Va da, podalaama",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Race podalaama?",
+        "tamil": "ரேஸ் போடலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Va da",
+        "Podalaama",
+        "Seri da",
+        "Aama da",
+        "Ok da",
+        "Ready da"
+      ],
+      "model_answer": "Va da, podalaama",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Va da, podalaama'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You and your friend are in the park. They challenge you to a race.",
+  "topic": "Race"
 }

@@ -16,5 +16,47 @@
   "model_answer": "Seri da, edukkalaam",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Photo edukalaama?",
+        "tamil": "ஃபோட்டோ எடுக்கலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Seri da",
+        "Edukkalaam",
+        "Va da",
+        "Aama da",
+        "Ok da"
+      ],
+      "model_answer": "Seri da, edukkalaam",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Seri da, edukkalaam'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You and your friend are at a park. They want to take a photo.",
+  "topic": "Photo"
 }

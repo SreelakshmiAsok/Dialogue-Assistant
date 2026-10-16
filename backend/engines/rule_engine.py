@@ -1,3 +1,4 @@
+import re
 from difflib import SequenceMatcher
 from nlp.preprocessing import normalize_text
 
@@ -128,11 +129,40 @@ def check_answer(response, expected_answers):
     return False
 
 
-def _stranger_safety_violation(response):
+def _stranger_safety_violation(response, scenario_id=None):
     normalized = normalize_text(response)
-    tokens = normalized.split()
-    accepted = any(word in tokens or word in normalized for word in STRANGER_DANGER_ACCEPT)
-    refused = any(word in tokens or word in normalized for word in STRANGER_SAFETY_REFUSE)
+
+    # Check if this scenario is actually a safety / refusal scenario
+    is_safety_scenario = False
+    if scenario_id:
+        sc_clean = str(scenario_id).lower()
+        if sc_clean in ("stranger_22", "t2_stranger_01", "t2_stranger_02", "t2_stranger_03", "t2_stranger_04"):
+            is_safety_scenario = True
+        elif "safety" in sc_clean or "lure" in sc_clean or "decline" in sc_clean:
+            is_safety_scenario = True
+
+    # Check if utterance mentions danger lure terms
+    lure_detected = any(
+        re.search(r'\b' + re.escape(word) + r'\b', normalized)
+        for word in ["puppy", "candy", "chocolate", "car", "ride", "lift", "ice cream"]
+    )
+    if lure_detected:
+        is_safety_scenario = True
+
+    # If it is a known non-safety scenario (directions stranger_01..10, thank you stranger_03, greetings stranger_12)
+    # and no dangerous lure words were spoken, it is NOT a safety violation
+    if scenario_id and not is_safety_scenario:
+        return False
+
+    # Whole token matching: prevents "go" matching "good" or "poonga", and "no" matching "know"
+    accepted = any(
+        re.search(r'\b' + re.escape(word) + r'\b', normalized)
+        for word in STRANGER_DANGER_ACCEPT
+    )
+    refused = any(
+        re.search(r'\b' + re.escape(word) + r'\b', normalized)
+        for word in STRANGER_SAFETY_REFUSE
+    )
     return accepted and not refused
 
 
@@ -140,7 +170,7 @@ def _stranger_safety_violation(response):
 # MAIN RULE CHECK
 # ============================================================
 
-def check_pragmatics(response, scenario_id=None, expected_answers=None, character=None):
+def check_pragmatics(response, scenario_id=None, expected_answers=None, character=None, **kwargs):
     """
     Stylistic and safety checks only.
 
@@ -148,6 +178,11 @@ def check_pragmatics(response, scenario_id=None, expected_answers=None, characte
     Missing honorifics are flags, not hard failures.
     """
     response = response or ""
+
+    # Support flexible argument orders
+    if isinstance(scenario_id, list) and expected_answers is None:
+        expected_answers = scenario_id
+        scenario_id = kwargs.get("scenario_id") or kwargs.get("question_id")
 
     if not character:
         character = "Stranger"
@@ -166,9 +201,9 @@ def check_pragmatics(response, scenario_id=None, expected_answers=None, characte
         }
 
     # --------------------------------------------------------
-    # Safety checks remain critical failures
+    # Safety checks remain critical failures on safety scenarios
     # --------------------------------------------------------
-    if character == "Stranger" and _stranger_safety_violation(response):
+    if character == "Stranger" and _stranger_safety_violation(response, scenario_id):
         return {
             "matched": False,
             "preferred_phrase_used": False,

@@ -6,7 +6,12 @@
   "skill": "Refusing personal info",
   "learning_objective": "Child refuses to give personal information.",
   "curriculum": {
-    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+    "source": "National Crime Prevention Council (NCPC) / Kidpower",
+    "module": "Personal Data Privacy & Child Safety",
+    "target_rules": [
+      "Never disclose your phone number or home address to strangers",
+      "Refuse firmly and walk away"
+    ]
   },
   "scenario": "A stranger asks for your home address or phone number.",
   "initial_prompt": {
@@ -28,16 +33,33 @@
         "No"
       ],
       "model_answer": "Naan sollamaten",
-      "required_features": [
-        "FirmNo"
-      ],
+      "required_features": [],
       "next_character_reply": {
         "tanglish": "Thappa nenaikadha, naan unga appa friend.",
         "tamil": "தப்பா நினைக்காத, நான் உங்க அப்பா ஃப்ரெண்ட்.",
         "english": "Don't mistake me, I am your dad's friend."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "PrivacyProtection",
+      "allowed_intents": [
+        "SafetyRefusal",
+        "FirmRefusal"
+      ],
+      "violating_intents": [
+        "StrangerCompliance"
+      ],
+      "feedback": {
+        "hint": "Do not give out your number. Tell them you will not share it.",
+        "gentle_correction": "Try saying: 'Naan sollamaten'"
+      },
+      "expected_intents": [
+        "PrivacyProtection"
+      ],
+      "violates": [
+        "StrangerCompliance"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +82,28 @@
         "tamil": "(ஸ்ட்ரேஞ்சர் செல்கிறார்).",
         "english": "(Stranger leaves)."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "SafetyRefusal",
+      "allowed_intents": [
+        "FirmRefusal"
+      ],
+      "violating_intents": [
+        "StrangerCompliance",
+        "SocialAcceptance"
+      ],
+      "feedback": {
+        "hint": "Firmly refuse again and find a trusted adult.",
+        "gentle_correction": "Try saying: 'No, naan sollamaten.'"
+      },
+      "expected_intents": [
+        "SafetyRefusal"
+      ],
+      "violates": [
+        "StrangerCompliance",
+        "SocialAcceptance"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

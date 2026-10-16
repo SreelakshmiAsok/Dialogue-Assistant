@@ -6,7 +6,12 @@
   "skill": "Direction request refusal",
   "learning_objective": "Child politey refuses to give directions or leave safe zone.",
   "curriculum": {
-    "source": "National Crime Prevention Council (NCPC) / Kidpower"
+    "source": "National Crime Prevention Council (NCPC) / Kidpower",
+    "module": "Stranger Awareness & Boundary Setting",
+    "target_rules": [
+      "Do not leave the safe area to show directions",
+      "Firmly state refusal to accompany stranger"
+    ]
   },
   "scenario": "A stranger asks you for directions to a hospital.",
   "initial_prompt": {
@@ -35,7 +40,26 @@
         "english": "Come and show me the way."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "PoliteRefusal",
+      "allowed_intents": [
+        "UncertaintyResponse",
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "StrangerCompliance"
+      ],
+      "feedback": {
+        "hint": "Tell the stranger politely that you don't know the way.",
+        "gentle_correction": "Try saying: 'Enaku theriyadhu sir.'"
+      },
+      "expected_intents": [
+        "PoliteRefusal"
+      ],
+      "violates": [
+        "StrangerCompliance"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -58,7 +82,28 @@
         "tamil": "சரி நான் வேற யார் கிட்ட ஆவது கேக்குறேன்.",
         "english": "Ok I will ask someone else."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "FirmRefusal",
+      "allowed_intents": [
+        "SafetyRefusal"
+      ],
+      "violating_intents": [
+        "StrangerCompliance",
+        "SocialAcceptance"
+      ],
+      "feedback": {
+        "hint": "Firmly say NO and tell them you cannot go with them!",
+        "gentle_correction": "Try saying: 'No, naan vara maaten. Vera yaravathu kitta kelunga.'"
+      },
+      "expected_intents": [
+        "FirmRefusal"
+      ],
+      "violates": [
+        "StrangerCompliance",
+        "SocialAcceptance"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

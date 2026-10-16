@@ -17,5 +17,51 @@
   "model_answer": "Good morning teacher",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Good morning! Ulla vaanga.",
+        "tamil": "குட் மார்னிங்! உள்ள வாங்க."
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Good morning teacher",
+        "Good morning miss",
+        "Good morning sir",
+        "Good morning ma'am",
+        "Vanakkam teacher",
+        "Vanakkam miss"
+      ],
+      "model_answer": "Good morning teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Good morning teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You walk into the classroom in the morning. Teacher greets you.",
+  "topic": "Greeting"
 }

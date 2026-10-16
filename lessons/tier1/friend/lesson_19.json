@@ -16,5 +16,47 @@
   "model_answer": "Polaam da",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Ice cream saapdalama?",
+        "tamil": "ஐஸ் கிரீம் சாப்பிடலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Saapdalaam da",
+        "Polaam da",
+        "Va da",
+        "Seri da",
+        "Aama da"
+      ],
+      "model_answer": "Polaam da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Polaam da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is a hot day. Your friend asks if you want to get ice cream.",
+  "topic": "Ice Cream"
 }

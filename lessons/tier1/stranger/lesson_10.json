@@ -17,5 +17,52 @@
   "model_answer": "Indha road la sir",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Kovil enga?",
+        "tamil": "கோவில் எங்க?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse",
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Indha road la sir",
+        "Straight poonga sir",
+        "Left la sir",
+        "Right la sir",
+        "Theriyadhu sir",
+        "Anga sir"
+      ],
+      "model_answer": "Indha road la sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Indha road la sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "An elderly person asks you where the temple is.",
+  "topic": "Directions - Temple"
 }

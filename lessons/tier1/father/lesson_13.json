@@ -16,5 +16,51 @@
   "model_answer": "Seri appa",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Nalla nadandhukkanum, puriyudha?",
+        "tamil": "நல்லா நடந்துக்கணும், புரியுதா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Seri appa",
+        "Aama appa",
+        "Puriyudhu appa",
+        "Ok appa",
+        "Nalla nadandhukuren appa"
+      ],
+      "model_answer": "Seri appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Seri appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Guests are coming to your house. Appa asks you to behave nicely.",
+  "topic": "Guests"
 }

@@ -16,5 +16,50 @@
   "model_answer": "Varen appa",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Va saapdu, breakfast ready.",
+        "tamil": "வா சாப்பிடு, ப்ரேக்ஃபாஸ்ட் ரெடி."
+      },
+      "target_intent": "CooperativeSuggestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Varen appa",
+        "Seri appa",
+        "Aama appa",
+        "Ok appa",
+        "Varengo appa"
+      ],
+      "model_answer": "Varen appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Varen appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "CooperativeSuggestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is morning. Appa calls you to eat breakfast.",
+  "topic": "Breakfast"
 }

@@ -15,5 +15,47 @@
   "model_answer": "Sorry teacher",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Silence please.",
+        "tamil": "சைலன்ஸ் ப்ளீஸ்."
+      },
+      "target_intent": "HonestApology",
+      "allowed_intents": [],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Seri teacher",
+        "Sorry teacher",
+        "Ok teacher",
+        "Aama teacher"
+      ],
+      "model_answer": "Sorry teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Sorry teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "HonestApology"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "The class is noisy. Teacher asks everyone to be quiet.",
+  "topic": "Quiet"
 }

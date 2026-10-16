@@ -1,3 +1,4 @@
+import re
 from engines.semantic_engine import combined_similarity
 from nlp.preprocessing import normalize_text
 from nlp.bad_words_filter import check_inappropriate
@@ -114,9 +115,12 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
     features_met = True
     for req_feat in required_features:
         if req_feat in feature_lexicon:
-            # Check if any synonym exists as substring or token in normalized text
+            # Match whole tokens to avoid naive substring matches (e.g. 'pa' in 'panren')
             synonyms = feature_lexicon[req_feat]
-            has_feature = any(syn in normalized for syn in synonyms)
+            has_feature = any(
+                bool(re.search(r'\b' + re.escape(syn) + r'\b', normalized))
+                for syn in synonyms
+            )
             if not has_feature:
                 features_met = False
                 break

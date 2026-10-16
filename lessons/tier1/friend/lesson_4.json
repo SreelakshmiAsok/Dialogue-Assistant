@@ -17,5 +17,48 @@
   "model_answer": "Va da, aadalaam",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Game aadalaama?",
+        "tamil": "கேம் ஆடலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Va da",
+        "Aadalaama",
+        "Seri da",
+        "Aama da",
+        "Ok da",
+        "Va machi"
+      ],
+      "model_answer": "Va da, aadalaam",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Va da, aadalaam'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend has a new mobile game. They ask if you want to play.",
+  "topic": "Games"
 }

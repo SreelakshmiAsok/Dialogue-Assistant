@@ -6,7 +6,12 @@
   "skill": "Answering politely",
   "learning_objective": "Child answers when called upon.",
   "curriculum": {
-    "source": "Social Thinking® (Michelle Garcia Winner)"
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Classroom Participation & Academic Confidence",
+    "target_rules": [
+      "Answer with respectful tone and honorific",
+      "Acknowledge teacher's praise"
+    ]
   },
   "scenario": "The teacher calls your name to answer a question.",
   "initial_prompt": {
@@ -37,7 +42,27 @@
         "english": "Very good! Correct answer."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Answer the question and say 'miss' politely.",
+        "gentle_correction": "Try saying: 'Four miss'"
+      },
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +85,26 @@
         "tamil": "ஓகே உக்காரு.",
         "english": "Ok sit down."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "ExpressGratitude",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Thank the teacher when she praises your answer.",
+        "gentle_correction": "Try saying: 'Thank you miss'"
+      },
+      "expected_intents": [
+        "ExpressGratitude"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

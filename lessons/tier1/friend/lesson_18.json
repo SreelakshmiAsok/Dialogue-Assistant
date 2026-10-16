@@ -16,5 +16,47 @@
   "model_answer": "Seri da, padikalaama",
   "respect_required": false,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Serndhu padikalaama?",
+        "tamil": "சேர்ந்து படிக்கலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Padikalaama",
+        "Seri da",
+        "Va da",
+        "Aama da",
+        "Polaam da"
+      ],
+      "model_answer": "Seri da, padikalaama",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Seri da, padikalaama'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Exam is coming. Your friend asks if you want to study together.",
+  "topic": "Study Together"
 }

@@ -1,66 +1,102 @@
 {
+  "_id": "t2_teacher_02",
   "id": "t2_teacher_02",
   "character": "Teacher",
   "tier": 2,
   "difficulty": 2,
-  "skill": "Asking for help",
-  "learning_objective": "Child asks for help when stuck.",
+  "skill": "Self-Advocacy & Clarification",
+  "learning_objective": "Child practices politely asking the teacher for clarification when they don't understand.",
   "curriculum": {
-    "source": "Social Thinking® (Michelle Garcia Winner)"
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Self-Advocacy & Asking for Clarification",
+    "target_rules": [
+      "Signal that you have a question politely.",
+      "State what you don't understand."
+    ]
   },
-  "scenario": "You are doing a math sum but you don't understand it.",
+  "scenario": "The teacher explains a homework assignment, but you didn't understand what to do.",
   "initial_prompt": {
-    "tanglish": "Ellarum math homework panreengala?",
-    "tamil": "எல்லாரும் மேத் ஹோம்வொர்க் பண்றீங்களா?",
-    "english": "Is everyone doing their math homework?"
+    "tanglish": "Ellarukum purinjidha? Any doubts?",
+    "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?",
+    "english": "Did everyone understand? Any doubts?"
   },
   "turns": [
     {
       "turn_id": "turn_1",
+      "step_number": 1,
       "prompt": {
-        "tanglish": "Ellarum math homework panreengala?",
-        "tamil": "எல்லாரும் மேத் ஹோம்வொர்க் பண்றீங்களா?",
-        "english": "Is everyone doing their math homework?"
+        "tanglish": "Ellarukum purinjidha? Any doubts?",
+        "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?"
       },
-      "expected_responses": [
-        "Miss, enaku idhu puriyala",
-        "Teacher konjam help pannunga",
-        "Miss doubt irukku"
-      ],
-      "model_answer": "Teacher, enaku oru doubt irukku",
+      "target_intent": "RaiseDoubt",
       "required_features": [
-        "Honorific"
+        "DoubtKeyword"
       ],
+      "expected_responses": [
+        "Mam, enaku oru doubt.",
+        "Yes mam, enaku doubt iruku.",
+        "Excuse me mam, oru doubt."
+      ],
+      "model_answer": "Mam, enaku oru doubt.",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Tell the teacher that you have a doubt.",
+        "gentle_correction": "Try saying: 'Mam, enaku oru doubt.'"
+      },
       "next_character_reply": {
-        "tanglish": "Enna sum ma puriyala? Vangandu paakuren.",
-        "tamil": "என்ன சம் மா புரியல? வந்து பாக்குறேன்.",
-        "english": "Which sum don't you understand? Let me come and see."
+        "tanglish": "Sollu thambi, enna doubt?",
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "expected_intents": [
+        "RaiseDoubt"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
+      "step_number": 2,
       "prompt": {
-        "tanglish": "Enna sum ma puriyala? Vangandu paakuren.",
-        "tamil": "என்ன சம் மா புரியல? வந்து பாக்குறேன்.",
-        "english": "Which sum don't you understand? Let me come and see."
+        "tanglish": "Sollu thambi, enna doubt?",
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
       },
-      "expected_responses": [
-        "Third sum miss",
-        "Indha sum teacher",
-        "Idhu dhaan miss"
-      ],
-      "model_answer": "Indha third sum teacher",
+      "target_intent": "AskClarification",
       "required_features": [
-        "Honorific"
+        "ClarificationKeyword"
       ],
-      "next_character_reply": {
-        "tanglish": "Ok, naan explain panren.",
-        "tamil": "ஓகே, நான் எக்ஸ்பிளைன் பண்றேன்.",
-        "english": "Ok, I will explain."
+      "expected_responses": [
+        "Idhu enaku puriyala, thirumba solreengala?",
+        "Homework eppadi pannanum nu puriyala.",
+        "Can you explain it again mam?"
+      ],
+      "model_answer": "Idhu enaku puriyala, thirumba solreengala?",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Ask the teacher to explain the homework again.",
+        "gentle_correction": "Try saying: 'Idhu enaku puriyala, thirumba solreengala?'"
       },
-      "is_terminal": true
+      "next_character_reply": {
+        "tanglish": "Kandippa, naan thirumba explain panren.",
+        "tamil": "கண்டிப்பா, நான் திரும்ப எக்ஸ்பிளைன் பண்றேன்."
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AskClarification"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": null
     }
-  ]
+  ],
+  "completion": {
+    "success_title": "Great Question! ✋",
+    "success_message": "Awesome! You asked for help when you didn't understand!",
+    "stars": 3
+  }
 }
