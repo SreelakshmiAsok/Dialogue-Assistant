@@ -1,4 +1,19 @@
-fastapi>=0.100.0
-uvicorn>=0.20.0
-owlready2>=0.40
+# Web Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+werkzeug>=3.0.0
 pydantic>=2.0.0
+python-dotenv>=1.0.0
+PyJWT>=2.8.0
+
+# Speech Synthesis (TTS)
+edge-tts>=7.3.1
+gTTS>=2.5.0
+
+# Semantic & Knowledge Graph Engine
+owlready2>=0.40
+sentence-transformers>=2.2.0
+
+# Optional Database & Network
+pymongo>=4.6.0
+certifi>=2024.2.2
