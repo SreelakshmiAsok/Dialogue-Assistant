@@ -12,3 +12,6 @@ users.json
 .env
 backend/.env
 *.zip
+*.tsbuildinfo
+AGENTS.md
+CLAUDE.md

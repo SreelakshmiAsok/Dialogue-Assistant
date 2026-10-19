@@ -231,3 +231,43 @@ if "stranger" in role_l:
          tier=tier
      )
      ```
+
+---
+
+## 7. OWL DL Axiomatization & Build-Time Reasoning
+
+### 7.1 Formal Axioms Implemented
+In `reasoning/generate_scenarios.py`, the ontology is enriched with formal OWL 2 DL axioms:
+1. **Safety Refusal Specialization Hierarchy**:
+   `RefusalAndEscape`, `FirmRefusal`, `EscapeDanger`, and `PrivacyProtection` are formalized as subclasses of `SafetyRefusal`.
+2. **Pairwise Disjoint Intents (`AllDisjoint`)**:
+   Top-level communicative intents (`SafetyRefusal`, `AnswerQuestion`, `TaskCompletionConfirmation`, `IncompleteTaskReport`, `PoliteRequest`, `PoliteInterruption`, `ContextualRequest`, `UncertaintyResponse`, `PeerInvitationAcceptance`, `PoliteRefusal`, `CooperativeSuggestion`, `HonestApology`, `StrangerCompliance`, `HostileRefusal`, `DisrespectfulInformal`, `RequestHelp`, `ExplainSituation`, `CallForHelp`) are declared mutually disjoint.
+3. **Disjoint Object Properties**:
+   `AllDisjoint([expectsIntent, violatesScenario])` ensures that any scenario that both expects and violates the same intent is detected as logically inconsistent.
+4. **Defined Scenario Classes (`owl:equivalentClass`)**:
+   - `SafetyCriticalScenario ≡ CommunicationScenario ⊓ (expectsIntent some SafetyRefusal)`
+   - `TaskCompletionScenario ≡ CommunicationScenario ⊓ (expectsIntent some TaskCompletionConfirmation)`
+   - `PoliteInterruptionScenario ≡ CommunicationScenario ⊓ (expectsIntent some PoliteInterruption)`
+   - `AuthorityDecorumScenario ≡ CommunicationScenario ⊓ (requiresFeature some HonorificMarker)`
+   - `PeerCooperationScenario ≡ CommunicationScenario ⊓ ((expectsIntent some PeerInvitationAcceptance) ⊔ (expectsIntent some CooperativeSuggestion))`
+
+### 7.2 Build-Time DL Reasoner (`reasoning/run_reasoner.py`)
+- Resolves the local Java executable path (`owlready2.JAVA_EXE`) on Windows and POSIX.
+- Invokes the **HermiT OWL DL Reasoner** (`sync_reasoner_hermit`) over `social_communication.owl`.
+- Traps `OwlReadyInconsistentOntologyError` to verify logical consistency.
+- Materializes 45+ inferred class memberships and saves the materialized knowledge graph to `reasoning/social_communication_inferred.owl`.
+
+### 7.3 Inferred Graph Runtime Querying (`reasoning/ontology_service.py`)
+- At runtime, `OntologyService` operates in either `inferred` (default) or `legacy` mode via `ONTOLOGY_MODE`:
+  - `is_safety_critical(scenario_id)`: Queries `default_world.sparql` for `rdf:type onto:SafetyCriticalScenario` (falling back to Python property access if SPARQL is unavailable).
+  - `expected_intents(scenario_id)` & `violating_intents(scenario_id)`: Extracts expected and violating intents via SPARQL graph queries.
+- **Zero Hardcoded Lesson IDs**: All hardcoded lists (`("stranger_22", "t2_stranger_01", ...)`) have been removed from `backend/app.py`, `backend/engines/rule_engine.py`, and `reasoning/reasoner.py` in favor of dynamic ontology queries.
+
+---
+
+## 8. Automated Test Suite (`tests/test_reasoning.py`)
+The ontology reasoning pipeline is validated with 4 automated test gates:
+- **Test (a)**: Build-time reasoner runs and successfully saves `social_communication_inferred.owl`.
+- **Test (b)**: `Scenario_stranger_22` and Tier 2 stranger scenarios (`Scenario_t2_stranger_01`..`05`) are classified as `SafetyCriticalScenario` with zero false positives across all 114 other scenarios.
+- **Test (c)**: A deliberately contradictory scenario (both expecting and violating the same intent) is caught as inconsistent by HermiT.
+- **Test (d)**: Complete 120/120 concordance between `ONTOLOGY_MODE=legacy` and `ONTOLOGY_MODE=inferred`.
