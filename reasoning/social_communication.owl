@@ -67,14 +67,15 @@
 <owl:ObjectProperty rdf:about="#expectsIntent">
   <rdfs:domain rdf:resource="#CommunicationScenario"/>
   <rdfs:range rdf:resource="#CommunicativeIntent"/>
+  <owl:propertyDisjointWith rdf:resource="#violatesScenario"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="#allowsAlternativeIntent">
+<owl:ObjectProperty rdf:about="#violatesScenario">
   <rdfs:domain rdf:resource="#CommunicationScenario"/>
   <rdfs:range rdf:resource="#CommunicativeIntent"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="#violatesScenario">
+<owl:ObjectProperty rdf:about="#allowsAlternativeIntent">
   <rdfs:domain rdf:resource="#CommunicationScenario"/>
   <rdfs:range rdf:resource="#CommunicativeIntent"/>
 </owl:ObjectProperty>
@@ -369,6 +370,221 @@
   </owl:equivalentClass>
 </owl:Class>
 
+<owl:Class rdf:about="#RefusalAndEscape">
+  <rdfs:subClassOf rdf:resource="#SafetyRefusal"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FirmRefusal">
+  <rdfs:subClassOf rdf:resource="#SafetyRefusal"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EscapeDanger">
+  <rdfs:subClassOf rdf:resource="#SafetyRefusal"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PrivacyProtection">
+  <rdfs:subClassOf rdf:resource="#SafetyRefusal"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RequestHelp">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExplainSituation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CallForHelp">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#GreetingPolite">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OfferHelp">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RequestPermission">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AcknowledgePermission">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RaiseDoubt">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AskClarification">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OfferAssistance">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AcknowledgeInstructions">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PoliteNegotiation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExpressGratitude">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ComplianceConfirmation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OfferCompliment">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EnthusiasticAgreement">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ShareInterest">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EngageConversation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ShowSportsmanship">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProposeActivity">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PoliteApology">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AcceptCorrection">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SelfAdvocacyRequest">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ConfirmationResponse">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#NegotiationIntent">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PromiseConfirmation">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RequestToJoin">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CooperationAgreement">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ShowEmpathy">
+  <rdfs:subClassOf rdf:resource="#CommunicativeIntent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SafetyCriticalScenario">
+  <rdfs:subClassOf rdf:resource="#CommunicationScenario"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#CommunicationScenario"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#expectsIntent"/>
+          <owl:someValuesFrom rdf:resource="#SafetyRefusal"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#TaskCompletionScenario">
+  <rdfs:subClassOf rdf:resource="#CommunicationScenario"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#CommunicationScenario"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#expectsIntent"/>
+          <owl:someValuesFrom rdf:resource="#TaskCompletionConfirmation"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#PoliteInterruptionScenario">
+  <rdfs:subClassOf rdf:resource="#CommunicationScenario"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#CommunicationScenario"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#expectsIntent"/>
+          <owl:someValuesFrom rdf:resource="#PoliteInterruption"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#AuthorityDecorumScenario">
+  <rdfs:subClassOf rdf:resource="#CommunicationScenario"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#CommunicationScenario"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#requiresFeature"/>
+          <owl:someValuesFrom rdf:resource="#HonorificMarker"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#PeerCooperationScenario">
+  <rdfs:subClassOf rdf:resource="#CommunicationScenario"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#CommunicationScenario"/>
+        <owl:Class>
+          <owl:unionOf rdf:parseType="Collection">
+            <owl:Restriction>
+              <owl:onProperty rdf:resource="#expectsIntent"/>
+              <owl:someValuesFrom rdf:resource="#PeerInvitationAcceptance"/>
+            </owl:Restriction>
+            <owl:Restriction>
+              <owl:onProperty rdf:resource="#expectsIntent"/>
+              <owl:someValuesFrom rdf:resource="#CooperativeSuggestion"/>
+            </owl:Restriction>
+          </owl:unionOf>
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
 <owl:NamedIndividual rdf:about="#ChildUser">
   <rdf:type rdf:resource="#Person"/>
 </owl:NamedIndividual>
@@ -479,9 +695,9 @@
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_SocialAcceptance">
-  <rdf:type rdf:resource="#PeerInvitationAcceptance"/>
   <appropriateFor rdf:resource="#PeerContextInd"/>
   <violates rdf:resource="#StrangerContextInd"/>
+  <rdf:type rdf:resource="#CommunicativeIntent"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_StrangerCompliance">
@@ -1800,13 +2016,23 @@
   <expectsIntent rdf:resource="#intent_NegotiationIntent"/>
   <requiresFeature rdf:resource="#feat_TimeExtension"/>
   <requiresFeature rdf:resource="#feat_RespectWord"/>
+  <expectsIntent rdf:resource="#intent_PromiseConfirmation"/>
+  <requiresFeature rdf:resource="#feat_PromiseKeyword"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_NegotiationIntent">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#NegotiationIntent"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_TimeExtension">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_PromiseConfirmation">
+  <rdf:type rdf:resource="#PromiseConfirmation"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_PromiseKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -1816,9 +2042,19 @@
   <inSocialContext rdf:resource="#ParentContextInd"/>
   <expectsIntent rdf:resource="#intent_PoliteInterruption"/>
   <requiresFeature rdf:resource="#feat_ExcuseMeKeyword"/>
+  <expectsIntent rdf:resource="#intent_RequestHelp"/>
+  <requiresFeature rdf:resource="#feat_HelpKeyword"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_ExcuseMeKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_RequestHelp">
+  <rdf:type rdf:resource="#RequestHelp"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_HelpKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -1832,10 +2068,16 @@
   <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
   <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
   <requiresFeature rdf:resource="#feat_RespectWord"/>
+  <expectsIntent rdf:resource="#intent_AcknowledgeInstructions"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_OfferAssistance">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#OfferAssistance"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_AcknowledgeInstructions">
+  <rdf:type rdf:resource="#AcknowledgeInstructions"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_father_04">
@@ -1848,10 +2090,16 @@
   <allowsAlternativeIntent rdf:resource="#intent_PoliteRefusal"/>
   <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
   <requiresFeature rdf:resource="#feat_RespectWord"/>
+  <expectsIntent rdf:resource="#intent_ExpressGratitude"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_PoliteNegotiation">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#PoliteNegotiation"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ExpressGratitude">
+  <rdf:type rdf:resource="#ExpressGratitude"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_father_05">
@@ -1863,10 +2111,16 @@
   <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
   <violatesScenario rdf:resource="#intent_DisrespectfulInformal"/>
   <requiresFeature rdf:resource="#feat_RespectWord"/>
+  <expectsIntent rdf:resource="#intent_ComplianceConfirmation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_GreetingPolite">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#GreetingPolite"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ComplianceConfirmation">
+  <rdf:type rdf:resource="#ComplianceConfirmation"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_friend_01">
@@ -1876,13 +2130,23 @@
   <inSocialContext rdf:resource="#PlaygroundContextInd"/>
   <expectsIntent rdf:resource="#intent_RequestToJoin"/>
   <requiresFeature rdf:resource="#feat_JoinIntent"/>
+  <expectsIntent rdf:resource="#intent_CooperationAgreement"/>
+  <requiresFeature rdf:resource="#feat_AgreementKeyword"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_RequestToJoin">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#RequestToJoin"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_JoinIntent">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_CooperationAgreement">
+  <rdf:type rdf:resource="#CooperationAgreement"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_AgreementKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -1893,14 +2157,20 @@
   <inSocialContext rdf:resource="#PlaygroundContextInd"/>
   <expectsIntent rdf:resource="#intent_ShowEmpathy"/>
   <requiresFeature rdf:resource="#feat_EmpathyKeyword"/>
+  <expectsIntent rdf:resource="#intent_OfferHelp"/>
+  <requiresFeature rdf:resource="#feat_HelpKeyword"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_ShowEmpathy">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#ShowEmpathy"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_EmpathyKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_OfferHelp">
+  <rdf:type rdf:resource="#OfferHelp"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_friend_03">
@@ -1911,10 +2181,15 @@
   <inSocialContext rdf:resource="#PlaygroundContextInd"/>
   <expectsIntent rdf:resource="#intent_OfferCompliment"/>
   <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <expectsIntent rdf:resource="#intent_EnthusiasticAgreement"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_OfferCompliment">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#OfferCompliment"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_EnthusiasticAgreement">
+  <rdf:type rdf:resource="#EnthusiasticAgreement"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_friend_04">
@@ -1925,10 +2200,16 @@
   <inSocialContext rdf:resource="#PlaygroundContextInd"/>
   <expectsIntent rdf:resource="#intent_ShareInterest"/>
   <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <expectsIntent rdf:resource="#intent_EngageConversation"/>
+  <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_ShareInterest">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#ShareInterest"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_EngageConversation">
+  <rdf:type rdf:resource="#EngageConversation"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_friend_05">
@@ -1939,10 +2220,15 @@
   <inSocialContext rdf:resource="#PlaygroundContextInd"/>
   <expectsIntent rdf:resource="#intent_ShowSportsmanship"/>
   <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
+  <expectsIntent rdf:resource="#intent_ProposeActivity"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_ShowSportsmanship">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#ShowSportsmanship"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ProposeActivity">
+  <rdf:type rdf:resource="#ProposeActivity"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_stranger_01">
@@ -1955,14 +2241,20 @@
   <expectsIntent rdf:resource="#intent_RefusalAndEscape"/>
   <requiresFeature rdf:resource="#feat_MentionAdult"/>
   <requiresFeature rdf:resource="#feat_FirmNo"/>
+  <expectsIntent rdf:resource="#intent_FirmRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_RefusalAndEscape">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#RefusalAndEscape"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_MentionAdult">
   <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_FirmRefusal">
+  <rdf:type rdf:resource="#FirmRefusal"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_stranger_02">
@@ -1971,13 +2263,17 @@
   <inSocialContext rdf:resource="#StrangerContextInd"/>
   <expectsIntent rdf:resource="#intent_RequestHelp"/>
   <requiresFeature rdf:resource="#feat_HelpKeyword"/>
+  <expectsIntent rdf:resource="#intent_SafetyRefusal"/>
+  <expectsIntent rdf:resource="#intent_ExplainSituation"/>
+  <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
+  <requiresFeature rdf:resource="#feat_LostKeyword"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#intent_RequestHelp">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+<owl:NamedIndividual rdf:about="#intent_ExplainSituation">
+  <rdf:type rdf:resource="#ExplainSituation"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#feat_HelpKeyword">
+<owl:NamedIndividual rdf:about="#feat_LostKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -1989,6 +2285,10 @@
   <expectsIntent rdf:resource="#intent_PoliteRefusal"/>
   <allowsAlternativeIntent rdf:resource="#intent_AnswerQuestion"/>
   <allowsAlternativeIntent rdf:resource="#intent_UncertaintyResponse"/>
+  <expectsIntent rdf:resource="#intent_FirmRefusal"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
+  <violatesScenario rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_FirmNo"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_stranger_04">
@@ -1999,14 +2299,13 @@
   <expectsIntent rdf:resource="#intent_PrivacyProtection"/>
   <allowsAlternativeIntent rdf:resource="#intent_FirmRefusal"/>
   <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
+  <expectsIntent rdf:resource="#intent_SafetyRefusal"/>
+  <violatesScenario rdf:resource="#intent_SocialAcceptance"/>
+  <requiresFeature rdf:resource="#feat_FirmNo"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_PrivacyProtection">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#intent_FirmRefusal">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#PrivacyProtection"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_stranger_05">
@@ -2018,10 +2317,15 @@
   <allowsAlternativeIntent rdf:resource="#intent_SafetyRefusal"/>
   <violatesScenario rdf:resource="#intent_StrangerCompliance"/>
   <requiresFeature rdf:resource="#feat_FirmNo"/>
+  <expectsIntent rdf:resource="#intent_CallForHelp"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_EscapeDanger">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#EscapeDanger"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_CallForHelp">
+  <rdf:type rdf:resource="#CallForHelp"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_teacher_01">
@@ -2032,13 +2336,23 @@
   <expectsIntent rdf:resource="#intent_RequestPermission"/>
   <requiresFeature rdf:resource="#feat_Honorific"/>
   <requiresFeature rdf:resource="#feat_RestroomIntent"/>
+  <expectsIntent rdf:resource="#intent_AcknowledgePermission"/>
+  <requiresFeature rdf:resource="#feat_ThankYou"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_RequestPermission">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#RequestPermission"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_RestroomIntent">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_AcknowledgePermission">
+  <rdf:type rdf:resource="#AcknowledgePermission"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_ThankYou">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -2049,13 +2363,23 @@
   <inSocialContext rdf:resource="#ClassroomContextInd"/>
   <expectsIntent rdf:resource="#intent_RaiseDoubt"/>
   <requiresFeature rdf:resource="#feat_DoubtKeyword"/>
+  <expectsIntent rdf:resource="#intent_AskClarification"/>
+  <requiresFeature rdf:resource="#feat_ClarificationKeyword"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_RaiseDoubt">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#RaiseDoubt"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#feat_DoubtKeyword">
+  <rdf:type rdf:resource="#LinguisticFeature"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_AskClarification">
+  <rdf:type rdf:resource="#AskClarification"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#feat_ClarificationKeyword">
   <rdf:type rdf:resource="#LinguisticFeature"/>
 </owl:NamedIndividual>
 
@@ -2069,10 +2393,16 @@
   <expectsIntent rdf:resource="#intent_PoliteApology"/>
   <allowsAlternativeIntent rdf:resource="#intent_HonestApology"/>
   <requiresFeature rdf:resource="#feat_Honorific"/>
+  <expectsIntent rdf:resource="#intent_AcceptCorrection"/>
+  <allowsAlternativeIntent rdf:resource="#intent_ExpressGratitude"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_PoliteApology">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#PoliteApology"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_AcceptCorrection">
+  <rdf:type rdf:resource="#AcceptCorrection"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_teacher_04">
@@ -2085,6 +2415,8 @@
   <violatesScenario rdf:resource="#intent_HostileRefusal"/>
   <allowsAlternativeIntent rdf:resource="#intent_TaskCompletionConfirmation"/>
   <requiresFeature rdf:resource="#feat_Honorific"/>
+  <expectsIntent rdf:resource="#intent_ExpressGratitude"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#Scenario_t2_teacher_05">
@@ -2097,11 +2429,63 @@
   <expectsIntent rdf:resource="#intent_SelfAdvocacyRequest"/>
   <allowsAlternativeIntent rdf:resource="#intent_PoliteRequest"/>
   <requiresFeature rdf:resource="#feat_Honorific"/>
+  <expectsIntent rdf:resource="#intent_ConfirmationResponse"/>
+  <allowsAlternativeIntent rdf:resource="#intent_SocialAcceptance"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#intent_SelfAdvocacyRequest">
-  <rdf:type rdf:resource="#CommunicativeIntent"/>
+  <rdf:type rdf:resource="#SelfAdvocacyRequest"/>
 </owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#intent_ConfirmationResponse">
+  <rdf:type rdf:resource="#ConfirmationResponse"/>
+</owl:NamedIndividual>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#SafetyRefusal"/>
+    <rdf:Description rdf:about="#AnswerQuestion"/>
+    <rdf:Description rdf:about="#TaskCompletionConfirmation"/>
+    <rdf:Description rdf:about="#IncompleteTaskReport"/>
+    <rdf:Description rdf:about="#PoliteRequest"/>
+    <rdf:Description rdf:about="#PoliteInterruption"/>
+    <rdf:Description rdf:about="#ContextualRequest"/>
+    <rdf:Description rdf:about="#UncertaintyResponse"/>
+    <rdf:Description rdf:about="#PeerInvitationAcceptance"/>
+    <rdf:Description rdf:about="#PoliteRefusal"/>
+    <rdf:Description rdf:about="#CooperativeSuggestion"/>
+    <rdf:Description rdf:about="#HonestApology"/>
+    <rdf:Description rdf:about="#StrangerCompliance"/>
+    <rdf:Description rdf:about="#HostileRefusal"/>
+    <rdf:Description rdf:about="#DisrespectfulInformal"/>
+    <rdf:Description rdf:about="#RequestHelp"/>
+    <rdf:Description rdf:about="#ExplainSituation"/>
+    <rdf:Description rdf:about="#CallForHelp"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#SafetyRefusal"/>
+    <rdf:Description rdf:about="#AnswerQuestion"/>
+    <rdf:Description rdf:about="#TaskCompletionConfirmation"/>
+    <rdf:Description rdf:about="#IncompleteTaskReport"/>
+    <rdf:Description rdf:about="#PoliteRequest"/>
+    <rdf:Description rdf:about="#PoliteInterruption"/>
+    <rdf:Description rdf:about="#ContextualRequest"/>
+    <rdf:Description rdf:about="#UncertaintyResponse"/>
+    <rdf:Description rdf:about="#PeerInvitationAcceptance"/>
+    <rdf:Description rdf:about="#PoliteRefusal"/>
+    <rdf:Description rdf:about="#CooperativeSuggestion"/>
+    <rdf:Description rdf:about="#HonestApology"/>
+    <rdf:Description rdf:about="#StrangerCompliance"/>
+    <rdf:Description rdf:about="#HostileRefusal"/>
+    <rdf:Description rdf:about="#DisrespectfulInformal"/>
+    <rdf:Description rdf:about="#RequestHelp"/>
+    <rdf:Description rdf:about="#ExplainSituation"/>
+    <rdf:Description rdf:about="#CallForHelp"/>
+  </owl:members>
+</owl:AllDisjointClasses>
 
 
 </rdf:RDF>

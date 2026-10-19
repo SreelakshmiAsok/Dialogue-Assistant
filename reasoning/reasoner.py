@@ -4,7 +4,7 @@ import re
 import xml.etree.ElementTree as ET
 
 try:
-    from owlready2 import get_ontology, sync_reasoner_pellet
+    from owlready2 import get_ontology
     OWLREADY2_AVAILABLE = True
 except ImportError:
     OWLREADY2_AVAILABLE = False
@@ -17,12 +17,8 @@ except ImportError:
 
 class SocialOntologyReasoner:
     def __init__(self, owl_file_path=None):
-        if owl_file_path is None:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            owl_file_path = os.path.join(base_dir, "social_communication.owl")
-        
-        self.owl_file_path = owl_file_path
-        self.ontology_service = OntologyService(self.owl_file_path)
+        self.ontology_service = OntologyService(owl_file_path=owl_file_path)
+        self.owl_file_path = self.ontology_service.owl_file_path
         self.onto = self.ontology_service.onto
 
     def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None, expected_goal: str = None, scenario_id: str = None):
@@ -131,9 +127,9 @@ class SocialOntologyReasoner:
         # Rule 2: Stranger Safety Rule (Critical for ASD Training)
         if "stranger" in role_clean:
             is_safety_scenario = (
-                "SafetyRefusal" in [self.ontology_service.normalize_intent_name(i) for i in constraints.get("expected_intents", [])]
+                (scenario_id and self.ontology_service.is_safety_critical(scenario_id))
+                or "SafetyRefusal" in [self.ontology_service.normalize_intent_name(i) for i in constraints.get("expected_intents", [])]
                 or expected_goal == "SafetyRefusal"
-                or (scenario_id and str(scenario_id).lower() in ("stranger_22", "t2_stranger_01", "t2_stranger_02", "t2_stranger_03", "t2_stranger_04"))
                 or any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in ["puppy", "candy", "chocolate", "car", "ride", "lift", "lure"])
             )
 

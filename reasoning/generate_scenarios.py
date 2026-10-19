@@ -11,7 +11,7 @@ Zero domain knowledge is hardcoded as code:
 import os
 import glob
 import json
-from owlready2 import get_ontology
+from owlready2 import get_ontology, AllDisjoint
 
 def get_or_create_intent(onto, intent_name):
     """Resolve an intent individual by name, creating a typed individual if needed."""
@@ -19,19 +19,18 @@ def get_or_create_intent(onto, intent_name):
         return None
         
     ind_name = f"intent_{intent_name}"
+    cls = getattr(onto, intent_name, None)
+    if cls is None:
+        cls = getattr(onto, "CommunicativeIntent", None)
+
     ind = getattr(onto, ind_name, None)
     if ind is not None:
+        if cls and cls not in ind.is_a:
+            ind.is_a = [cls]
         return ind
         
-    # Check if a class matches in ontology
-    cls = getattr(onto, intent_name, None)
     if cls is not None:
         return cls(ind_name)
-        
-    # Fallback to CommunicativeIntent general class
-    comm_cls = getattr(onto, "CommunicativeIntent", None)
-    if comm_cls is not None:
-        return comm_cls(ind_name)
         
     return None
 
@@ -41,19 +40,114 @@ def get_or_create_feature(onto, feat_name):
         return None
         
     ind_name = f"feat_{feat_name}"
+    cls = getattr(onto, feat_name, None)
+    if cls is None:
+        cls = getattr(onto, "LinguisticFeature", None)
+
     ind = getattr(onto, ind_name, None)
     if ind is not None:
+        if cls and cls not in ind.is_a:
+            ind.is_a = [cls]
         return ind
         
-    cls = getattr(onto, feat_name, None)
     if cls is not None:
         return cls(ind_name)
         
-    feat_cls = getattr(onto, "LinguisticFeature", None)
-    if feat_cls is not None:
-        return feat_cls(ind_name)
-        
     return None
+
+def setup_ontology_axioms(onto):
+    """
+    Define OWL 2 DL class hierarchies, disjointness axioms, and defined classes
+    using owl:equivalentClass.
+    """
+    with onto:
+        comm_cls = getattr(onto, "CommunicativeIntent")
+        sc_cls = getattr(onto, "CommunicationScenario")
+        ling_cls = getattr(onto, "LinguisticFeature")
+        exp_prop = getattr(onto, "expectsIntent")
+        viol_prop = getattr(onto, "violatesScenario")
+        req_feat_prop = getattr(onto, "requiresFeature")
+
+        # 1. SafetyRefusal Intent Specializations
+        safe_refusal_cls = getattr(onto, "SafetyRefusal")
+        
+        class RefusalAndEscape(safe_refusal_cls): pass
+        class FirmRefusal(safe_refusal_cls): pass
+        class EscapeDanger(safe_refusal_cls): pass
+        class PrivacyProtection(safe_refusal_cls): pass
+
+        # Ensure other dataset intents are typed CommunicativeIntent classes
+        other_intent_names = [
+            "AnswerQuestion", "TaskCompletionConfirmation", "IncompleteTaskReport",
+            "PoliteRequest", "PoliteInterruption", "ContextualRequest",
+            "UncertaintyResponse", "PeerInvitationAcceptance", "PoliteRefusal",
+            "CooperativeSuggestion", "HonestApology", "StrangerCompliance",
+            "HostileRefusal", "DisrespectfulInformal", "RequestHelp",
+            "ExplainSituation", "CallForHelp", "GreetingPolite", "OfferHelp",
+            "RequestPermission", "AcknowledgePermission", "RaiseDoubt",
+            "AskClarification", "OfferAssistance", "AcknowledgeInstructions",
+            "PoliteNegotiation", "ExpressGratitude", "ComplianceConfirmation",
+            "OfferCompliment", "EnthusiasticAgreement", "ShareInterest",
+            "EngageConversation", "ShowSportsmanship", "ProposeActivity",
+            "PoliteApology", "AcceptCorrection", "SelfAdvocacyRequest",
+            "ConfirmationResponse", "NegotiationIntent", "PromiseConfirmation",
+            "RequestToJoin", "CooperationAgreement", "ShowEmpathy"
+        ]
+        
+        for name in other_intent_names:
+            if not getattr(onto, name, None):
+                type(name, (comm_cls,), {})
+
+        # 2. Pairwise Disjoint Intent Classes (AllDisjoint)
+        # Sibling classes directly under CommunicativeIntent are mutually exclusive
+        top_level_intents = [
+            getattr(onto, "SafetyRefusal"),
+            getattr(onto, "AnswerQuestion"),
+            getattr(onto, "TaskCompletionConfirmation"),
+            getattr(onto, "IncompleteTaskReport"),
+            getattr(onto, "PoliteRequest"),
+            getattr(onto, "PoliteInterruption"),
+            getattr(onto, "ContextualRequest"),
+            getattr(onto, "UncertaintyResponse"),
+            getattr(onto, "PeerInvitationAcceptance"),
+            getattr(onto, "PoliteRefusal"),
+            getattr(onto, "CooperativeSuggestion"),
+            getattr(onto, "HonestApology"),
+            getattr(onto, "StrangerCompliance"),
+            getattr(onto, "HostileRefusal"),
+            getattr(onto, "DisrespectfulInformal"),
+            getattr(onto, "RequestHelp"),
+            getattr(onto, "ExplainSituation"),
+            getattr(onto, "CallForHelp"),
+        ]
+        top_level_intents = [c for c in top_level_intents if c is not None]
+        AllDisjoint(top_level_intents)
+
+        # 3. Disjoint Object Properties
+        # A scenario that both expects and violates the same intent is inconsistent
+        AllDisjoint([exp_prop, viol_prop])
+
+        # 4. Defined Classes with owl:equivalentClass
+        # SafetyCriticalScenario: Any communication scenario requiring safety refusal
+        class SafetyCriticalScenario(sc_cls):
+            equivalent_to = [sc_cls & exp_prop.some(safe_refusal_cls)]
+
+        task_comp_cls = getattr(onto, "TaskCompletionConfirmation")
+        class TaskCompletionScenario(sc_cls):
+            equivalent_to = [sc_cls & exp_prop.some(task_comp_cls)]
+
+        polite_interr_cls = getattr(onto, "PoliteInterruption")
+        class PoliteInterruptionScenario(sc_cls):
+            equivalent_to = [sc_cls & exp_prop.some(polite_interr_cls)]
+
+        honorific_cls = getattr(onto, "HonorificMarker")
+        class AuthorityDecorumScenario(sc_cls):
+            equivalent_to = [sc_cls & req_feat_prop.some(honorific_cls)]
+
+        peer_accept_cls = getattr(onto, "PeerInvitationAcceptance")
+        coop_sugg_cls = getattr(onto, "CooperativeSuggestion")
+        class PeerCooperationScenario(sc_cls):
+            equivalent_to = [sc_cls & (exp_prop.some(peer_accept_cls) | exp_prop.some(coop_sugg_cls))]
 
 def generate_scenarios(owl_file_path=None, lessons_dir=None):
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,6 +158,9 @@ def generate_scenarios(owl_file_path=None, lessons_dir=None):
 
     iri_path = "file://" + owl_file_path.replace("\\", "/")
     onto = get_ontology(iri_path).load()
+
+    # Define axioms & equivalent classes
+    setup_ontology_axioms(onto)
 
     with onto:
         # Reference Contexts
@@ -137,25 +234,46 @@ def generate_scenarios(owl_file_path=None, lessons_dir=None):
 
             # ------------------------------------------------------------------
             # DATASET-DRIVEN REASONING SPECIFICATION
-            # Read expectations and violations directly from the lesson turns
+            # Read expectations and violations across turns
             # ------------------------------------------------------------------
             turns = lesson_data.get("turns", [])
-            if turns:
-                first_turn = turns[0]
-                expected_names = first_turn.get("expected_intents") or ([first_turn.get("target_intent")] if first_turn.get("target_intent") else [])
-                allowed_names = first_turn.get("allowed_intents", [])
-                violating_names = first_turn.get("violates") or first_turn.get("violating_intents", [])
-                feature_names = first_turn.get("required_features", [])
+            expected_names = []
+            allowed_names = []
+            violating_names = []
+            feature_names = []
 
-                expected = [get_or_create_intent(onto, name) for name in expected_names if get_or_create_intent(onto, name)]
-                allowed = [get_or_create_intent(onto, name) for name in allowed_names if get_or_create_intent(onto, name)]
-                violates = [get_or_create_intent(onto, name) for name in violating_names if get_or_create_intent(onto, name)]
-                requires = [get_or_create_feature(onto, name) for name in feature_names if get_or_create_feature(onto, name)]
+            for turn in turns:
+                exp = turn.get("expected_intents") or ([turn.get("target_intent")] if turn.get("target_intent") else [])
+                for name in exp:
+                    if name and name not in expected_names:
+                        expected_names.append(name)
+                for name in turn.get("allowed_intents", []):
+                    if name and name not in allowed_names:
+                        allowed_names.append(name)
+                viol = turn.get("violates") or turn.get("violating_intents", [])
+                for name in viol:
+                    if name and name not in violating_names:
+                        violating_names.append(name)
+                for name in turn.get("required_features", []):
+                    if name and name not in feature_names:
+                        feature_names.append(name)
 
-                sc_ind.expectsIntent = [e for e in expected if e]
-                sc_ind.allowsAlternativeIntent = [a for a in allowed if a]
-                sc_ind.violatesScenario = [v for v in violates if v]
-                sc_ind.requiresFeature = [r for r in requires if r]
+            # Stranger Safety scenario expectation & violation
+            if character == "stranger" and (lesson_id == "stranger_22" or lesson_id.startswith("t2_stranger")):
+                if "SafetyRefusal" not in expected_names and not any(n in ("RefusalAndEscape", "FirmRefusal", "EscapeDanger", "PrivacyProtection") for n in expected_names):
+                    expected_names.append("SafetyRefusal")
+                if "StrangerCompliance" not in violating_names:
+                    violating_names.append("StrangerCompliance")
+
+            expected = [get_or_create_intent(onto, name) for name in expected_names if get_or_create_intent(onto, name)]
+            allowed = [get_or_create_intent(onto, name) for name in allowed_names if get_or_create_intent(onto, name)]
+            violates = [get_or_create_intent(onto, name) for name in violating_names if get_or_create_intent(onto, name)]
+            requires = [get_or_create_feature(onto, name) for name in feature_names if get_or_create_feature(onto, name)]
+
+            sc_ind.expectsIntent = [e for e in expected if e]
+            sc_ind.allowsAlternativeIntent = [a for a in allowed if a]
+            sc_ind.violatesScenario = [v for v in violates if v]
+            sc_ind.requiresFeature = [r for r in requires if r]
 
     # Save ontology back to OWL file
     onto.save(file=owl_file_path, format="rdfxml")

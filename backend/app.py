@@ -328,10 +328,10 @@ def infer_scenario_goal(question):
     ):
         return "peer_cooperation"
 
-    # 3. Stranger: differentiate safety refusal from general communication (directions, greetings, assistance)
+    # 3. Stranger: differentiate safety refusal from general communication using ontology reasoning
     if character == "Stranger":
-        q_id = (question.get("id") or "").lower()
-        if q_id in ("stranger_22", "t2_stranger_01", "t2_stranger_02", "t2_stranger_03", "t2_stranger_04") or "chocolate" in q_tanglish or "candy" in q_tanglish or "decline" in lesson:
+        q_id = question.get("id") or ""
+        if ontology_reasoner.ontology_service.is_safety_critical(q_id):
             return "SafetyRefusal"
         if "direction" in lesson or "enga" in q_tanglish:
             return "AnswerQuestion"

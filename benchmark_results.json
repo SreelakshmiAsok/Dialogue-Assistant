@@ -53,21 +53,21 @@
     {
       "variant": "Variant C: TalkWise Dataset-OWL Hybrid",
       "total": 125,
-      "accuracy": 80.8,
-      "macro_f1": 81.7,
+      "accuracy": 78.4,
+      "macro_f1": 79.7,
       "unsafe_detection_rate": 94.1,
       "tp": {
-        "correct": 43,
+        "correct": 40,
         "incorrect": 26,
         "unsafe": 32
       },
       "fp": {
         "correct": 3,
-        "incorrect": 21,
+        "incorrect": 24,
         "unsafe": 0
       },
       "fn": {
-        "correct": 19,
+        "correct": 22,
         "incorrect": 3,
         "unsafe": 2
       }

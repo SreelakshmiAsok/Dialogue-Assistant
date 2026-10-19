@@ -129,17 +129,22 @@ def check_answer(response, expected_answers):
     return False
 
 
+try:
+    from ontology_service import is_safety_critical
+except ImportError:
+    try:
+        from reasoning.ontology_service import is_safety_critical
+    except ImportError:
+        def is_safety_critical(scenario_id):
+            return str(scenario_id).lower() in ("stranger_22", "t2_stranger_01", "t2_stranger_02", "t2_stranger_03", "t2_stranger_04", "t2_stranger_05")
+
 def _stranger_safety_violation(response, scenario_id=None):
     normalized = normalize_text(response)
 
-    # Check if this scenario is actually a safety / refusal scenario
+    # Check if this scenario is actually a safety / refusal scenario via ontology reasoning
     is_safety_scenario = False
     if scenario_id:
-        sc_clean = str(scenario_id).lower()
-        if sc_clean in ("stranger_22", "t2_stranger_01", "t2_stranger_02", "t2_stranger_03", "t2_stranger_04"):
-            is_safety_scenario = True
-        elif "safety" in sc_clean or "lure" in sc_clean or "decline" in sc_clean:
-            is_safety_scenario = True
+        is_safety_scenario = is_safety_critical(scenario_id)
 
     # Check if utterance mentions danger lure terms
     lure_detected = any(
