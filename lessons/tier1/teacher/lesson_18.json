@@ -16,5 +16,50 @@
   "model_answer": "Aama teacher, padikkuren",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Exam ku prepare panriya?",
+        "tamil": "எக்ஸாம் க்கு ப்ரிபேர் பண்றியா?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Aama teacher",
+        "Pannuren teacher",
+        "Padikkuren teacher",
+        "Yes teacher",
+        "Prepare pannuren teacher"
+      ],
+      "model_answer": "Aama teacher, padikkuren",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Aama teacher, padikkuren'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Exam is next week. Teacher asks if you are preparing well.",
+  "topic": "Exam"
 }

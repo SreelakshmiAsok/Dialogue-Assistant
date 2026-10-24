@@ -17,5 +17,51 @@
   "model_answer": "Panniten teacher",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Assignment complete pannittiya?",
+        "tamil": "அசைன்மென்ட் கம்ப்ளீட் பண்ணிட்டியா?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Panniten teacher",
+        "Pannitten teacher",
+        "Aama teacher",
+        "Complete teacher",
+        "Yes teacher",
+        "Mudichiten teacher"
+      ],
+      "model_answer": "Panniten teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Panniten teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher asks if you completed the class assignment.",
+  "topic": "Assignment"
 }

@@ -6,7 +6,12 @@
   "skill": "Apologizing",
   "learning_objective": "Child apologizes respectfully.",
   "curriculum": {
-    "source": "Social Thinking® (Michelle Garcia Winner)"
+    "source": "Social Thinking® (Michelle Garcia Winner)",
+    "module": "Classroom Accountability & Polite Apologies",
+    "target_rules": [
+      "Admit mistake respectfully without excuses",
+      "Thank the teacher for giving an extension"
+    ]
   },
   "scenario": "You forgot to bring your English book to class.",
   "initial_prompt": {
@@ -37,7 +42,27 @@
         "english": "Oh, ok share with the student next to you."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "PoliteApology",
+      "allowed_intents": [
+        "HonestApology"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Apologize politely to Teacher for forgetting your book.",
+        "gentle_correction": "Try saying: 'Sorry miss, naan book marandhuten'"
+      },
+      "expected_intents": [
+        "PoliteApology"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +85,28 @@
         "tamil": "நாளைக்கு மறக்காம எடுத்துட்டு வாங்க.",
         "english": "Bring it without fail tomorrow."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "AcceptCorrection",
+      "allowed_intents": [
+        "ExpressGratitude"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Thank Teacher for letting you bring it tomorrow.",
+        "gentle_correction": "Try saying: 'Seri miss, thank you'"
+      },
+      "expected_intents": [
+        "AcceptCorrection"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

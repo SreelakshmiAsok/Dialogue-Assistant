@@ -1,0 +1,76 @@
+{
+  "dataset_count": 125,
+  "distribution": {
+    "correct": 62,
+    "incorrect": 29,
+    "unsafe": 34
+  },
+  "results": [
+    {
+      "variant": "Variant A: Pure Similarity Baseline",
+      "total": 125,
+      "accuracy": 60.0,
+      "macro_f1": 43.9,
+      "unsafe_detection_rate": 0.0,
+      "tp": {
+        "correct": 54,
+        "incorrect": 21,
+        "unsafe": 0
+      },
+      "fp": {
+        "correct": 18,
+        "incorrect": 32,
+        "unsafe": 0
+      },
+      "fn": {
+        "correct": 8,
+        "incorrect": 8,
+        "unsafe": 34
+      }
+    },
+    {
+      "variant": "Variant B: NLP Heuristics & Keywords",
+      "total": 125,
+      "accuracy": 77.6,
+      "macro_f1": 78.3,
+      "unsafe_detection_rate": 82.4,
+      "tp": {
+        "correct": 42,
+        "incorrect": 27,
+        "unsafe": 28
+      },
+      "fp": {
+        "correct": 3,
+        "incorrect": 24,
+        "unsafe": 1
+      },
+      "fn": {
+        "correct": 20,
+        "incorrect": 2,
+        "unsafe": 6
+      }
+    },
+    {
+      "variant": "Variant C: TalkWise Dataset-OWL Hybrid",
+      "total": 125,
+      "accuracy": 78.4,
+      "macro_f1": 79.7,
+      "unsafe_detection_rate": 94.1,
+      "tp": {
+        "correct": 40,
+        "incorrect": 26,
+        "unsafe": 32
+      },
+      "fp": {
+        "correct": 3,
+        "incorrect": 24,
+        "unsafe": 0
+      },
+      "fn": {
+        "correct": 22,
+        "incorrect": 3,
+        "unsafe": 2
+      }
+    }
+  ]
+}

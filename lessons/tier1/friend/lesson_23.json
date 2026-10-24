@@ -16,5 +16,47 @@
   "model_answer": "Va da, paadalaama",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Paatu paadalaama?",
+        "tamil": "பாட்டு பாடலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Paadalaama",
+        "Va da",
+        "Seri da",
+        "Aama da",
+        "Ok da"
+      ],
+      "model_answer": "Va da, paadalaama",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Va da, paadalaama'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend hears a nice song. They ask if you want to sing together.",
+  "topic": "Singing"
 }

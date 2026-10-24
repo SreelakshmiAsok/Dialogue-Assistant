@@ -6,7 +6,13 @@
   "skill": "Meal manners",
   "learning_objective": "Child expresses food preference politely.",
   "curriculum": {
-    "source": "Carol Gray's Social Stories™"
+    "source": "Carol Gray's Social Stories™",
+    "module": "Nutrition & Table Manners",
+    "target_rules": [
+      "Politely state preference without throwing food",
+      "Agree to try a small portion",
+      "Thank the parent"
+    ]
   },
   "scenario": "Appa is serving you vegetables that you don't like.",
   "initial_prompt": {
@@ -37,7 +43,27 @@
         "english": "Ok eat a little bit, next time we will make something else."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "PoliteNegotiation",
+      "allowed_intents": [
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Tell Appa politely you will try a little bit.",
+        "gentle_correction": "Try saying: 'Enaku carrot pudikadhu appa, aana konjam saapduren'"
+      },
+      "expected_intents": [
+        "PoliteNegotiation"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +86,26 @@
         "tamil": "குட் பாய்/கேர்ள்.",
         "english": "Good boy/girl."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "ExpressGratitude",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Thank Appa for understanding.",
+        "gentle_correction": "Try saying: 'Thank you appa'"
+      },
+      "expected_intents": [
+        "ExpressGratitude"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

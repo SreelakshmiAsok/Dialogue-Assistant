@@ -15,5 +15,47 @@
   "model_answer": "Sorry teacher, I will say sorry",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Sorry sollu.",
+        "tamil": "ஸாரி சொல்லு."
+      },
+      "target_intent": "HonestApology",
+      "allowed_intents": [],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Sorry teacher",
+        "Seri teacher",
+        "Sorry solluven teacher",
+        "Aama teacher"
+      ],
+      "model_answer": "Sorry teacher, I will say sorry",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Sorry teacher, I will say sorry'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "HonestApology"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You accidentally pushed your friend. Teacher asks you to say sorry.",
+  "topic": "Apology"
 }

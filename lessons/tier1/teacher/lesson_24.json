@@ -17,5 +17,51 @@
   "model_answer": "Bye teacher, thank you",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Bye children, naalaikku paappom.",
+        "tamil": "பை சில்ட்ரன், நாளைக்கு பாப்போம்."
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Bye teacher",
+        "Good bye teacher",
+        "Bye miss",
+        "Thank you teacher bye",
+        "Naalaikku paappom teacher",
+        "Vanakkam teacher"
+      ],
+      "model_answer": "Bye teacher, thank you",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Bye teacher, thank you'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "School is over. Teacher says goodbye to the class.",
+  "topic": "Goodbye"
 }

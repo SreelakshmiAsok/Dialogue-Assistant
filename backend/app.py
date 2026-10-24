@@ -24,6 +24,7 @@ from engines.sentiment_engine import analyze_sentiment
 from nlp.preprocessing import normalize_text
 from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
+from nlp.tanglish_tts_helper import tanglish_resolver
 import re
 import sys
 from pydantic import ValidationError
@@ -237,27 +238,22 @@ def api_questions(character):
 
 @app.route("/api/audio/<question_id>", methods=["GET"])
 def api_audio(question_id):
-    """Generate and return TTS audio for a question using gTTS."""
+    """Generate and return TTS audio for a question."""
     question = get_question_by_id(question_id)
     if not question:
         return jsonify({"error": "Question not found"}), 404
 
-    text = question["question_tamil"]
-    character = question["character"]
+    text = question.get("question_tamil") or question.get("question_tanglish", "")
+    character = question.get("character", "Friend")
     
-    # We will save the audio files in a cache folder
-    audio_dir = "static/audio"
+    audio_dir = os.path.join(os.path.dirname(__file__), "static", "audio")
     os.makedirs(audio_dir, exist_ok=True)
-    
     filepath = os.path.join(audio_dir, f"{question_id}.mp3")
     
-    # Generate if not exists
-    if not os.path.exists(filepath):
-        voice = "ta-IN-PallaviNeural"  # Default female
-        if character in ["Father", "Stranger", "Friend"]:
-            voice = "ta-IN-ValluvarNeural"
-        
-        subprocess.run(["edge-tts", "--voice", voice, "--text", text, "--write-media", filepath])
+    if not os.path.exists(filepath) or os.path.getsize(filepath) == 0:
+        success = tanglish_resolver.synthesize_to_file(text, character, filepath)
+        if not success:
+            return jsonify({"error": "Failed to generate audio"}), 500
         
     return send_file(filepath, mimetype="audio/mpeg")
 
@@ -265,9 +261,9 @@ def api_audio(question_id):
 @app.route("/api/tts", methods=["GET", "POST"])
 def api_tts():
     """
-    Generate and return Neural TTS audio dynamically via edge-tts.
-    Supports GET /api/tts?text=...&character=...
-    or POST { "text": "...", "character": "..." }
+    Generate and return Neural TTS audio dynamically.
+    Automatically resolves Tanglish to authentic Tamil script for characters
+    so words are pronounced properly rather than spelled letter-by-letter.
     """
     import hashlib
 
@@ -282,38 +278,16 @@ def api_tts():
     if not text:
         return jsonify({"error": "No text provided"}), 400
 
-    # Clean out parenthesized stage directions like "(Talking on phone)" or "(போனில் பேசுகிறார்)"
-    spoken_text = re.sub(r'\(.*?\)', '', text).strip()
-    if not spoken_text:
-        spoken_text = text.strip()
-
-    # Determine voice:
-    if character == "Narrator":
-        voice = "en-IN-NeerjaExpressiveNeural"
-    elif has_tamil(spoken_text):
-        if character in ["Father", "Stranger", "Friend"]:
-            voice = "ta-IN-ValluvarNeural"
-        else:
-            voice = "ta-IN-PallaviNeural"
-    else:
-        if character in ["Father", "Stranger", "Friend"]:
-            voice = "en-IN-PrabhatNeural"
-        elif character == "Teacher":
-            voice = "en-IN-NeerjaNeural"
-        else:
-            voice = "en-IN-NeerjaExpressiveNeural"
-
-    # Cache by hash of voice + spoken_text
-    h = hashlib.md5(f"{voice}_{spoken_text}".encode("utf-8")).hexdigest()
+    # Cache by hash of character + text
+    h = hashlib.md5(f"{character}_{text}".encode("utf-8")).hexdigest()
     audio_dir = os.path.join(os.path.dirname(__file__), "static", "audio")
     os.makedirs(audio_dir, exist_ok=True)
     filepath = os.path.join(audio_dir, f"tts_{h}.mp3")
 
-    if not os.path.exists(filepath):
-        res = subprocess.run(["edge-tts", "--voice", voice, "--text", spoken_text, "--write-media", filepath], capture_output=True, text=True)
-        if res.returncode != 0:
-            print(f"TTS generation failed: {res.stderr}")
-            return jsonify({"error": "Failed to generate TTS audio", "details": res.stderr}), 500
+    if not os.path.exists(filepath) or os.path.getsize(filepath) == 0:
+        success = tanglish_resolver.synthesize_to_file(text, character, filepath)
+        if not success:
+            return jsonify({"error": "Failed to generate TTS audio"}), 500
 
     return send_file(filepath, mimetype="audio/mpeg")
 
@@ -354,9 +328,16 @@ def infer_scenario_goal(question):
     ):
         return "peer_cooperation"
 
-    # 3. Stranger safety (refusal / uncertainty)
+    # 3. Stranger: differentiate safety refusal from general communication using ontology reasoning
     if character == "Stranger":
-        return "safe_refusal"
+        q_id = question.get("id") or ""
+        if ontology_reasoner.ontology_service.is_safety_critical(q_id):
+            return "SafetyRefusal"
+        if "direction" in lesson or "enga" in q_tanglish:
+            return "AnswerQuestion"
+        if "thank" in lesson or "greeting" in lesson or "compliment" in lesson or "goodbye" in lesson:
+            return "SocialAcceptance"
+        return "AnswerQuestion"
 
     # 4. Apology
     if "sorry" in q_tanglish or "apology" in lesson or "sorry" in model:
@@ -472,8 +453,8 @@ def api_evaluate():
     # --------------------------------------------------------
     rule_result = check_pragmatics(
         response,
-        expected_answers,
-        model_answer,
+        scenario_id=question_id,
+        expected_answers=expected_answers,
         character=character
     )
 
@@ -636,10 +617,12 @@ def api_evaluate():
     # --------------------------------------------------------
     try:
         save_progress(
-            question_id,
-            response,
-            matched,
-            stars
+            user_id=data.get("user_id", "default_user"),
+            interaction_id=question_id,
+            response=response,
+            correct=matched,
+            stars=stars,
+            tier=question.get("tier", 1)
         )
     except Exception:
         pass  # Don't fail the response if progress save fails

@@ -16,5 +16,50 @@
   "model_answer": "Idho teacher",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Notebook kudunga.",
+        "tamil": "நோட்புக் குடுங்க."
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Idho teacher",
+        "Idho miss",
+        "Idho ma'am",
+        "Seri teacher",
+        "Kudukuren teacher"
+      ],
+      "model_answer": "Idho teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Idho teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher asks you to give your notebook for correction.",
+  "topic": "Notebook"
 }

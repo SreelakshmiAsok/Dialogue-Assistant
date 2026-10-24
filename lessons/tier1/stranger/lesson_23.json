@@ -16,5 +16,50 @@
   "model_answer": "Thank you aunty",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Romba azhaga irukke!",
+        "tamil": "ரொம்ப அழகா இருக்கே!"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Thank you aunty",
+        "Thanks aunty",
+        "Nandri aunty",
+        "Thank you sir",
+        "Thanks"
+      ],
+      "model_answer": "Thank you aunty",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Thank you aunty'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "An aunty in the neighborhood says you look nice today.",
+  "topic": "Compliment"
 }

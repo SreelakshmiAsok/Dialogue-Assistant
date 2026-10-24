@@ -16,5 +16,47 @@
   "model_answer": "Thanks da",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Naan share pannava unakku?",
+        "tamil": "நான் ஷேர் பண்ணவா உனக்கு?"
+      },
+      "target_intent": "CooperativeSuggestion",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Thanks da",
+        "Thank you da",
+        "Seri da",
+        "Aama da",
+        "Romba thanks da"
+      ],
+      "model_answer": "Thanks da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Thanks da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "CooperativeSuggestion"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend shared their lunch with you.",
+  "topic": "Thanks"
 }

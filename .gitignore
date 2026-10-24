@@ -11,3 +11,7 @@ SemanticDialogueAssistant_datasets/static/audio/*.mp3
 users.json
 .env
 backend/.env
+*.zip
+*.tsbuildinfo
+AGENTS.md
+CLAUDE.md

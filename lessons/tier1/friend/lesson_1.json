@@ -22,5 +22,53 @@
   "model_answer": "Va da, vilayaadalaam",
   "respect_required": false,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Cricket vilayaadalaama?",
+        "tamil": "கிரிக்கெட் விளையாடலாமா?"
+      },
+      "target_intent": "SocialAcceptance",
+      "allowed_intents": [
+        "PoliteRefusal",
+        "CooperativeSuggestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Va da",
+        "Vaa da",
+        "Seri da",
+        "Sari da",
+        "Aama da",
+        "Ama da",
+        "Okay da",
+        "Ok da",
+        "Vilayaadalaam",
+        "Va machi",
+        "Polaam da"
+      ],
+      "model_answer": "Va da, vilayaadalaam",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Va da, vilayaadalaam'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "SocialAcceptance"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You are in the playground. Your friend asks you to play cricket.",
+  "topic": "Cricket"
 }

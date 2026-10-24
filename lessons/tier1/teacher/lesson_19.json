@@ -16,5 +16,50 @@
   "model_answer": "Purinjuthu teacher, thank you",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Ippo purinjutha?",
+        "tamil": "இப்போ புரிஞ்சுதா?"
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Purinjuthu teacher thank you",
+        "Purinjuchu teacher",
+        "Aama teacher nandri",
+        "Thank you teacher",
+        "Purinjuthu teacher"
+      ],
+      "model_answer": "Purinjuthu teacher, thank you",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Purinjuthu teacher, thank you'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Teacher helped you solve a difficult math problem.",
+  "topic": "Thank You"
 }

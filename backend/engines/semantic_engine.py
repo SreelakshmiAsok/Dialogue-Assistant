@@ -1,3 +1,4 @@
+import re
 from difflib import SequenceMatcher
 
 from nlp.preprocessing import normalize_text
@@ -317,13 +318,13 @@ def extract_linguistic_features(text):
         or "oru minute" in normalized
     )
 
-    # --- Greeting markers ---
+    # --- Greeting markers (whole-token match to prevent 'hi' in 'thittuvaanga') ---
     greeting_tokens = ["good morning", "good afternoon", "good evening", "vanakkam", "namaskaram", "hello", "hi"]
-    has_greeting = any(g in normalized for g in greeting_tokens)
+    has_greeting = any(re.search(r'\b' + re.escape(g) + r'\b', normalized) for g in greeting_tokens)
 
     # --- Hostile / Disrespectful markers ---
     hostile_phrases = ["get lost", "shut up", "no way", "go away", "it is mine", "its mine", "move", "stupid"]
-    has_hostile = any(h in normalized for h in hostile_phrases)
+    has_hostile = any(re.search(r'\b' + re.escape(h) + r'\b', normalized) for h in hostile_phrases)
 
     # --- Interlocutor Question vs First-Person State ---
     is_q_back = is_question_directed_at_interlocutor(text)

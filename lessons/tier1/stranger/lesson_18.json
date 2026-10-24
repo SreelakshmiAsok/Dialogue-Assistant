@@ -16,5 +16,50 @@
   "model_answer": "Excuse me sir",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Vazhividunga.",
+        "tamil": "வழிவிடுங்க."
+      },
+      "target_intent": "AnswerQuestion",
+      "allowed_intents": [
+        "UncertaintyResponse"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Excuse me sir",
+        "Excuse me",
+        "Please sir",
+        "Konjam vazhividunga sir",
+        "Sorry sir"
+      ],
+      "model_answer": "Excuse me sir",
+      "feedback": {
+        "hint": "Respond politely to Stranger.",
+        "gentle_correction": "Try saying: 'Excuse me sir'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "AnswerQuestion"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You need to pass through a crowded area. You need to say excuse me.",
+  "topic": "Excuse Me"
 }

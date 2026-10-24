@@ -16,5 +16,51 @@
   "model_answer": "Kudichen appa",
   "respect_required": true,
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Paal kudicha?",
+        "tamil": "பால் குடிச்சா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Kudichen appa",
+        "Kudichiten appa",
+        "Aama appa",
+        "Illa appa",
+        "Kudikuren appa"
+      ],
+      "model_answer": "Kudichen appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Kudichen appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Appa gives you a glass of milk in the morning.",
+  "topic": "Milk"
 }

@@ -1,9 +1,10 @@
 import os
 import sys
+import re
 import xml.etree.ElementTree as ET
 
 try:
-    from owlready2 import get_ontology, sync_reasoner_pellet
+    from owlready2 import get_ontology
     OWLREADY2_AVAILABLE = True
 except ImportError:
     OWLREADY2_AVAILABLE = False
@@ -16,12 +17,8 @@ except ImportError:
 
 class SocialOntologyReasoner:
     def __init__(self, owl_file_path=None):
-        if owl_file_path is None:
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            owl_file_path = os.path.join(base_dir, "social_communication.owl")
-        
-        self.owl_file_path = owl_file_path
-        self.ontology_service = OntologyService(self.owl_file_path)
+        self.ontology_service = OntologyService(owl_file_path=owl_file_path)
+        self.owl_file_path = self.ontology_service.owl_file_path
         self.onto = self.ontology_service.onto
 
     def evaluate_utterance(self, role: str, context: str, utterance_text: str, intent: str = None, has_politeness: bool = None, semantic_similarity: float = None, expected_goal: str = None, scenario_id: str = None):
@@ -93,19 +90,25 @@ class SocialOntologyReasoner:
             if intent in ("unknown", None):
                 inference_details = "Utterance intent is unverified for this scenario; semantic similarity alone is insufficient."
 
-        # Rule 1: Politeness & Formal Greetings
-        if "teacher" in role_clean or "doctor" in role_clean:
-            has_polite = any(w in text_clean for w in [
+        # Rule 1: Politeness & Formal Respect for Authority Figures (Teacher, Parent, Father, Doctor)
+        if any(r in role_clean for r in ["teacher", "doctor", "parent", "father"]):
+            polite_markers = [
                 "teacher", "mr", "ms", "mrs", "good morning", "please", "excuse me",
-                "mam", "ma'am", "maam", "madam", "medam", "miss", "missy"
-            ])
-            has_rude = any(w in text_clean for w in ["hey man", "shut up", "gimme", "stupid", "whatever"])
+                "mam", "ma'am", "maam", "madam", "medam", "miss", "missy", "appa", "pa", "amma"
+            ]
+            rude_markers = [
+                "hey man", "shut up", "gimme", "stupid", "idiot", "whatever", "poda", "podi",
+                "panni", "get lost", "hate you", "un vela paaru"
+            ]
+
+            has_polite = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in polite_markers)
+            has_rude = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in rude_markers)
 
             if has_rude:
                 status = "VIOLATION"
-                details = "Used informal or disrespectful phrase when talking to an authority figure."
-                violations.append("T_DECORUM")
-            elif has_polite or len(text_clean.split()) >= 3:
+                details = f"Used informal or disrespectful phrase when talking to an authority figure ({role})."
+                violations.append("AUTHORITY_DECORUM")
+            elif has_polite or len(text_clean.split()) >= 2:
                 status = "PASS"
                 details = "Addressed interlocutor with appropriate respect and politeness."
             else:
@@ -123,20 +126,41 @@ class SocialOntologyReasoner:
 
         # Rule 2: Stranger Safety Rule (Critical for ASD Training)
         if "stranger" in role_clean:
-            danger_accepted = any(w in text_clean for w in ["sure", "okay", "yes", "go", "puppy", "candy", "chocolate", "car"])
-            safety_refused = any(w in text_clean for w in ["no", "don't", "cant", "cannot", "parent", "mom", "dad", "teacher"])
+            is_safety_scenario = (
+                (scenario_id and self.ontology_service.is_safety_critical(scenario_id))
+                or "SafetyRefusal" in [self.ontology_service.normalize_intent_name(i) for i in constraints.get("expected_intents", [])]
+                or expected_goal == "SafetyRefusal"
+                or any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in ["puppy", "candy", "chocolate", "car", "ride", "lift", "lure"])
+            )
 
-            if danger_accepted and not safety_refused:
-                status = "VIOLATION"
-                details = "CRITICAL SAFETY VIOLATION: Complied with a stranger's request!"
-                violations.append("S_SAFETY_CRITICAL")
-            elif safety_refused:
-                status = "PASS"
-                details = "PASSED SAFETY RULE: Refused stranger and invoked trusted adult."
+            # Match whole tokens to avoid "go" matching "good" or "no" matching "know"
+            danger_words = ["sure", "okay", "yes", "go", "puppy", "candy", "chocolate", "car", "come", "ride"]
+            refusal_words = ["no", "don't", "dont", "cant", "cannot", "parent", "mom", "dad", "teacher", "vendaam", "illa", "maten"]
+
+            danger_accepted = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in danger_words)
+            safety_refused = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in refusal_words)
+
+            if is_safety_scenario:
+                if danger_accepted and not safety_refused:
+                    status = "VIOLATION"
+                    details = "CRITICAL SAFETY VIOLATION: Complied with a stranger's request or offer!"
+                    violations.append("S_SAFETY_CRITICAL")
+                elif safety_refused:
+                    status = "PASS"
+                    details = "PASSED SAFETY RULE: Refused stranger and invoked trusted adult."
+                else:
+                    status = "FAIL"
+                    details = "Unclear safety refusal."
+                    failures.append("S_REFUSAL")
             else:
-                status = "FAIL"
-                details = "Unclear safety refusal."
-                failures.append("S_REFUSAL")
+                # Non-safety stranger interaction (directions, assistance, courtesy)
+                if danger_accepted and not safety_refused and any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in ["candy", "chocolate", "car", "ride"]):
+                    status = "VIOLATION"
+                    details = "CRITICAL SAFETY VIOLATION: Complied with dangerous lure!"
+                    violations.append("S_SAFETY_CRITICAL")
+                else:
+                    status = "PASS"
+                    details = "Addressed stranger politely without safety concerns."
 
             rule_evaluations.append({
                 "id": "ONTOLOGY_STRANGER_SAFETY_RULE",
@@ -148,14 +172,17 @@ class SocialOntologyReasoner:
 
         # Rule 3: Peer & Friend Cooperation Rule
         if "peer" in role_clean or "friend" in role_clean:
-            cooperative = any(w in text_clean for w in ["share", "turn", "together", "sorry", "please", "timer", "minutes", "okay"])
-            hostile = any(w in text_clean for w in ["mine", "no way", "get lost", "move", "go away"])
+            cooperative_words = ["share", "turn", "together", "sorry", "please", "timer", "minutes", "okay", "va", "vaa", "polam", "polaam"]
+            hostile_words = ["mine", "no way", "get lost", "move", "go away", "shut up", "hate"]
+
+            cooperative = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in cooperative_words)
+            hostile = any(re.search(r'\b' + re.escape(w) + r'\b', text_clean) for w in hostile_words)
 
             if hostile:
                 status = "VIOLATION"
                 details = "Hostile or uncooperative social response to peer."
                 violations.append("F_HOSTILE")
-            elif cooperative:
+            elif cooperative or len(text_clean.split()) >= 2:
                 status = "PASS"
                 details = "Cooperative social response promoting sharing/turn-taking."
             else:

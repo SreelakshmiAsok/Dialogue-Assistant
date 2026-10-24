@@ -16,5 +16,47 @@
   "model_answer": "Pannuren da",
   "respect_required": false,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Homework la help pannuva?",
+        "tamil": "ஹோம்வொர்க் ல ஹெல்ப் பண்ணுவா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "required_features": [],
+      "expected_responses": [
+        "Pannuren da",
+        "Seri da",
+        "Va da paappom",
+        "Aama da",
+        "Help pannuren"
+      ],
+      "model_answer": "Pannuren da",
+      "feedback": {
+        "hint": "Respond politely to Friend.",
+        "gentle_correction": "Try saying: 'Pannuren da'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "Your friend is stuck on homework. They ask if you can help.",
+  "topic": "Homework Help"
 }

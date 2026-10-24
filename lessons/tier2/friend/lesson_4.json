@@ -6,7 +6,12 @@
   "skill": "Starting a conversation about interests",
   "learning_objective": "Child engages in a conversation about common interests.",
   "curriculum": {
-    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)"
+    "source": "PEERS® Curriculum for School-Age Children",
+    "module": "Peer Reciprocal Conversation",
+    "target_rules": [
+      "Share your interest when a friend mentions a cartoon",
+      "Engage in reciprocal discussion about favorite characters"
+    ]
   },
   "scenario": "You see your friend watching a cartoon.",
   "initial_prompt": {
@@ -35,7 +40,25 @@
         "english": "Which is your favorite alien?"
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "ShareInterest",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Tell your friend that you like Ben 10 too!",
+        "gentle_correction": "Try saying: 'Enakkum Ben 10 romba pudikkum'"
+      },
+      "expected_intents": [
+        "ShareInterest"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -57,7 +80,26 @@
         "tamil": "ஆஸம்! வா உக்காந்து பாக்கலாம்.",
         "english": "Awesome! Come sit and watch."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "EngageConversation",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "HostileRefusal"
+      ],
+      "feedback": {
+        "hint": "Name your favorite alien like Four Arms or Heatblast.",
+        "gentle_correction": "Try saying: 'Four arms'"
+      },
+      "expected_intents": [
+        "EngageConversation"
+      ],
+      "violates": [
+        "HostileRefusal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

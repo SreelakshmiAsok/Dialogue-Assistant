@@ -16,5 +16,50 @@
   "model_answer": "Bathroom ponum teacher",
   "respect_required": true,
   "difficulty": 2,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Enna venum?",
+        "tamil": "என்ன வேணும்?"
+      },
+      "target_intent": "PoliteRequest",
+      "allowed_intents": [
+        "AnswerQuestion"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "Honorific"
+      ],
+      "expected_responses": [
+        "Bathroom ponum teacher",
+        "Bathroom polama teacher",
+        "Washroom teacher",
+        "May I go teacher",
+        "Permission teacher"
+      ],
+      "model_answer": "Bathroom ponum teacher",
+      "feedback": {
+        "hint": "Respond politely to Teacher.",
+        "gentle_correction": "Try saying: 'Bathroom ponum teacher'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "PoliteRequest"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "You need to go to the bathroom. Teacher asks what you need.",
+  "topic": "Permission"
 }

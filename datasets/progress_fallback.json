@@ -1,0 +1,101 @@
+[
+    {
+        "user_id": "default_user",
+        "interaction_id": "stranger_01",
+        "response": "Straight poonga sir",
+        "correct": "True",
+        "stars": "5",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:03:14.127859+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "father_01",
+        "response": "Varen appa",
+        "correct": "True",
+        "stars": "5",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:03:07.510328+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_01",
+        "response": "ippo varai maa",
+        "correct": "False",
+        "stars": "1",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:04:30.272964+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "friend_01",
+        "response": "Va da, vilayaadalaam",
+        "correct": "True",
+        "stars": "5",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:03:11.833675+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_02",
+        "response": "rompa pidichchaachchu",
+        "correct": "False",
+        "stars": "2",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:08:22.301047+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_03",
+        "response": "ippa tharen mem",
+        "correct": "False",
+        "stars": "1",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:08:47.616705+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_04",
+        "response": "puriyala mem",
+        "correct": "False",
+        "stars": "2",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:09:07.213923+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_05",
+        "response": "aarampikkalaam",
+        "correct": "False",
+        "stars": "2",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:09:24.777141+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_06",
+        "response": "ippa puk oppan pannungka",
+        "correct": "False",
+        "stars": "1",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:09:46.864130+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_07",
+        "response": "poddu paakkalaam",
+        "correct": "False",
+        "stars": "1",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:10:08.547094+00:00"
+    },
+    {
+        "user_id": "default_user",
+        "interaction_id": "teacher_08",
+        "response": "pilding vaad is thi vorking vorkking in thi chens vaad",
+        "correct": "False",
+        "stars": "1",
+        "tier": 1,
+        "timestamp": "2026-10-16T10:10:24.345426+00:00"
+    }
+]

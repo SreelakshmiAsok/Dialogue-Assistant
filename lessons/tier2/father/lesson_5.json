@@ -6,7 +6,12 @@
   "skill": "Morning routine",
   "learning_objective": "Child greets and prepares for school.",
   "curriculum": {
-    "source": "Carol Gray's Social Stories™"
+    "source": "Carol Gray's Social Stories™",
+    "module": "Daily Living Routines",
+    "target_rules": [
+      "Greet parent warmly in the morning",
+      "Acknowledge instruction to get ready promptly"
+    ]
   },
   "scenario": "You wake up in the morning. Appa comes to your room.",
   "initial_prompt": {
@@ -37,7 +42,27 @@
         "english": "Go brush and come, milk is ready."
       },
       "next_turn_id": "turn_2",
-      "is_terminal": false
+      "is_terminal": false,
+      "target_intent": "GreetingPolite",
+      "allowed_intents": [
+        "SocialAcceptance"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Wish Appa a cheerful good morning!",
+        "gentle_correction": "Try saying: 'Good morning appa!'"
+      },
+      "expected_intents": [
+        "GreetingPolite"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": "turn_2"
     },
     {
       "turn_id": "turn_2",
@@ -60,7 +85,28 @@
         "tamil": "சீக்கிரம் வா.",
         "english": "Come quickly."
       },
-      "is_terminal": true
+      "is_terminal": true,
+      "target_intent": "ComplianceConfirmation",
+      "allowed_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violating_intents": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "feedback": {
+        "hint": "Tell Appa you are going to brush your teeth right away.",
+        "gentle_correction": "Try saying: 'Seri appa, idho poren'"
+      },
+      "expected_intents": [
+        "ComplianceConfirmation"
+      ],
+      "violates": [
+        "HostileRefusal",
+        "DisrespectfulInformal"
+      ],
+      "nextTurn": null,
+      "next_turn_id": null
     }
   ]
 }

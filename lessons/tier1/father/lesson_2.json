@@ -10,6 +10,19 @@
     "intent": "AnswerQuestion",
     "meaning": "Indicate whether they have eaten."
   },
+  "expected_answers": [
+    "Saaptaen appa",
+    "Saapten appa",
+    "Saptaen appa",
+    "Sapten appa",
+    "Aama appa",
+    "Illa appa",
+    "Saaptuten appa",
+    "Saaptutten appa",
+    "Naan saaptaen appa",
+    "Naan saapten appa",
+    "Naan chaappidden appa"
+  ],
   "preferred_phrases": [
     "Saaptaen appa",
     "Saapten appa",
@@ -25,5 +38,58 @@
   ],
   "model_answer": "Saaptaen appa",
   "difficulty": 1,
-  "tier": 1
+  "tier": 1,
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Saaptiya?",
+        "tamil": "சாப்பிட்டியா?"
+      },
+      "target_intent": "TaskCompletionConfirmation",
+      "allowed_intents": [
+        "ContextualRequest",
+        "SocialAcceptance",
+        "PoliteRefusal"
+      ],
+      "violating_intents": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "required_features": [
+        "RespectWord"
+      ],
+      "expected_responses": [
+        "Saaptaen appa",
+        "Saapten appa",
+        "Saptaen appa",
+        "Sapten appa",
+        "Aama appa",
+        "Illa appa",
+        "Saaptuten appa",
+        "Saaptutten appa",
+        "Naan saaptaen appa",
+        "Naan saapten appa",
+        "Naan chaappidden appa"
+      ],
+      "model_answer": "Saaptaen appa",
+      "feedback": {
+        "hint": "Respond politely to Father.",
+        "gentle_correction": "Try saying: 'Saaptaen appa'"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "TaskCompletionConfirmation"
+      ],
+      "violates": [
+        "DisrespectfulInformal",
+        "HostileRefusal"
+      ],
+      "nextTurn": null
+    }
+  ],
+  "scenario": "It is lunchtime. Appa asks if you have eaten your food.",
+  "topic": "Meals"
 }
