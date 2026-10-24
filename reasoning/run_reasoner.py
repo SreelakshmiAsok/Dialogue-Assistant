@@ -42,7 +42,7 @@ def run_reasoner(owl_file=None, output_file=None):
 
     java_path = configure_java()
     print("=" * 80)
-    print("TALKWISE OWL BUILD-TIME REASONER (HermiT)")
+    print("NAVIL OWL BUILD-TIME REASONER (HermiT)")
     print("=" * 80)
     print(f"[Reasoner] Java Executable: {java_path}")
     print(f"[Reasoner] Source Ontology: {owl_file}")

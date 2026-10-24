@@ -2,7 +2,7 @@
 """
 dataset/validate_dataset.py
 
-Unified Dataset & Schema Integrity Validator for TalkWise Dialogue Assistant.
+Unified Dataset & Schema Integrity Validator for Navil Dialogue Assistant.
 Validates both Tier 1 and Tier 2 lessons against the Single Graph Schema:
   1. Unique scenario/lesson IDs and turn IDs.
   2. Schema conformity (required fields, prompt structures).
@@ -78,7 +78,7 @@ def validate_all_lessons():
                         errors.append(f"JSON Parse Error in {fpath}: {e}")
 
     print("=" * 80)
-    print(f"TALKWISE UNIFIED DATASET VALIDATOR")
+    print(f"NAVIL UNIFIED DATASET VALIDATOR")
     print(f"Loaded {len(all_lessons)} total lessons for validation.")
     print("=" * 80)
 

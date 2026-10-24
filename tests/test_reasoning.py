@@ -103,7 +103,7 @@ class TestOWLReasoning(unittest.TestCase):
         """(c) A deliberately contradictory test ontology is detected as inconsistent."""
         print("\n--- Test (c): Contradictory ontology inconsistency detection ---")
         world = owlready2.World()
-        test_onto = world.get_ontology("http://test.talkwise.org/contradictory.owl")
+        test_onto = world.get_ontology("http://test.navil.org/contradictory.owl")
 
         with test_onto:
             class Scenario(Thing): pass

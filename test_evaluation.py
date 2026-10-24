@@ -175,7 +175,7 @@ test_cases = [
 ]
 
 print("=" * 70)
-print("TALKWISE ONTOLOGY & SEMANTIC ENGINE COMPREHENSIVE TEST SUITE")
+print("NAVIL ONTOLOGY & SEMANTIC ENGINE COMPREHENSIVE TEST SUITE")
 print("=" * 70)
 
 all_passed = True

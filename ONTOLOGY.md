@@ -1,8 +1,8 @@
-# TalkWise Social Pragmatic Ontology (`ONTOLOGY.md`)
+# Navil Social Pragmatic Ontology (`ONTOLOGY.md`)
 
 ## 1. Ontology Formalism & Overview
 
-The **TalkWise Social Pragmatic Ontology** (`reasoning/social_communication.owl`) is an **OWL 2 DL (Description Logic)** knowledge graph designed to formalize social communication rules, interlocutor relationships, conversational expectations, and pragmatic boundaries for autistic children.
+The **Navil Social Pragmatic Ontology** (`reasoning/social_communication.owl`) is an **OWL 2 DL (Description Logic)** knowledge graph designed to formalize social communication rules, interlocutor relationships, conversational expectations, and pragmatic boundaries for autistic children.
 
 While neural models process surface semantics and embeddings, the **Ontology provides the normative standard**:
 - It dictates **what a communicative turn means** in a given context.

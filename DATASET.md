@@ -1,8 +1,8 @@
-# TalkWise Social Communication Dataset (`DATASET.md`)
+# Navil Social Communication Dataset (`DATASET.md`)
 
 ## 1. Overview & Clinical Grounding
 
-The **TalkWise Social Communication Dataset** is a bilingual (Tamil & Tanglish) social-pragmatic dialogue training corpus engineered specifically for autistic children and speech-language therapy.
+The **Navil Social Communication Dataset** is a bilingual (Tamil & Tanglish) social-pragmatic dialogue training corpus engineered specifically for autistic children and speech-language therapy.
 
 Standard language models and generic conversational datasets evaluate interactions purely on syntactic fluency or statistical likelihood. In contrast, autistic children frequently struggle with **context-sensitive pragmatic rules**, such as:
 - Using appropriate honorifics with authority figures (Teacher, Parents, Elders).

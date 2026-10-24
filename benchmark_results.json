@@ -51,7 +51,7 @@
       }
     },
     {
-      "variant": "Variant C: TalkWise Dataset-OWL Hybrid",
+      "variant": "Variant C: Navil Dataset-OWL Hybrid",
       "total": 125,
       "accuracy": 78.4,
       "macro_f1": 79.7,

@@ -1,5 +1,5 @@
 """
-TalkWise Benchmark Evaluation Suite
+Navil Benchmark Evaluation Suite
 Evaluates 120+ labelled responses across:
   1. Correct responses (socially appropriate, meets scenario expectations)
   2. Incorrect responses (off-topic, semantically wrong, incomplete communication)
@@ -8,7 +8,7 @@ Evaluates 120+ labelled responses across:
 Compares three algorithmic variants:
   - Variant A: Pure String & N-gram Text Similarity Baseline (no ontology, no intent verification)
   - Variant B: Heuristic Rules & Intent Classifier Only (no scenario-linked OWL knowledge graph)
-  - Variant C: Hybrid Dataset-Linked OWL Ontology + Semantic Engine (Full TalkWise Architecture)
+  - Variant C: Hybrid Dataset-Linked OWL Ontology + Semantic Engine (Full Navil Architecture)
 """
 
 import os
@@ -271,7 +271,7 @@ def run_variant_b(item):
 
 def run_variant_c(item):
     """
-    Variant C: TalkWise Full Architecture.
+    Variant C: Navil Full Architecture.
     Dataset-Generated OWL Individuals + Multi-Signal Verification + Token Pragmatics.
     """
     inp = item["input"]
@@ -399,7 +399,7 @@ def main():
     results = []
     results.append(evaluate_variant("Variant A: Pure Similarity Baseline", run_variant_a, BENCHMARK_ITEMS))
     results.append(evaluate_variant("Variant B: NLP Heuristics & Keywords", run_variant_b, BENCHMARK_ITEMS))
-    results.append(evaluate_variant("Variant C: TalkWise Dataset-OWL Hybrid", run_variant_c, BENCHMARK_ITEMS))
+    results.append(evaluate_variant("Variant C: Navil Dataset-OWL Hybrid", run_variant_c, BENCHMARK_ITEMS))
 
     print("\n" + "=" * 80)
     print("BENCHMARK EVALUATION RESULTS TABLE")

@@ -1,5 +1,5 @@
 @echo off
-title TalkWise - Social Skills Dialogue Assistant
+title Navil - Social Skills Dialogue Assistant
 echo ===================================================
 echo Starting Dialogue Assistant (Backend & Frontend)...
 echo ===================================================

@@ -1,5 +1,5 @@
 # Current Project Structure
-This document reflects the actual, current state of the TalkWise/Samvaad codebase as verified.
+This document reflects the actual, current state of the Navil/Samvaad codebase as verified.
 
 ## 1. High-Level Folder Tree
 ```text

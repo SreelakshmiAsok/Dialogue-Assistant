@@ -1,10 +1,10 @@
-# TalkWise Unified Dialogue & Graph Schema
+# Navil Unified Dialogue & Graph Schema
 
 ## Overview
 
 In accordance with the architectural plan to remove domain knowledge written as `if/else` code, **Tier 1 (Single-turn Foundations)** and **Tier 2 (Multi-turn Milestones)** now run on a **single, unified graph schema**.
 
-Every interaction in TalkWise is modeled as a `CommunicationScenario` comprised of one or more sequential or branching `turns`.
+Every interaction in Navil is modeled as a `CommunicationScenario` comprised of one or more sequential or branching `turns`.
 
 ---
 

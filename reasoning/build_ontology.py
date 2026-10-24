@@ -1,6 +1,6 @@
 """
 Script to build and enrich social_communication.owl with scenario-aware,
-context-aware, and intent-aware domain knowledge for TalkWise.
+context-aware, and intent-aware domain knowledge for Navil.
 """
 
 import os

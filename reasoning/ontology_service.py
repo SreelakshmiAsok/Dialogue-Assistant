@@ -1,5 +1,5 @@
 """
-Ontology Service for TalkWise.
+Ontology Service for Navil.
 Queries social_communication.owl using Owlready2 to provide context-aware,
 scenario-aware, and intent-aware semantic reasoning.
 """
