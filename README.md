@@ -7,7 +7,7 @@
 
 **Navil** (Semantic Dialogue Assistant) is an interactive, application-based assistive platform designed to support children with Autism Spectrum Disorder (ASD) in developing real-time social communication skills.
 
-Children with ASD often encounter challenges in recognizing social contexts, understanding the role of their interlocutor (e.g., Teacher, Parent, Friend, or Stranger), and formulating appropriate verbal responses. **SocialBuddy** bridges this gap by combining real-time multimodal perception, ontology-based semantic web reasoning (OWL/SWRL), RAG vector similarity matching, visual AAC (Augmentative and Alternative Communication) cards, and eye-contact attention tracking.
+Children with ASD often encounter challenges in recognizing social contexts, understanding the role of their interlocutor (e.g., Teacher, Parent, Friend, or Stranger), and formulating appropriate verbal responses. **Navil** bridges this gap by combining real-time multimodal perception, ontology-based semantic web reasoning (OWL/SWRL), RAG vector similarity matching, visual AAC (Augmentative and Alternative Communication) cards, and eye-contact attention tracking.
 
 ---
 
@@ -33,7 +33,7 @@ Children with ASD often encounter challenges in recognizing social contexts, und
 ```mermaid
 flowchart TD
     subgraph Client["1. Web Client & Visual Interface (HTML5 / CSS / JS)"]
-        UI["SocialBuddy Stage UI"]
+        UI["Navil Stage UI"]
         AAC["AAC Visual Cartoon Cards"]
         TTS["Speech Synthesis & Audio Player"]
         STT["Web Speech Recognition API"]
