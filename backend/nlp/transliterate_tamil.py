@@ -1,4 +1,8 @@
-import tamil
+try:
+    import tamil
+    import tamil.utf8
+except ImportError:
+    tamil = None
 
 TAMIL_TO_TANGLISH_MAP = {
     'அ': 'a', 'ஆ': 'aa', 'இ': 'i', 'ஈ': 'ee', 'உ': 'u', 'ஊ': 'oo', 'எ': 'e', 'ஏ': 'e', 'ஐ': 'ai', 'ஒ': 'o', 'ஓ': 'o', 'ஔ': 'au',
@@ -22,11 +26,6 @@ TAMIL_TO_TANGLISH_MAP = {
     'க்ஷ': 'ksha', 'க்ஷி': 'kshi', 'க்ஷீ': 'kshee', 'க்ஷு': 'kshu', 'க்ஷூ': 'kshoo', 'க்ஷெ': 'kshe', 'க்ஷே': 'kshe', 'க்ஷை': 'kshai', 'க்ஷொ': 'ksho', 'க்ஷோ': 'ksho', 'க்ஷௌ': 'kshau',
     'ஜ்': 'j', 'ஷ்': 'sh', 'ஸ்': 's', 'ஹ்': 'h', 'க்ஷ்': 'ksh'
 }
-
-try:
-    import tamil.utf8
-except ImportError:
-    pass
 
 def to_tanglish(text):
     """Accurately maps Tamil script to Tanglish phonetics."""
