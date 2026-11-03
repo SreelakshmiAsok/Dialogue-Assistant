@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setToken, getParentToken, getToken } from "@/lib/auth";
+import { API_BASE } from "@/lib/api";
 
 export default function ParentTeacherModal({
   isOpen,
@@ -32,7 +33,7 @@ export default function ParentTeacherModal({
     const tokenToUse = getParentToken() || getToken() || "";
 
     try {
-      const res = await fetch("http://127.0.0.1:5001/api/auth/verify-password", {
+      const res = await fetch(`${API_BASE}/auth/verify-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

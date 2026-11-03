@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getToken, setToken, getAuthHeaders, getRole, clearAuth } from "@/lib/auth";
+import { API_BASE } from "@/lib/api";
 
 export default function Profiles() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function Profiles() {
 
     const fetchChildren = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:5001/api/parents/children", {
+        const res = await fetch(`${API_BASE}/parents/children`, {
           headers: getAuthHeaders(),
         });
         if (!res.ok) throw new Error("Failed to load");
@@ -35,7 +36,7 @@ export default function Profiles() {
 
   const handleAssumeChild = async (childId: string) => {
     try {
-      const res = await fetch("http://127.0.0.1:5001/api/auth/assume-child", {
+      const res = await fetch(`${API_BASE}/auth/assume-child`, {
         method: "POST",
         headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify({ child_id: childId }),

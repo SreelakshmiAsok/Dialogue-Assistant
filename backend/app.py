@@ -3,9 +3,22 @@
 # For autistic children
 # ============================================================
 
+import os
+import sys
+
+# Ensure backend and reasoning directories are always in sys.path
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+root_dir = os.path.dirname(backend_dir)
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+reasoning_path = os.path.join(root_dir, "reasoning")
+if reasoning_path not in sys.path:
+    sys.path.insert(0, reasoning_path)
+
 from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
-import os
 import subprocess
 import hashlib
 from core.db import get_tier2_lessons_for_character, get_tier2_lesson_by_id
@@ -726,11 +739,13 @@ def api_tier2_evaluate_turn():
 # ============================================================
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5001))
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() in ("true", "1")
     print("=" * 60)
     print("[*] Social Skills Dialogue Assistant")
     print("   For autistic children")
     print("=" * 60)
-    print("Open http://localhost:5001 in your browser")
+    print(f"[*] Running on port {port} (debug={debug})")
     print("=" * 60)
 
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    app.run(debug=debug, host="0.0.0.0", port=port)

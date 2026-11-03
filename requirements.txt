@@ -5,6 +5,7 @@ werkzeug>=3.0.0
 pydantic>=2.0.0
 python-dotenv>=1.0.0
 PyJWT>=2.8.0
+gunicorn>=21.2.0
 
 # Speech Synthesis (TTS)
 edge-tts>=7.3.1

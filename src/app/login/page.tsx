@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/lib/auth";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 export default function Login() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await fetch("http://127.0.0.1:5001/api/auth/login", {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

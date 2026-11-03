@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getToken, getRole, getAuthHeaders } from "@/lib/auth";
+import { API_BASE } from "@/lib/api";
 
 export default function ParentAccess() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function ParentAccess() {
     setError("");
 
     try {
-      const res = await fetch("http://127.0.0.1:5001/api/auth/verify-password", {
+      const res = await fetch(`${API_BASE}/auth/verify-password`, {
         method: "POST",
         headers: {
           ...getAuthHeaders(),

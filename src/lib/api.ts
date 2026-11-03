@@ -79,7 +79,9 @@ export interface Tier2EvaluationResult {
   transcribed_tamil: string;
 }
 
-const API_BASE = "http://127.0.0.1:5001/api";
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/api`
+  : "/api";
 import { getAuthHeaders, getRole } from "./auth";
 
 export async function fetchCharacters(): Promise<Character[]> {

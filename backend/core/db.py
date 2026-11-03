@@ -33,18 +33,23 @@ class Database:
                     ca = None
 
                 # Use environment variable for MongoDB Atlas or fallback to local
-                mongo_uri = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
+                mongo_uri = os.environ.get("MONGO_URI", "").strip()
                 
-                if ca:
-                    self.client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000, tlsCAFile=ca)
+                # Check if uri is valid and not a placeholder
+                if mongo_uri and not mongo_uri.startswith("<") and not "your mongodb" in mongo_uri.lower() and (mongo_uri.startswith("mongodb://") or mongo_uri.startswith("mongodb+srv://")):
+                    if ca:
+                        self.client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000, tlsCAFile=ca)
+                    else:
+                        self.client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
+                        
+                    self.client.admin.command('ping')
+                    self.db = self.client["dialogue_assistant"]
+                    self.use_fallback = False
+                    self._seed_mongodb_if_empty()
+                    print("[DB] Connected to MongoDB.")
                 else:
-                    self.client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
-                    
-                self.client.admin.command('ping')
-                self.db = self.client["dialogue_assistant"]
-                self.use_fallback = False
-                self._seed_mongodb_if_empty()
-                print("[DB] Connected to MongoDB.")
+                    print("[DB] No valid MONGO_URI configured. Using local JSON fallback.")
+                    self.use_fallback = True
             except (ConnectionFailure, ServerSelectionTimeoutError, Exception) as e:
                 print(f"[DB] MongoDB not available ({e}). Using local JSON fallback.")
                 self.use_fallback = True
