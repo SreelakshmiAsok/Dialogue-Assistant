@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getToken, getRole, clearAuth } from "@/lib/auth";
+import { API_BASE } from "@/lib/api";
 import ParentTeacherModal from "@/components/ParentTeacherModal";
 
 export default function WelcomeHome() {
@@ -19,6 +20,8 @@ export default function WelcomeHome() {
       token: getToken(),
       role: getRole(),
     });
+    // Wake up Render backend in the background as soon as user lands on home
+    fetch(`${API_BASE}/characters`).catch(() => {});
   }, []);
 
   const handleStart = () => {

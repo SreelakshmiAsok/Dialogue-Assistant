@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
@@ -14,14 +14,22 @@ export default function Register() {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Wake up Render backend in the background while user fills form
+  useEffect(() => {
+    fetch(`${API_BASE}/characters`).catch(() => {});
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     if (!confirmed) {
       setError("Please confirm you are a parent or educator.");
       return;
     }
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_BASE}/auth/register`, {
@@ -35,7 +43,13 @@ export default function Register() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Server is still waking up — please try again in a few seconds.");
+      }
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
       setSuccess(true);
@@ -43,7 +57,9 @@ export default function Register() {
         router.push("/login");
       }, 1500);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Unable to reach server. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,8 +137,12 @@ export default function Register() {
               I confirm that I am a parent, guardian, or educator setting up this account for a child.
             </label>
           </div>
-          <button type="submit" className="w-full bg-primary text-on-primary py-3 rounded-full font-bold mt-2 shadow-md">
-            Create Account
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary text-on-primary py-3 rounded-full font-bold mt-2 shadow-md disabled:opacity-60 cursor-pointer"
+          >
+            {loading ? "Creating account... (waking server)" : "Create Account"}
           </button>
         </form>
 

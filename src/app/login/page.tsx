@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { setToken } from "@/lib/auth";
 import Link from "next/link";
@@ -11,10 +11,18 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Wake up Render backend in the background while user types credentials
+  useEffect(() => {
+    fetch(`${API_BASE}/characters`).catch(() => {});
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
@@ -23,7 +31,13 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Server is still waking up — please try again in a few seconds.");
+      }
       if (!res.ok) throw new Error(data.error || "Login failed");
 
       setToken(data.access_token, data.role);
@@ -34,7 +48,9 @@ export default function Login() {
         router.push("/choose-friend");
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Unable to reach server. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,8 +92,12 @@ export default function Login() {
               required 
             />
           </div>
-          <button type="submit" className="w-full bg-primary text-on-primary py-3 rounded-full font-bold mt-2 shadow-md">
-            Sign In
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary text-on-primary py-3 rounded-full font-bold mt-2 shadow-md disabled:opacity-60 cursor-pointer"
+          >
+            {loading ? "Signing in... (waking server)" : "Sign In"}
           </button>
         </form>
 
