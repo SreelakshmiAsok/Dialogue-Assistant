@@ -126,12 +126,6 @@ export default function WelcomeHome() {
 
       {/* Main Hero Content */}
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-8 relative z-10 max-w-5xl mx-auto w-full text-center">
-        {/* Welcome Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-container/70 text-on-secondary-container text-[13px] font-bold mb-6 shadow-sm animate-bounce-gentle">
-          <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
-          <span>Bilingual English &amp; Tamil Dialogue Practice</span>
-        </div>
-
         {/* Hero Title & Subtitle */}
         <h1 className="text-[40px] leading-[50px] sm:text-[56px] sm:leading-[66px] md:text-[68px] md:leading-[78px] font-bold text-on-surface tracking-tight max-w-3xl">
           Welcome to <span className="text-primary font-extrabold">Navil</span>
