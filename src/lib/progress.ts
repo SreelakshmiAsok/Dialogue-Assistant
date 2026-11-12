@@ -13,8 +13,10 @@ function getStorageKey(): string {
   try {
     const token = getToken();
     if (token) {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      const uid = payload.sub || payload.user_id || payload.id || payload.email;
+      const part = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const padded = part + "=".repeat((4 - (part.length % 4)) % 4);
+      const payload = JSON.parse(atob(padded));
+      const uid = payload.user_id || payload.sub || payload.id || payload.email;
       if (uid) return `dialogue_roadmap_progress_${uid}`;
     }
   } catch {
