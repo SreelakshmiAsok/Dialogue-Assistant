@@ -102,13 +102,20 @@ export async function evaluateAnswer(
   questionId: string,
   response: string
 ): Promise<EvaluationResult> {
-  const res = await fetch(`${API_BASE}/evaluate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...getAuthHeaders() },
-    body: JSON.stringify({ question_id: questionId, response }),
-  });
-  if (!res.ok) throw new Error("Failed to evaluate answer");
-  return res.json();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 35000);
+  try {
+    const res = await fetch(`${API_BASE}/evaluate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+      body: JSON.stringify({ question_id: questionId, response }),
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error("Failed to evaluate answer");
+    return res.json();
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export function getAudioUrl(questionId: string): string {

@@ -1,3 +1,5 @@
+import { getToken } from "./auth";
+
 export interface CharacterProgress {
   completedLessons: string[];
   lessonStars: Record<string, number>;
@@ -6,7 +8,20 @@ export interface CharacterProgress {
 
 export type RoadmapProgress = Record<string, CharacterProgress>;
 
-const STORAGE_KEY = "dialogue_roadmap_progress";
+function getStorageKey(): string {
+  if (typeof window === "undefined") return "dialogue_roadmap_progress";
+  try {
+    const token = getToken();
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const uid = payload.sub || payload.user_id || payload.id || payload.email;
+      if (uid) return `dialogue_roadmap_progress_${uid}`;
+    }
+  } catch {
+    // fallback if token cannot be decoded
+  }
+  return "dialogue_roadmap_progress_guest";
+}
 
 const defaultProgress: CharacterProgress = {
   completedLessons: [],
@@ -17,7 +32,7 @@ const defaultProgress: CharacterProgress = {
 export function getRoadmapProgress(): RoadmapProgress {
   if (typeof window === "undefined") return {};
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(getStorageKey());
     if (data) {
       return JSON.parse(data);
     }
@@ -68,7 +83,7 @@ export function saveLessonCompletion(
   }
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(allProgress));
+    localStorage.setItem(getStorageKey(), JSON.stringify(allProgress));
   } catch (e) {
     console.error("Failed to save roadmap progress", e);
   }

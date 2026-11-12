@@ -9,6 +9,7 @@ export default function Profiles() {
   const router = useRouter();
   const [children, setChildren] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const role = getRole();
@@ -22,11 +23,20 @@ export default function Profiles() {
         const res = await fetch(`${API_BASE}/parents/children`, {
           headers: getAuthHeaders(),
         });
-        if (!res.ok) throw new Error("Failed to load");
+        if (res.status === 401 || res.status === 403) {
+          clearAuth();
+          router.push("/login");
+          return;
+        }
+        if (!res.ok) {
+          setError("Could not load child profiles. Please make sure the backend server is running.");
+          return;
+        }
         const data = await res.json();
         setChildren(data.children || []);
       } catch (e) {
         console.error(e);
+        setError("Could not reach the server. Please make sure the backend is running.");
       } finally {
         setLoading(false);
       }
@@ -88,6 +98,12 @@ export default function Profiles() {
         <p className="text-on-surface-variant text-[15px] md:text-[16px] mb-10 text-center">
           Select who is learning today or manage settings
         </p>
+
+        {error && (
+          <div className="bg-error-container text-on-error-container px-4 py-3 rounded-xl mb-6 text-sm font-medium text-center max-w-md">
+            {error}
+          </div>
+        )}
       
       <div className="flex flex-wrap gap-8 justify-center">
         {/* Parent Dashboard Profile */}
