@@ -38,6 +38,7 @@ from engines.sentiment_engine import analyze_sentiment
 from nlp.preprocessing import normalize_text
 from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
+from nlp.repetition import is_echo, repetition_reply
 from nlp.tanglish_tts_helper import tanglish_resolver
 from data.tier1_tamil import story_tamil, feedback_tamil as t1_feedback_tamil
 from core.roadmap_store import get_roadmap, merge_and_save_roadmap
@@ -61,6 +62,16 @@ ontology_reasoner = SocialOntologyReasoner()
 
 def has_tamil(text):
     return bool(re.search(r'[\u0B80-\u0BFF]', text))
+
+
+def _computer_lines(*texts):
+    """The computer's preceding line(s) as Tanglish (Tamil script is transliterated) for echo checks."""
+    out = []
+    for t in texts:
+        if not t:
+            continue
+        out.append(to_tanglish(t) if has_tamil(t) else t)
+    return out
 
 app = Flask(__name__)
 CORS(app)
@@ -442,6 +453,33 @@ def api_evaluate():
         })
 
     normalized = normalize_text(response)
+
+    # --------------------------------------------------------
+    # Step 0: Echo check. If the child just repeated the computer's line, nudge them to answer in
+    # their own words. Not scored, not saved: they simply get another turn.
+    # --------------------------------------------------------
+    computer_lines = _computer_lines(
+        question.get("question_tanglish"), question.get("question_tamil")
+    )
+    if is_echo(response, computer_lines, expected_answers):
+        reply = repetition_reply(
+            data.get("repeat_count", 0), model_answer, last_feedback=data.get("last_feedback")
+        )
+        return jsonify({
+            "correct": False,
+            "repeated": True,
+            "stars": 0,
+            "feedback": reply["feedback"],
+            "feedback_tamil": reply["feedback_tamil"],
+            "suggestion": reply["suggestion"],
+            "model_answer": model_answer,
+            "encouragement": "",
+            "transcribed_text": transcribed_tanglish,
+            "transcribed_tamil": transcribed_tamil,
+            "semantic_score": 0.0,
+            "nlp_similarity": 0.0,
+            "sentiment": "Neutral"
+        })
 
     # --------------------------------------------------------
     # Step 1: Check inappropriate language
@@ -887,6 +925,38 @@ def api_tier2_evaluate_turn():
         response = to_tanglish(response)
         transcribed_tanglish = response
         
+    # Echo check: the computer's immediately preceding line is this turn's prompt (and the
+    # previous turn's reply). Repetition is neither right nor wrong: no score, no retry used.
+    prompt = turn.get("prompt") or {}
+    idx = lesson["turns"].index(turn)
+    prev_reply = (lesson["turns"][idx - 1].get("next_character_reply") or {}) if idx > 0 else {}
+    lines = _computer_lines(
+        prompt.get("tanglish"), prompt.get("tamil"),
+        prev_reply.get("tanglish"), prev_reply.get("tamil"),
+    )
+    if is_echo(response, lines, turn.get("expected_responses", [])):
+        reply = repetition_reply(
+            data.get("repeat_count", 0),
+            turn.get("model_answer", ""),
+            turn.get("model_answer_tamil", ""),
+            last_feedback=data.get("last_feedback"),
+        )
+        return jsonify({
+            "correct": False,
+            "repeated": True,
+            "stars_awarded": 0,
+            "feedback": reply["feedback"],
+            "feedback_tamil": reply["feedback_tamil"],
+            "final_appreciation_tamil": "",
+            "suggestion": reply["suggestion"],
+            "next_character_reply": None,
+            "next_turn_id": turn_id,
+            "is_completed": False,
+            "scores": {"politeness": 0, "safety": 0, "relevance": 0},
+            "transcribed_text": transcribed_tanglish,
+            "transcribed_tamil": transcribed_tamil,
+        })
+
     # Evaluate
     result = evaluate_tier2_turn(lesson, turn, response, retry_count)
     try:

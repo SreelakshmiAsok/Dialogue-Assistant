@@ -23,6 +23,7 @@ export interface Question {
 
 export interface EvaluationResult {
   correct: boolean;
+  repeated?: boolean; // the child only echoed the computer: not scored, try again
   stars: number;
   feedback: string;
   feedback_tamil?: string;
@@ -96,6 +97,7 @@ export interface Tier2Lesson {
 
 export interface Tier2EvaluationResult {
   correct: boolean;
+  repeated?: boolean; // the child only echoed the computer: not scored, no retry used
   stars_awarded: number;
   feedback: string;
   feedback_tamil?: string;
@@ -134,7 +136,9 @@ export async function fetchQuestions(character: string): Promise<Question[]> {
 
 export async function evaluateAnswer(
   questionId: string,
-  response: string
+  response: string,
+  repeatCount = 0,
+  lastFeedback?: string
 ): Promise<EvaluationResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 35000);
@@ -142,7 +146,7 @@ export async function evaluateAnswer(
     const res = await fetch(`${API_BASE}/evaluate`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...getAuthHeaders() },
-      body: JSON.stringify({ question_id: questionId, response }),
+      body: JSON.stringify({ question_id: questionId, response, repeat_count: repeatCount, last_feedback: lastFeedback }),
       signal: controller.signal,
     });
     if (!res.ok) throw new Error("Failed to evaluate answer");
@@ -228,12 +232,14 @@ export async function evaluateTier2Turn(
   lessonId: string,
   turnId: string,
   response: string,
-  retryCount: number
+  retryCount: number,
+  repeatCount = 0,
+  lastFeedback?: string
 ): Promise<Tier2EvaluationResult> {
   const res = await fetch(`${API_BASE}/tier2/evaluate-turn`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeaders() },
-    body: JSON.stringify({ lesson_id: lessonId, turn_id: turnId, response, retry_count: retryCount }),
+    body: JSON.stringify({ lesson_id: lessonId, turn_id: turnId, response, retry_count: retryCount, repeat_count: repeatCount, last_feedback: lastFeedback }),
   });
   if (!res.ok) throw new Error("Failed to evaluate tier 2 turn");
   return res.json();

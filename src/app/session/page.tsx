@@ -48,6 +48,9 @@ function Tier1SessionContent() {
   const listenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const submitRef = useRef<(answer: string) => void>(() => {});
   const [micNotice, setMicNotice] = useState("");
+  const [repeatNotice, setRepeatNotice] = useState(""); // gentle "say it in your own words" reminder
+  const repeatCountRef = useRef(0); // echoes in a row for this question
+  const lastRepeatRef = useRef("");
 
   // Turn the microphone OFF and invalidate any pending auto-listen. Safe to call at any time.
   const abortListening = useCallback(() => {
@@ -241,8 +244,26 @@ function Tier1SessionContent() {
     setEvaluation(null);
 
     try {
-      const result = await evaluateAnswer(currentQuestion.id, answer);
+      const result = await evaluateAnswer(
+        currentQuestion.id, answer, repeatCountRef.current, lastRepeatRef.current || undefined
+      );
       if (!mountedRef.current) return; // user already left Tier 1
+      if (result.repeated) {
+        // Echo of the computer: no score, no result card. Remind gently and listen again.
+        repeatCountRef.current += 1;
+        lastRepeatRef.current = result.feedback;
+        setRepeatNotice(result.suggestion ? `${result.feedback} 💡 ${result.suggestion}` : result.feedback);
+        if (result.feedback_tamil) {
+          playSequence([{ url: getTtsAudioUrl(result.feedback_tamil, "Result"), text: result.feedback_tamil }])
+            .then(listenAfterSpeech);
+        } else {
+          setTimeout(() => listenAfterSpeech("done"), 0);
+        }
+        return;
+      }
+      repeatCountRef.current = 0;
+      lastRepeatRef.current = "";
+      setRepeatNotice("");
       evaluationShownRef.current = true;
       setEvaluation(result);
       playTamilResult(result.feedback_tamil);
@@ -272,7 +293,7 @@ function Tier1SessionContent() {
       evaluatingRef.current = false;
       setIsEvaluating(false);
     }
-  }, [currentQuestion, playTamilResult, abortListening]);
+  }, [currentQuestion, playTamilResult, abortListening, listenAfterSpeech]);
 
   // Keep the latest submitAnswer reachable from long-lived recognition callbacks
   useEffect(() => {
@@ -327,6 +348,9 @@ useEffect(() => {
   const handleNext = () => {
     abortListening();
     evaluationShownRef.current = false;
+    repeatCountRef.current = 0;
+    lastRepeatRef.current = "";
+    setRepeatNotice("");
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       setEvaluation(null);
@@ -555,6 +579,12 @@ useEffect(() => {
                   )}
                 </div>
                 
+                {repeatNotice && (
+                  <div className="relative z-10 mb-4 max-w-sm text-center bg-secondary-container/95 text-on-secondary-container border border-secondary/30 rounded-2xl px-4 py-2 shadow-sm">
+                    <p className="text-[15px] font-bold">🗣️ {repeatNotice}</p>
+                  </div>
+                )}
+
                 {/* Mic Button */}
                 <button 
                   onClick={handleMicTap}
@@ -623,6 +653,8 @@ function Tier2SessionContent() {
     { speaker: "character" | "child"; text: string; tamilText?: string; englishText?: string }[]
   >([]);
   const [retryCount, setRetryCount] = useState(0);
+  const repeatCountRef = useRef(0); // echoes in a row on this turn (not a failed attempt)
+  const lastRepeatRef = useRef("");
 
   const [isListening, setIsListening] = useState(false);
   const [sttText, setSttText] = useState("");
@@ -932,9 +964,24 @@ function Tier2SessionContent() {
       setEvaluation(null);
 
       try {
-        const result = await evaluateTier2Turn(lesson.id, currentTurnId, answer, retryCount);
+        const result = await evaluateTier2Turn(
+          lesson.id, currentTurnId, answer, retryCount, repeatCountRef.current, lastRepeatRef.current || undefined
+        );
         if (!mountedRef.current) return; // user already left the lesson
         setEvaluation(result);
+        if (result.repeated) {
+          // Echo of the computer: not a success or a failure. Keep retryCount, remind, listen again.
+          repeatCountRef.current += 1;
+          lastRepeatRef.current = result.feedback;
+          if (result.feedback_tamil) {
+            playAudioSequence([{ text: result.feedback_tamil, character: "Result" }]).then(listenAfterSpeech);
+          } else {
+            setTimeout(() => listenAfterSpeech("done"), 0);
+          }
+          return;
+        }
+        repeatCountRef.current = 0;
+        lastRepeatRef.current = "";
 
         // NO appreciation after individual answers. Only hints / gentle redirects are spoken
         // (feedback_tamil is empty for a normal correct answer).
@@ -1207,14 +1254,14 @@ function Tier2SessionContent() {
 
           {/* Gentle Hint / Correction Card */}
           {evaluation && !evaluation.correct && (
-            <div className="bg-error-container/90 text-on-error-container p-3 rounded-2xl mt-2 max-w-md mx-auto text-center shadow-sm border border-error/30">
+            <div className={`p-3 rounded-2xl mt-2 max-w-md mx-auto text-center shadow-sm border ${evaluation.repeated ? 'bg-secondary-container/95 text-on-secondary-container border-secondary/30' : 'bg-error-container/90 text-on-error-container border-error/30'}`}>
               <p className="font-bold text-[13px]">{evaluation.feedback}</p>
               {evaluation.suggestion && (
                 <p className="text-[12px] font-medium opacity-90 mt-0.5">💡 {evaluation.suggestion}</p>
               )}
               <button
                 onClick={() => setEvaluation(null)}
-                className="mt-2 px-4 py-1 bg-error text-on-error rounded-full font-bold text-[12px] shadow-sm active:scale-95"
+                className={`mt-2 px-4 py-1 rounded-full font-bold text-[12px] shadow-sm active:scale-95 ${evaluation.repeated ? 'bg-primary text-on-primary' : 'bg-error text-on-error'}`}
               >
                 Try Again
               </button>
