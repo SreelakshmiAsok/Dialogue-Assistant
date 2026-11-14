@@ -249,14 +249,14 @@ def extract_linguistic_features(text):
     # --- Affirmative polarity markers ---
     # These are agreement signals, not specific correct answers.
     # "Seri" means "okay/alright" — it signals affirmative intent.
-    affirmative_tokens = {"seri", "sari", "aama", "ama", "ok", "okay", "yes", "yeah"}
+    affirmative_tokens = {"seri", "sari", "aama", "ama", "ok", "okay", "yes", "yeah", "sure", "fine", "alright", "kandippa"}
     has_affirmative = bool(tokens & affirmative_tokens)
 
     # --- Come / invitation-acceptance markers ---
     # "Vaa" / "Va" is the Tamil imperative for "come".
     # Responding with "vaa" to "shall we play?" signals acceptance.
     # "Polaam" means "let's go" — also signals acceptance.
-    come_tokens = {"vaa", "va", "polaam", "polam", "polaama", "vaalaam"}
+    come_tokens = {"vaa", "va", "polaam", "polam", "polaama", "vaalaam", "lets", "let's", "coming", "varen", "varaen"}
     has_come_marker = bool(tokens & come_tokens)
 
     # --- Activity verb markers (hortative -laam forms) ---
@@ -447,6 +447,126 @@ def aligns_with_required_meaning(text, meaning, intent=""):
 
 
 # ============================================================
+# DIALOGUE-ACT ALIGNMENT (meaning stage, data-driven)
+#
+# Instead of requiring the child to repeat one reference sentence, we ask:
+# "does the response perform the same communicative act as the lesson's
+# accepted answers?"  Acts are inferred from the lesson's OWN expected answers
+# (no per-question hard-coding), with tolerant token matching so spelling /
+# transliteration / speech-to-text variants ("purinjithu", "veladlam") still count.
+# ============================================================
+
+_ACT_WORDS = {
+    "affirm": ["seri", "sari", "ok", "okay", "yes", "yeah", "yep", "aama", "ama", "aam", "sure",
+               "fine", "correct", "kandippa", "definitely", "alright", "ofcourse"],
+    "understand": ["purinjuthu", "puriyudhu", "puriyum", "understood", "understand", "gotit"],
+    "ready": ["ready", "redy"],
+    "complete": ["done", "finished", "completed", "finish", "complete"],
+    "comego": ["varen", "varaen", "varan", "varuven", "vaa", "va", "polaam", "polam", "polaama",
+               "coming", "lets", "let's", "shall", "vilayaadalaam"],
+    "thanks": ["nandri", "nanri", "thanks", "thank", "thankyou", "tq"],
+    "sorry": ["sorry", "mannichidunga"],
+    "refuse": ["illa", "venam", "vendam", "vendaam", "venaam", "no", "nope", "mudiyadhu", "mudiyathu",
+               "maten", "maaten", "varala", "mattaen"],
+    "unknown": ["theriyadhu", "theriyathu", "theriyala", "therila"],
+    # a reason for declining ("I'm tired now"); only meaningful as an answer to a yes/no question
+    "decline_reason": ["tired", "sleepy", "busy", "tiredness"],
+    "direction": ["left", "right", "straight", "munnadi", "munnaadi", "pakkathula", "anga", "angae",
+                  "signal", "near", "opposite"],
+}
+# (tag, regex, min token length): stems that cover inflections / spelling variants
+_ACT_STEMS = [
+    ("complete", r"^mudi", 5),
+    ("understand", r"^(purin|puriy)", 6),
+    ("comego", r"(laam|lam)$", 6),
+    ("comego", r"^(vilay|velad|vilai|vilaid)", 6),
+    ("ate", r"^(saap|sapt|chaap)", 5),
+]
+_ACK_ACTS = {"affirm", "understand", "ready", "complete", "comego", "ate"}
+# Generic acknowledgements usable for ANY affirmative expected answer. "comego" (let's go/play,
+# I'm coming) answers an invitation, so it only counts when the lesson itself expects it.
+_GENERIC_ACK = {"affirm", "understand", "ready", "complete"}
+_LOCATION_ACTS = {"direction", "unknown"}
+
+
+def dialogue_acts(text):
+    """Set of communicative-act tags found in text (tolerant to spelling/STT variants)."""
+    from difflib import get_close_matches
+
+    n = normalize_text(text)
+    if not n:
+        return set()
+    tokens = re.findall(r"[a-z']+", n)
+    tags = set()
+    if re.search(r"don'?t know|do not know|not sure", n):
+        tags.add("unknown")
+    if "got it" in n:
+        tags.add("understand")
+    if "not yet" in n or ("innum" in tokens and any(t in ("illa", "no") for t in tokens)):
+        tags.add("notyet")
+    for t in tokens:
+        # "puriyala" / "mudiyala" / "mudichala" = NOT understood / not done: never a positive act
+        negated = bool(re.search(r"(ala|alai)$", t)) and bool(re.match(r"^(puri|mudi)", t))
+        if negated:
+            tags.add("refuse")
+            continue
+        for tag, words in _ACT_WORDS.items():
+            if t in words:
+                tags.add(tag)
+            elif len(t) >= 6 and get_close_matches(t, words, n=1, cutoff=0.84):
+                tags.add(tag)
+        for tag, pat, min_len in _ACT_STEMS:
+            if len(t) >= min_len and re.search(pat, t):
+                tags.add(tag)
+    return tags
+
+
+def act_alignment(response, answers, question_is_yes_no=False, primary=None):
+    """
+    Does `response` perform the same communicative act as the accepted answers?
+    Returns None, or {"kind": str, "score": float}. Scores keep meaningful distinctions:
+      0.88 same act / strongly equivalent      -> 4-5 stars
+      0.82 generic acknowledgement (yes/ok)    -> 4 stars
+      0.70 valid but different (refusal / 'not yet' to a yes-no question) -> 3 stars
+    """
+    r = dialogue_acts(response)
+    if not r:
+        return None
+    e = set()
+    for a in answers:
+        e |= dialogue_acts(a)
+    if not e:
+        return None
+    # The lesson's PRIMARY intent is its model answer. Generic yes/ok only count as a valid
+    # alternative when that primary answer is itself an acknowledgement (e.g. "Purinjuthu teacher"),
+    # so a stray "Ok ..." in an answer list cannot make "yes" right for "How was school?".
+    e_primary = dialogue_acts(primary) if primary else e
+
+    if "refuse" in r and "affirm" in r:
+        return None  # contradictory ("okay illa"): not enough evidence
+
+    shared = r & e
+    non_generic = shared - {"affirm"}
+    # polarity conflict only when the response refuses but no accepted answer does
+    if non_generic and not ("refuse" in r and "refuse" not in e):
+        return {"kind": "same_act", "score": 0.88}
+    if r & _LOCATION_ACTS and e & _LOCATION_ACTS:
+        return {"kind": "location_answer", "score": 0.85}
+    if "affirm" in r and "affirm" in e_primary and "refuse" not in r:
+        return {"kind": "same_act", "score": 0.88}
+    if "refuse" not in r and (
+        ("affirm" in r and e_primary & _ACK_ACTS) or ("affirm" in e_primary and r & _GENERIC_ACK)
+    ):
+        return {"kind": "acknowledgement", "score": 0.82}
+    if question_is_yes_no and e_primary & _ACK_ACTS:
+        if "notyet" in r and "complete" in e:
+            return {"kind": "honest_not_yet", "score": 0.70}
+        if ("refuse" in r or "decline_reason" in r) and "refuse" not in e and "notyet" not in r:
+            return {"kind": "valid_refusal", "score": 0.70}
+    return None
+
+
+# ============================================================
 # SEMANTIC MATCH
 # ============================================================
 
@@ -495,6 +615,29 @@ def semantic_match(user_response, scenario):
                 "expected": expected,
                 "matched": True,
                 "semantic_score": 1.0
+            }
+
+    # --------------------------------------------------------
+    # DIALOGUE-ACT ALIGNMENT (tolerant meaning check)
+    #
+    # Same communicative act as the accepted answers => the child got the message across,
+    # even if the wording differs ("Yes mam" for "Purinjuthu teacher"). Lessons with a
+    # strict required meaning (e.g. eating status, polite interruption) keep their own checks.
+    # --------------------------------------------------------
+    if not meaning:
+        act = act_alignment(
+            normalized_response, all_answers,
+            question_is_yes_no=bool(scenario.get("question_is_yes_no")),
+            primary=expected
+        )
+        if act and classify_response_intent(normalized_response) != "hostile_refusal":
+            return {
+                "normalized": normalized_response,
+                "expected": expected,
+                "matched": True,
+                "semantic_score": act["score"],
+                "inferred_intent": classify_response_intent(normalized_response),
+                "act": act["kind"]
             }
 
     # --------------------------------------------------------
@@ -662,7 +805,9 @@ def semantic_match(user_response, scenario):
     # --------------------------------------------------------
 
     if response_type == "AnswerQuestion":
-        if is_eating_answer(normalized_response):
+        # "eating status" logic is only for questions that are actually about eating; applying it to
+        # every AnswerQuestion lesson accepted a bare "okay" for "Bank enga iruku?"
+        if _eating_meaning(meaning) and is_eating_answer(normalized_response):
             return {
                 "normalized": normalized_response,
                 "expected": expected,
@@ -670,7 +815,9 @@ def semantic_match(user_response, scenario):
                 "semantic_score": 0.90
             }
 
-        if is_yes_answer(normalized_response):
+        # A bare yes/ok only answers a question whose accepted answer is itself an acknowledgement
+        # (not "Bank enga iruku?" or "What is your name?").
+        if is_yes_answer(normalized_response) and (dialogue_acts(expected) & _ACK_ACTS):
 
             return {
                 "normalized": normalized_response,

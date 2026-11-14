@@ -77,48 +77,52 @@ export default function Register() {
       </div>
 
       <div className="flex-1 flex items-center justify-center">
-        <div className="bg-surface p-8 rounded-2xl shadow-xl w-full max-w-md border border-outline-variant/30">
-          <h1 className="text-3xl font-bold text-center mb-6 text-primary">Parent Sign Up</h1>
+        <div className="bg-surface-container-lowest p-8 md:p-10 rounded-[32px] shadow-ambient w-full max-w-md">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-surface-container-high flex items-center justify-center">
+            <span className="material-symbols-outlined text-[28px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>person_add</span>
+          </div>
+          <h1 className="text-[28px] font-bold text-center mb-1 text-on-surface">Parent Sign Up</h1>
+          <p className="text-center text-on-surface-variant text-[15px] mb-6">Create an account for your child</p>
         
-        {error && <div className="bg-error-container text-on-error-container p-3 rounded-md mb-4">{error}</div>}
-        {success && <div className="bg-green-100 text-green-800 p-3 rounded-md mb-4 font-semibold text-center">Registration successful! Redirecting to login...</div>}
+        {error && <div className="bg-error-container text-on-error-container px-4 py-3 rounded-xl mb-4 text-[14px] font-semibold">{error}</div>}
+        {success && <div className="bg-secondary-container text-on-secondary-container px-4 py-3 rounded-xl mb-4 font-semibold text-center text-[14px]">Registration successful! Redirecting to login...</div>}
         
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
           <div>
-            <label className="block font-semibold mb-1">Parent/Educator Name</label>
+            <label className="block text-[14px] font-semibold text-on-surface-variant mb-1.5">Parent/Educator Name</label>
             <input 
               type="text" 
-              className="w-full p-3 border rounded-lg" 
+              className="w-full h-[52px] px-4 text-[16px] bg-surface-container border-2 border-outline-variant rounded-2xl focus:border-primary focus:outline-none transition-colors" 
               value={parentName} 
               onChange={e => setParentName(e.target.value)} 
               required 
             />
           </div>
           <div>
-            <label className="block font-semibold mb-1">Child/Student Name</label>
+            <label className="block text-[14px] font-semibold text-on-surface-variant mb-1.5">Child/Student Name</label>
             <input 
               type="text" 
-              className="w-full p-3 border rounded-lg" 
+              className="w-full h-[52px] px-4 text-[16px] bg-surface-container border-2 border-outline-variant rounded-2xl focus:border-primary focus:outline-none transition-colors" 
               value={childName} 
               onChange={e => setChildName(e.target.value)} 
               required 
             />
           </div>
           <div>
-            <label className="block font-semibold mb-1">Email</label>
+            <label className="block text-[14px] font-semibold text-on-surface-variant mb-1.5">Email</label>
             <input 
               type="email" 
-              className="w-full p-3 border rounded-lg" 
+              className="w-full h-[52px] px-4 text-[16px] bg-surface-container border-2 border-outline-variant rounded-2xl focus:border-primary focus:outline-none transition-colors" 
               value={email} 
               onChange={e => setEmail(e.target.value)} 
               required 
             />
           </div>
           <div>
-            <label className="block font-semibold mb-1">Password (min 6 characters)</label>
+            <label className="block text-[14px] font-semibold text-on-surface-variant mb-1.5">Password (min 6 characters)</label>
             <input 
               type="password" 
-              className="w-full p-3 border rounded-lg" 
+              className="w-full h-[52px] px-4 text-[16px] bg-surface-container border-2 border-outline-variant rounded-2xl focus:border-primary focus:outline-none transition-colors" 
               value={password} 
               onChange={e => setPassword(e.target.value)} 
               required 
@@ -129,18 +133,18 @@ export default function Register() {
             <input 
               type="checkbox" 
               id="confirmParent"
-              className="mt-1"
+              className="mt-1 h-5 w-5 shrink-0"
               checked={confirmed}
               onChange={e => setConfirmed(e.target.checked)}
             />
-            <label htmlFor="confirmParent" className="text-sm">
+            <label htmlFor="confirmParent" className="text-[14px] leading-snug text-on-surface-variant">
               I confirm that I am a parent, guardian, or educator setting up this account for a child.
             </label>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary text-on-primary py-3 rounded-full font-bold mt-2 shadow-md disabled:opacity-60 cursor-pointer"
+            className="w-full h-[54px] bg-primary text-on-primary rounded-2xl text-[17px] font-bold mt-2 shadow-sm hover:bg-surface-tint active:scale-95 transition-all disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Creating account... (waking server)" : "Create Account"}
           </button>

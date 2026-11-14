@@ -4,6 +4,8 @@
 # Always gives gentle, encouraging redirection
 # ============================================================
 
+import re
+
 from nlp.preprocessing import normalize_text
 
 
@@ -154,8 +156,9 @@ def check_inappropriate(text, character="Stranger"):
     # --------------------------------------------------------
     # Check rude phrases
     # --------------------------------------------------------
+    # Whole-word/phrase matching only: "poda" must not match inside "podalaama" (let's draw)
     for phrase in RUDE_PHRASES:
-        if phrase in normalized:
+        if re.search(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])", normalized):
             flagged.append(phrase)
 
     if flagged:

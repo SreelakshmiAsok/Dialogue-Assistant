@@ -102,22 +102,6 @@ QUESTIONS = {
             "difficulty": 1
         },
         {
-            "id": "father_04",
-            "character": "Father",
-            "avatar": "👨",
-            "lesson": "Books",
-            "social_story": "Appa is sitting in the hall. He asks you to bring his book from the table.",
-            "question_tanglish": "Book eduthu kudu.",
-            "question_tamil": "புக் எடுத்துக் குடு.",
-            "expected_answers": [
-                "Idho appa", "Seri appa", "Kudukuren appa",
-                "Eduthukuren appa", "Aama appa"
-            ],
-            "model_answer": "Seri appa",
-            "respect_required": True,
-            "difficulty": 1
-        },
-        {
             "id": "father_05",
             "character": "Father",
             "avatar": "👨",
@@ -131,22 +115,6 @@ QUESTIONS = {
                 "Pannuren appa", "Illai appa"
             ],
             "model_answer": "Mudichiten appa",
-            "respect_required": True,
-            "difficulty": 1
-        },
-        {
-            "id": "father_06",
-            "character": "Father",
-            "avatar": "👨",
-            "lesson": "Water",
-            "social_story": "Appa is thirsty. He asks you to bring a glass of water.",
-            "question_tanglish": "Thanni kondu va.",
-            "question_tamil": "தண்ணி கொண்டு வா.",
-            "expected_answers": [
-                "Seri appa", "Idho appa", "Konduvaren appa",
-                "Aama appa", "Konduraren appa"
-            ],
-            "model_answer": "Seri appa",
             "respect_required": True,
             "difficulty": 1
         },

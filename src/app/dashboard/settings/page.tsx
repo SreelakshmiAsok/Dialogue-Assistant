@@ -78,7 +78,7 @@ export default function SettingsPage() {
           Choose which companion modules are unlocked and visible on the child&apos;s companion screen.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
           {CHARACTERS.map((char) => {
             const isEnabled = enabledModules.includes(char.id);
             return (
@@ -97,14 +97,14 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className={`text-[14px] font-bold truncate ${isEnabled ? "text-on-primary-container" : "text-on-surface-variant"}`}>
+                    <p className={`text-[14px] font-bold leading-tight ${isEnabled ? "text-on-primary-container" : "text-on-surface-variant"}`}>
                       {char.displayName}
                     </p>
                     <span className="material-symbols-outlined text-[18px] ml-1 shrink-0 text-primary">
                       {isEnabled ? "check_circle" : "cancel"}
                     </span>
                   </div>
-                  <p className="text-[12px] text-on-surface-variant truncate">{char.subtitle}</p>
+                  <p className="text-[12px] text-on-surface-variant leading-snug">{char.subtitle}</p>
                 </div>
               </button>
             );

@@ -443,8 +443,16 @@ def api_evaluate():
 
     # --------------------------------------------------------
     # Step 1: Check inappropriate language
+    #
+    # Genuinely rude/abusive wording rejects the answer. A merely informal address
+    # for the role (severity "mild", e.g. "da" to a teacher) is a style note: the answer
+    # is still judged on its meaning, and politeness only caps the stars below.
     # --------------------------------------------------------
     bad_check = check_inappropriate(response, character)
+    style_note = None
+    if bad_check["is_inappropriate"] and bad_check.get("severity") == "mild":
+        style_note = bad_check
+        bad_check = {**bad_check, "is_inappropriate": False}
 
     if bad_check["is_inappropriate"]:
         feedback_result = generate_feedback(
@@ -519,6 +527,7 @@ def api_evaluate():
             if required_communication else expected_goal
         ),
         "required_communication": required_communication,
+        "question_is_yes_no": "?" in (question.get("question_tanglish", "") + question.get("question_tamil", "")),
         "meaning": (
             required_communication.get("meaning", "")
             if required_communication else ""
@@ -612,6 +621,8 @@ def api_evaluate():
 
     if matched and missing_preferred_vocative:
         stars = min(stars, 3)
+    if matched and style_note:
+        stars = min(stars, 3)  # informal address: correct meaning, gentle politeness tip
 
     # --------------------------------------------------------
     # Step 6: Generate feedback
@@ -632,6 +643,8 @@ def api_evaluate():
         missing_preferred_vocative=matched and missing_preferred_vocative,
         ontology_context=semantic_result.get("inferred_intent")
     )
+    if matched and style_note and not feedback_result.get("suggestion"):
+        feedback_result["suggestion"] = style_note.get("suggestion") or None
 
 
     # --------------------------------------------------------
@@ -759,5 +772,23 @@ if __name__ == "__main__":
     print("=" * 60)
     print(f"[*] Running on port {port} (debug={debug})")
     print("=" * 60)
+
+    def _warm_up():
+        """Pre-load the neural model and run the ontology reasoner once, so the child's first
+        answer is not delayed (a cold start made the first evaluation take 40+ seconds)."""
+        try:
+            from engines.nlp_semantic_engine import semantic_similarity as _sim
+            _sim("seri appa", "okay appa")
+            ontology_reasoner.evaluate_utterance(
+                role="Teacher", context="Classroom", utterance_text="yes teacher",
+                intent="social_acceptance", has_politeness=True, semantic_similarity=0.8,
+                expected_goal="AnswerQuestion", scenario_id="teacher_04"
+            )
+            print("[warm-up] evaluation pipeline ready")
+        except Exception as exc:  # warm-up must never break startup
+            print(f"[warm-up] skipped: {exc}")
+
+    import threading
+    threading.Thread(target=_warm_up, daemon=True).start()
 
     app.run(debug=debug, host="0.0.0.0", port=port)

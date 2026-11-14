@@ -105,34 +105,38 @@ export default function Profiles() {
           </div>
         )}
       
-      <div className="flex flex-wrap gap-8 justify-center">
+      <div className="flex flex-wrap gap-6 sm:gap-10 justify-center">
         {/* Parent Dashboard Profile */}
-        <div 
-          onClick={() => router.push("/parent-access")} 
-          className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform"
+        <button
+          type="button"
+          onClick={() => router.push("/parent-access")}
+          className="group flex flex-col items-center cursor-pointer rounded-3xl p-3 transition-transform hover:-translate-y-1"
         >
-          <div className="w-32 h-32 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mb-4 shadow-lg border-2 border-outline-variant/30">
-            <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mb-4 shadow-ambient border-2 border-outline-variant/30 group-hover:border-primary/60 transition-colors">
+            <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>
               supervisor_account
             </span>
           </div>
-          <span className="font-semibold text-lg text-on-surface">Parent Dashboard</span>
-        </div>
+          <span className="font-bold text-lg text-on-surface">Parent Dashboard</span>
+          <span className="text-[13px] text-on-surface-variant mt-0.5">Progress &amp; settings</span>
+        </button>
 
         {/* Child Profiles */}
         {children.map((child) => (
-          <div 
+          <button
+            type="button"
             key={child.id}
             onClick={() => handleAssumeChild(child.id)}
-            className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform"
+            className="group flex flex-col items-center cursor-pointer rounded-3xl p-3 transition-transform hover:-translate-y-1"
           >
-            <div className="w-32 h-32 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-4 shadow-lg border-2 border-outline-variant/30">
-              <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+            <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-4 shadow-ambient border-2 border-outline-variant/30 group-hover:border-primary/60 transition-colors">
+              <span className="material-symbols-outlined text-[64px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 face
               </span>
             </div>
-            <span className="font-semibold text-lg text-on-surface">{child.name || child.email.split("@")[0]}</span>
-          </div>
+            <span className="font-bold text-lg text-on-surface">{child.name || child.email.split("@")[0]}</span>
+            <span className="text-[13px] text-on-surface-variant mt-0.5">Start learning</span>
+          </button>
         ))}
       </div>
       

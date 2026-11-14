@@ -37,11 +37,173 @@ function Tier1SessionContent() {
   const starsRef = useRef(0);
   const correctRef = useRef(0);
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  // ---- Microphone lifecycle (turn-taking: computer speaks -> mic opens -> mic closes while processing)
+  const recognitionRef = useRef<any>(null);
+  const mountedRef = useRef(true);
+  const evaluatingRef = useRef(false);
+  const evaluationShownRef = useRef(false);
+  const listenGenRef = useRef(0);
+  const silentRoundsRef = useRef(0);
+  const micBlockedRef = useRef(false);
+  const listenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const submitRef = useRef<(answer: string) => void>(() => {});
+  const [micNotice, setMicNotice] = useState("");
+
+  // Turn the microphone OFF and invalidate any pending auto-listen. Safe to call at any time.
+  const abortListening = useCallback(() => {
+    listenGenRef.current++;
+    if (listenTimerRef.current) {
+      clearTimeout(listenTimerRef.current);
+      listenTimerRef.current = null;
+    }
+    const rec = recognitionRef.current;
+    recognitionRef.current = null;
+    if (rec) {
+      rec.onstart = rec.onresult = rec.onerror = rec.onend = null;
+      try {
+        rec.abort();
+      } catch {
+        /* ignore */
+      }
+    }
+    setIsListening(false);
+  }, []);
+
+  // Leaving Tier 1 (or the page) always releases the microphone and any audio.
+  useEffect(() => {
+    mountedRef.current = true;
+    const onPageHide = () => abortListening();
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      mountedRef.current = false;
+      window.removeEventListener("pagehide", onPageHide);
+      abortListening();
+      stopAll();
+    };
+  }, [abortListening]);
+
+  // Silence: retry listening once, then stop and leave the manual mic button for the child.
+  const handleSilence = useCallback((retry: () => void) => {
+    silentRoundsRef.current += 1;
+    if (silentRoundsRef.current < 2) {
+      listenTimerRef.current = setTimeout(() => {
+        listenTimerRef.current = null;
+        if (mountedRef.current) retry();
+      }, 500);
+    } else {
+      silentRoundsRef.current = 0;
+      setMicNotice("Tap the microphone when you are ready to answer");
+    }
+  }, []);
+
+  // Open the microphone. auto=true when triggered by the end of the computer's speech.
+  const startListening = useCallback(
+    (auto: boolean) => {
+      if (!mountedRef.current || evaluatingRef.current || evaluationShownRef.current) return;
+      if (recognitionRef.current) return; // never two microphone sessions
+      const SpeechRecognitionAPI =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognitionAPI) {
+        setShowTextInput(true);
+        return;
+      }
+      if (auto && micBlockedRef.current) return;
+      if (!auto) {
+        silentRoundsRef.current = 0;
+        micBlockedRef.current = false;
+      }
+      stopAll(); // the microphone must never run while a voice is playing
+      setMicNotice("");
+
+      const gen = ++listenGenRef.current;
+      const rec = new SpeechRecognitionAPI();
+      rec.lang = "ta-IN";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.continuous = false;
+      let handled = false;
+      const stale = () => gen !== listenGenRef.current || !mountedRef.current;
+
+      rec.onstart = () => {
+        if (stale()) return;
+        setIsListening(true);
+        setSttText("");
+      };
+      rec.onresult = (e: any) => {
+        if (stale() || handled) return;
+        handled = true;
+        const transcript = e.results?.[0]?.[0]?.transcript?.trim();
+        recognitionRef.current = null;
+        setIsListening(false);
+        if (!transcript) {
+          handleSilence(() => startListeningRef.current(true));
+          return;
+        }
+        silentRoundsRef.current = 0;
+        setSttText(transcript);
+        submitRef.current(transcript); // microphone is already off while the answer is processed
+      };
+      rec.onerror = (e: any) => {
+        if (stale() || handled) return;
+        handled = true;
+        recognitionRef.current = null;
+        setIsListening(false);
+        const err = e?.error;
+        if (err === "no-speech") {
+          handleSilence(() => startListeningRef.current(true));
+        } else if (err === "not-allowed" || err === "service-not-allowed") {
+          micBlockedRef.current = true;
+          setShowTextInput(true);
+          setMicNotice("Microphone is blocked. You can type your answer instead.");
+        } else if (err === "audio-capture" || err === "network") {
+          micBlockedRef.current = true;
+          setShowTextInput(true);
+          setMicNotice("Microphone is not available. You can type your answer instead.");
+        }
+        // "aborted": we stopped it ourselves
+      };
+      rec.onend = () => {
+        if (stale() || handled) return;
+        handled = true;
+        recognitionRef.current = null;
+        setIsListening(false);
+        handleSilence(() => startListeningRef.current(true)); // ended without a result = silence
+      };
+      recognitionRef.current = rec;
+      try {
+        rec.start();
+      } catch {
+        recognitionRef.current = null;
+        setIsListening(false);
+      }
+    },
+    [handleSilence]
+  );
+
+  // Lets the recognition callbacks call the latest startListening (retry after silence)
+  const startListeningRef = useRef<(auto: boolean) => void>(() => {});
+  useEffect(() => {
+    startListeningRef.current = startListening;
+  }, [startListening]);
+
+  // After the computer has COMPLETELY finished speaking (playback "done"), open the mic once.
+  const listenAfterSpeech = useCallback(
+    (result: "done" | "cancelled" | "blocked") => {
+      if (result !== "done" || !mountedRef.current) return;
+      if (evaluatingRef.current || evaluationShownRef.current) return;
+      if (listenTimerRef.current) clearTimeout(listenTimerRef.current);
+      // short pause so the tail of the voice is not picked up by the microphone
+      listenTimerRef.current = setTimeout(() => {
+        listenTimerRef.current = null;
+        if (mountedRef.current) startListening(true);
+      }, 400);
+    },
+    [startListening]
+  );
 
   // Speak a Tamil result/feedback line through the central audio manager (stops anything else first)
   const playTamilResult = useCallback((text?: string) => {
-    if (!text || !/[஀-௿]/.test(text)) return;
+    if (!text || !/[\u0B80-\u0BFF]/.test(text)) return;
     playSequence([{ url: getTtsAudioUrl(text, "Result"), text }]);
   }, []);
 
@@ -70,11 +232,18 @@ function Tier1SessionContent() {
   // Submit answer for evaluation
   const submitAnswer = useCallback(async (answer: string) => {
     if (!currentQuestion || !answer.trim()) return;
+    if (evaluatingRef.current) return; // one answer at a time
+    evaluatingRef.current = true;
+    abortListening(); // microphone OFF while the answer is processed
+    setMicNotice("");
+    evaluationShownRef.current = false;
     setIsEvaluating(true);
     setEvaluation(null);
 
     try {
       const result = await evaluateAnswer(currentQuestion.id, answer);
+      if (!mountedRef.current) return; // user already left Tier 1
+      evaluationShownRef.current = true;
       setEvaluation(result);
       playTamilResult(result.feedback_tamil);
       starsRef.current += result.stars;
@@ -84,6 +253,8 @@ function Tier1SessionContent() {
         setSessionCorrect(correctRef.current);
       }
     } catch {
+      if (!mountedRef.current) return;
+      evaluationShownRef.current = true;
       setEvaluation({
         correct: false,
         stars: 0,
@@ -98,9 +269,15 @@ function Tier1SessionContent() {
         sentiment: "Neutral",
       });
     } finally {
+      evaluatingRef.current = false;
       setIsEvaluating(false);
     }
-  }, [currentQuestion, playTamilResult]);
+  }, [currentQuestion, playTamilResult, abortListening]);
+
+  // Keep the latest submitAnswer reachable from long-lived recognition callbacks
+  useEffect(() => {
+    submitRef.current = submitAnswer;
+  }, [submitAnswer]);
 
 // Speaker button / initial playback: scenario (Tamil) then the character's Tamil line.
 // playSequence() stops whatever is playing first, so repeated clicks never overlap.
@@ -110,10 +287,12 @@ const handlePlayAudio = useCallback(async () => {
   const storyTa = currentQuestion.social_story_tamil;
   if (storyTa) items.push({ url: getTtsAudioUrl(storyTa, "Scenario"), text: storyTa });
   items.push({ url: getAudioUrl(currentQuestion.id), text: currentQuestion.question_tamil || "" });
+  abortListening(); // never record while the computer is speaking
   setIsPlaying(true);
   const result = await playSequence(items);
   if (result !== "cancelled") setIsPlaying(false);
-}, [currentQuestion]);
+  listenAfterSpeech(result); // only when playback really finished ("done")
+}, [currentQuestion, abortListening, listenAfterSpeech]);
 
 // Play once when a question opens; silence everything when it changes or the page unmounts.
 useEffect(() => {
@@ -123,54 +302,19 @@ useEffect(() => {
   }
   return () => {
     alive = false;
+    abortListening();
     stopAll();
   };
-}, [currentQuestion, handlePlayAudio]);
+}, [currentQuestion, handlePlayAudio, abortListening]);
 
-  // Start speech recognition
+  // Manual microphone control stays available as a fallback (tap again while listening = stop)
   const handleMicTap = useCallback(() => {
-    if (isListening) return;
-    stopAll();
-
-    const SpeechRecognitionAPI = (window as unknown as { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition ||
-      (window as unknown as { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
-
-    if (!SpeechRecognitionAPI) {
-      setShowTextInput(true);
+    if (recognitionRef.current) {
+      abortListening();
       return;
     }
-
-    const recognition = new SpeechRecognitionAPI();
-    recognition.lang = "ta-IN";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      setIsListening(true);
-      setSttText("");
-    };
-
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0][0].transcript;
-      setSttText(transcript);
-      setIsListening(false);
-      submitAnswer(transcript);
-    };
-
-    recognition.onerror = (event: any) => {
-      if (event.error !== 'not-allowed') {
-        setIsListening(false);
-        setShowTextInput(true);
-      }
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
-  }, [isListening, submitAnswer]);
+    startListening(false);
+  }, [abortListening, startListening]);
 
   const handleTextSubmit = () => {
     if (textInput.trim()) {
@@ -181,6 +325,8 @@ useEffect(() => {
   };
 
   const handleNext = () => {
+    abortListening();
+    evaluationShownRef.current = false;
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       setEvaluation(null);
@@ -193,8 +339,10 @@ useEffect(() => {
   };
 
   const handleRetry = () => {
+    evaluationShownRef.current = false;
     setEvaluation(null);
     setSttText("");
+    startListening(false); // the child just tapped "Try Again": open the mic straight away
   };
 
   if (loading) {
@@ -228,6 +376,7 @@ useEffect(() => {
       <header className="w-full h-14 flex justify-between items-center px-4 md:px-12 shrink-0 relative z-10">
         <button 
           onClick={() => {
+            abortListening(); // release the microphone immediately
             stopAll(); // silence audio immediately, before the route change completes
             router.push("/choose-friend");
           }}
@@ -409,7 +558,7 @@ useEffect(() => {
                 {/* Mic Button */}
                 <button 
                   onClick={handleMicTap}
-                  className={`relative z-10 w-40 h-40 rounded-full flex items-center justify-center shadow-ambient hover:shadow-lg active:scale-95 transition-all duration-300 ${
+                  className={`relative z-10 w-40 h-40 [@media(max-height:700px)]:w-28 [@media(max-height:700px)]:h-28 rounded-full flex items-center justify-center shadow-ambient hover:shadow-lg active:scale-95 transition-all duration-300 ${
                     isListening ? 'bg-primary-container text-primary' : 'bg-primary text-on-primary'
                   }`}
                 >
@@ -418,7 +567,7 @@ useEffect(() => {
                   </span>
                 </button>
                 <p className="mt-6 text-[16px] font-semibold tracking-[0.04em] text-on-surface-variant z-10 bg-surface/80 px-4 py-2 rounded-full backdrop-blur-sm">
-                  {isListening ? "Listening..." : "Tap to speak"}
+                  {isListening ? "Listening..." : micNotice || "Tap to speak"}
                 </p>
                 
                 {/* Text Input Toggle */}
@@ -611,7 +760,7 @@ function Tier2SessionContent() {
         recognitionRef.current = null;
         setIsListening(false);
         if (!transcript) {
-          handleSilence(() => startListening(true));
+          handleSilence(() => startListeningRef.current(true));
           return;
         }
         silentRoundsRef.current = 0;
@@ -625,7 +774,7 @@ function Tier2SessionContent() {
         setIsListening(false);
         const err = e?.error;
         if (err === "no-speech") {
-          handleSilence(() => startListening(true));
+          handleSilence(() => startListeningRef.current(true));
         } else if (err === "not-allowed" || err === "service-not-allowed") {
           micBlockedRef.current = true;
           setShowTextInput(true);
@@ -642,7 +791,7 @@ function Tier2SessionContent() {
         handled = true;
         recognitionRef.current = null;
         setIsListening(false);
-        handleSilence(() => startListening(true)); // ended with no result = silence
+        handleSilence(() => startListeningRef.current(true)); // ended with no result = silence
       };
       recognitionRef.current = rec;
       try {
@@ -654,6 +803,12 @@ function Tier2SessionContent() {
     },
     [handleSilence]
   );
+
+  // Lets the recognition callbacks call the latest startListening (retry after silence)
+  const startListeningRef = useRef<(auto: boolean) => void>(() => {});
+  useEffect(() => {
+    startListeningRef.current = startListening;
+  }, [startListening]);
 
   // After the computer has COMPLETELY finished speaking, open the microphone (once).
   const listenAfterSpeech = useCallback(

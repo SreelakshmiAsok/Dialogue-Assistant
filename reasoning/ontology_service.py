@@ -252,6 +252,18 @@ class OntologyService:
         # 1. Check for ontology-defined violations
         is_violation = False
         violation_reason = None
+        # The generic Stranger context says "accepting is dangerous". That is a SAFETY rule: it must
+        # only apply to safety-critical scenarios (lure / candy / follow me). In an ordinary stranger
+        # interaction (helping with a bag, giving directions) "Seri sir, pannuren" is a perfectly
+        # appropriate answer, so the context-level constraint is contextual, not absolute.
+        if (
+            normalized_intent in violating
+            and "Stranger" in role
+            and normalized_intent in ("StrangerCompliance", "SocialAcceptance")
+            and not (scenario_id and self.is_safety_critical(scenario_id))
+            and self.normalize_intent_name(expected_goal or "") != "SafetyRefusal"
+        ):
+            violating = [v for v in violating if v != normalized_intent]
         if normalized_intent in violating:
             is_violation = True
             if "Stranger" in role:

@@ -40,7 +40,7 @@ export default function ChooseAFriend() {
 
   return (
     <div className="bg-background text-on-background min-h-screen font-sans antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
-      <main className="min-h-screen flex flex-col items-center justify-center relative px-6 md:px-20 py-12">
+      <main className="min-h-screen flex flex-col items-center justify-center relative px-6 md:px-20 pt-28 pb-12 md:py-12">
         {/* Back button */}
         <button
           onClick={() => router.push("/")}

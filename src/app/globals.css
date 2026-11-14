@@ -2,6 +2,9 @@
 
 
 @theme inline {
+  /* One typeface everywhere: pages use Tailwind's `font-sans`, which previously fell back to the
+     system font while the body used Plus Jakarta Sans (mixed typography). */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
   --color-inverse-primary: #ffb5a1;
   --color-surface-dim: #dddad4;
   --color-surface-container-high: #ebe8e2;
@@ -112,7 +115,14 @@
   --text-body-lg-letter-spacing: 0.01em;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   background: var(--color-background);
   color: var(--color-on-background);
   font-family: var(--font-body-md);
@@ -120,6 +130,100 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* ---------- Shared base: consistent forms, focus, tap feedback ---------- */
+@layer base {
+  ::selection {
+    background: var(--color-primary-fixed);
+    color: var(--color-on-primary-fixed);
+  }
+
+  h1, h2 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Text-like fields share one look (white fill, soft warm border, clear focus ring) */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    border-color: var(--color-outline-variant);
+    background-color: var(--color-surface-container-lowest);
+    color: var(--color-on-surface);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-outline);
+    opacity: 0.8;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(139, 78, 61, 0.18);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--color-primary);
+  }
+
+  /* Visible keyboard focus for every interactive element (accessibility) */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid rgba(139, 78, 61, 0.55);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Calm by default: respect the system "reduce motion" preference (important for sensory comfort) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Icon sizes: Google's icon stylesheet is unlayered and forces `font-size: 24px`, which silently beat
+   Tailwind's size utilities (utilities live in a CSS layer). These higher-specificity rules let every
+   icon render at the size its page asks for (mic, profile and status icons were all stuck at 24px). */
+.material-symbols-outlined.text-\[14px\] { font-size: 14px; }
+.material-symbols-outlined.text-\[16px\] { font-size: 16px; }
+.material-symbols-outlined.text-\[18px\] { font-size: 18px; }
+.material-symbols-outlined.text-\[20px\] { font-size: 20px; }
+.material-symbols-outlined.text-\[22px\] { font-size: 22px; }
+.material-symbols-outlined.text-\[24px\] { font-size: 24px; }
+.material-symbols-outlined.text-\[26px\] { font-size: 26px; }
+.material-symbols-outlined.text-\[28px\] { font-size: 28px; }
+.material-symbols-outlined.text-\[30px\] { font-size: 30px; }
+.material-symbols-outlined.text-\[32px\] { font-size: 32px; }
+.material-symbols-outlined.text-\[36px\] { font-size: 36px; }
+.material-symbols-outlined.text-\[48px\] { font-size: 48px; }
+.material-symbols-outlined.text-\[64px\] { font-size: 64px; }
+.material-symbols-outlined.text-\[72px\] { font-size: 72px; }
+.material-symbols-outlined.text-xl { font-size: 1.25rem; }
 
 /* Material Symbols Outlined Configuration */
 .material-symbols-outlined {
@@ -133,7 +237,7 @@ body {
 
 /* Custom Shadows and Animations */
 .shadow-ambient {
-  box-shadow: 0 12px 24px rgba(139,78,61,0.08), 0 4px 8px rgba(139,78,61,0.04);
+  box-shadow: 0 8px 20px rgba(139,78,61,0.07), 0 2px 6px rgba(139,78,61,0.04);
 }
 
 .active-sink:active {
@@ -152,7 +256,7 @@ body {
 }
 
 .shadow-glow {
-  box-shadow: 0 0 24px 4px rgba(139, 78, 61, 0.15); /* soft primary-tinted glow */
+  box-shadow: 0 4px 14px rgba(139, 78, 61, 0.12); /* gentle lift instead of a glow */
 }
 
 @keyframes subtle-pulse {
