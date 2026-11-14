@@ -15,3 +15,4 @@ backend/.env
 *.tsbuildinfo
 AGENTS.md
 CLAUDE.md
+datasets/roadmap_progress.json

@@ -1,4 +1,5 @@
-import { getToken } from "./auth";
+import { getToken, getRole, getAuthHeaders } from "./auth";
+import { API_BASE } from "./api";
 
 export interface CharacterProgress {
   completedLessons: string[];
@@ -88,5 +89,29 @@ export function saveLessonCompletion(
     localStorage.setItem(getStorageKey(), JSON.stringify(allProgress));
   } catch (e) {
     console.error("Failed to save roadmap progress", e);
+  }
+  void syncRoadmapWithServer();
+}
+
+/**
+ * Keep the roadmap on the server (MongoDB when connected) as well as in this browser, so a child's
+ * progress follows them to another device. Merges both sides (union of lessons, best stars) and
+ * stores the merged result locally. Silent no-op if the server is unreachable.
+ */
+export async function syncRoadmapWithServer(): Promise<void> {
+  if (typeof window === "undefined" || getRole() !== "student") return;
+  try {
+    const res = await fetch(`${API_BASE}/roadmap-progress`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+      body: JSON.stringify({ progress: getRoadmapProgress() }),
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.progress) {
+      localStorage.setItem(getStorageKey(), JSON.stringify(data.progress));
+    }
+  } catch {
+    /* offline: local progress still works */
   }
 }

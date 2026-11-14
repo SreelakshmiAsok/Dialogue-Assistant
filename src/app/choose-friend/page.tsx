@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CHARACTERS } from "@/lib/characters";
-import { getCharacterProgress } from "@/lib/progress";
+import { getCharacterProgress, syncRoadmapWithServer } from "@/lib/progress";
 import { getAppSettings } from "@/lib/settings";
 import ParentTeacherModal from "@/components/ParentTeacherModal";
 
@@ -20,13 +20,17 @@ export default function ChooseAFriend() {
     setChildName(settings.childName || "Friend");
     setEnabledModules(settings.enabledModules || []);
 
-    // Load progress for all characters on mount
-    const newProgress: Record<string, number> = {};
-    CHARACTERS.forEach((char) => {
-      const prog = getCharacterProgress(char.backendName);
-      newProgress[char.id] = prog.completedLessons.length;
-    });
-    setProgressData(newProgress);
+    // Load progress for all characters on mount (then refresh once the server copy is merged in)
+    const loadProgress = () => {
+      const newProgress: Record<string, number> = {};
+      CHARACTERS.forEach((char) => {
+        const prog = getCharacterProgress(char.backendName);
+        newProgress[char.id] = prog.completedLessons.length;
+      });
+      setProgressData(newProgress);
+    };
+    loadProgress();
+    syncRoadmapWithServer().then(loadProgress);
   }, []);
 
   const handleSelectCharacter = (backendName: string) => {

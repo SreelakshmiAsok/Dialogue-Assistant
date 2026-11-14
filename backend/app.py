@@ -21,6 +21,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import subprocess
 import hashlib
+import datetime
 from core.db import get_tier2_lessons_for_character, get_tier2_lesson_by_id
 from engines.tier2_engine import evaluate_tier2_turn
 
@@ -39,13 +40,14 @@ from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
 from nlp.tanglish_tts_helper import tanglish_resolver
 from data.tier1_tamil import story_tamil, feedback_tamil as t1_feedback_tamil
+from core.roadmap_store import get_roadmap, merge_and_save_roadmap
 import re
 import sys
 from pydantic import ValidationError
 from schemas.requests import EvaluateRequest, Tier2EvaluateTurnRequest, LinkChildRequest
 from schemas.auth import RegisterRequest, LoginRequest, AssumeChildRequest
 from core.users import create_user, get_user_by_email, get_user_by_id, link_child_to_parent, get_children_for_parent
-from core.auth import create_access_token, require_auth, require_roles
+from core.auth import create_access_token, verify_access_token, require_auth, require_roles
 from werkzeug.security import check_password_hash
 
 # Ensure reasoning package is accessible
@@ -652,7 +654,7 @@ def api_evaluate():
     # --------------------------------------------------------
     try:
         save_progress(
-            user_id=data.get("user_id", "default_user"),
+            user_id=(_request_user() or {}).get("user_id") or data.get("user_id", "default_user"),
             interaction_id=question_id,
             response=response,
             correct=matched,
@@ -680,21 +682,154 @@ def api_evaluate():
     })
 
 
+def _request_user():
+    """Decoded JWT payload of the caller, or None (the child's answers are saved under this id)."""
+    parts = (request.headers.get("Authorization") or "").split()
+    if len(parts) == 2 and parts[0].lower() == "bearer":
+        return verify_access_token(parts[1])
+    return None
+
+
+def _target_student_id(student_id=None):
+    """Which child's data the caller may see: a student sees their own; a parent sees a linked child."""
+    user = _request_user()
+    if not user:
+        return None, ("Authentication required", 401)
+    if user.get("role") == "student":
+        return user["user_id"], None
+    if user.get("role") == "parent":
+        child_ids = [c["id"] for c in get_children_for_parent(user["user_id"])]
+        if student_id:
+            if student_id not in child_ids:
+                return None, ("Child not linked to this parent account", 403)
+            return student_id, None
+        return (child_ids[0] if child_ids else None), None
+    return None, ("Forbidden", 403)
+
+
+def _parse_ts(value):
+    try:
+        return datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
 @app.route("/api/progress", methods=["GET"])
 def api_progress():
-    """Return progress summary."""
-    progress = get_progress()
+    """Progress summary for ONE child (never mixed across users)."""
+    sid, err = _target_student_id(request.args.get("student_id"))
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    progress = get_progress(sid) if sid else []
 
     total = len(progress)
-    correct = sum(1 for p in progress if p.get("correct", "").lower() == "true")
-    total_stars = sum(int(p.get("stars", 0)) for p in progress)
+    correct = sum(1 for p in progress if str(p.get("correct", "")).lower() == "true")
+    total_stars = sum(int(p.get("stars", 0) or 0) for p in progress)
+
+    # Real activity for the dashboard: stars per day (last 7 days) and the current streak
+    today = datetime.datetime.now(datetime.timezone.utc).date()
+    per_day = {}
+    active_days = set()
+    last_activity = None
+    for p in progress:
+        ts = _parse_ts(p.get("timestamp"))
+        if not ts:
+            continue
+        d = ts.astimezone(datetime.timezone.utc).date()
+        active_days.add(d)
+        per_day[d] = per_day.get(d, 0) + int(p.get("stars", 0) or 0)
+        if last_activity is None or ts > last_activity:
+            last_activity = ts
+    daily = []
+    for offset in range(6, -1, -1):
+        d = today - datetime.timedelta(days=offset)
+        daily.append({"day": d.strftime("%a"), "date": d.isoformat(), "stars": per_day.get(d, 0)})
+    streak = 0
+    cursor = today if today in active_days else today - datetime.timedelta(days=1)
+    while cursor in active_days:
+        streak += 1
+        cursor -= datetime.timedelta(days=1)
 
     return jsonify({
         "total_attempts": total,
         "correct_attempts": correct,
         "total_stars": total_stars,
-        "accuracy": round((correct / total * 100) if total > 0 else 0, 1)
+        "accuracy": round((correct / total * 100) if total > 0 else 0, 1),
+        "streak_days": streak,
+        "daily": daily,
+        "last_activity": last_activity.isoformat() if last_activity else None
     })
+
+
+@app.route("/api/history", methods=["GET"])
+def api_history():
+    """Real practice history for one child: answers grouped into sessions (same day + character + tier)."""
+    sid, err = _target_student_id(request.args.get("student_id"))
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    rows = get_progress(sid) if sid else []
+
+    sessions = {}
+    for p in rows:
+        ts = _parse_ts(p.get("timestamp"))
+        if not ts:
+            continue
+        tier = int(p.get("tier", 1) or 1)
+        iid = str(p.get("interaction_id", ""))
+        character, question = None, iid
+        if tier == 2 and ":" in iid:
+            lesson_id, _, turn_id = iid.partition(":")
+            lesson = get_tier2_lesson_by_id(lesson_id)
+            if lesson:
+                character = lesson.get("character")
+                turn = next((t for t in lesson.get("turns", []) if t.get("turn_id") == turn_id), None)
+                if turn:
+                    question = (turn.get("prompt") or {}).get("tanglish") or question
+        else:
+            q = get_question_by_id(iid)
+            if q:
+                character = q.get("character")
+                question = q.get("question_tanglish") or question
+        if not character:
+            continue  # lesson was removed; skip rather than show a blank entry
+        key = (ts.astimezone(datetime.timezone.utc).date().isoformat(), character, tier)
+        s = sessions.setdefault(key, {
+            "id": "-".join(str(k) for k in key), "character": character, "tier": tier,
+            "started_at": ts.isoformat(), "ended_at": ts.isoformat(), "exchanges": [], "starsEarned": 0
+        })
+        s["started_at"] = min(s["started_at"], ts.isoformat())
+        s["ended_at"] = max(s["ended_at"], ts.isoformat())
+        is_correct = str(p.get("correct", "")).lower() == "true"
+        stars = int(p.get("stars", 0) or 0)
+        s["starsEarned"] += stars
+        s["exchanges"].append({"question": question, "answer": p.get("response", ""), "correct": is_correct, "at": ts.isoformat()})
+
+    out = []
+    for s in sessions.values():
+        s["exchanges"].sort(key=lambda e: e["at"])
+        attempted = len(s["exchanges"])
+        correct = sum(1 for e in s["exchanges"] if e["correct"])
+        s["questionsAttempted"] = attempted
+        s["correctAnswers"] = correct
+        s["status"] = "completed" if attempted and correct / attempted >= 0.75 else "attempted"
+        out.append(s)
+    out.sort(key=lambda s: s["ended_at"], reverse=True)
+    return jsonify({"sessions": out})
+
+
+@app.route("/api/roadmap-progress", methods=["GET", "PUT"])
+def api_roadmap_progress():
+    """A child's roadmap (completed lessons / stars / Tier 2 unlock), kept on the server so it follows them."""
+    user = _request_user()
+    if not user or user.get("role") != "student":
+        return jsonify({"error": "Student login required"}), 401
+    if request.method == "PUT":
+        body = request.get_json(force=True, silent=True) or {}
+        progress = body.get("progress")
+        if not isinstance(progress, dict):
+            return jsonify({"error": "progress object required"}), 400
+        return jsonify({"progress": merge_and_save_roadmap(user["user_id"], progress)})
+    return jsonify({"progress": get_roadmap(user["user_id"])})
 
 
 # ============================================================
@@ -754,6 +889,17 @@ def api_tier2_evaluate_turn():
         
     # Evaluate
     result = evaluate_tier2_turn(lesson, turn, response, retry_count)
+    try:
+        save_progress(
+            user_id=(_request_user() or {}).get("user_id") or "default_user",
+            interaction_id=f"{lesson_id}:{turn_id}",
+            response=transcribed_tanglish,
+            correct=bool(result.get("correct")),
+            stars=int(result.get("stars_awarded", 0) or 0),
+            tier=2
+        )
+    except Exception:
+        pass  # saving progress must never break the conversation
     result["transcribed_text"] = transcribed_tanglish
     result["transcribed_tamil"] = transcribed_tamil
     

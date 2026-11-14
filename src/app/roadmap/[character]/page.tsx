@@ -4,7 +4,7 @@ import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { fetchQuestions, fetchTier2Lessons } from "@/lib/api";
 import { getCharacterByBackendName } from "@/lib/characters";
-import { getCharacterProgress } from "@/lib/progress";
+import { getCharacterProgress, syncRoadmapWithServer } from "@/lib/progress";
 import type { Question, Tier2LessonSummary } from "@/lib/api";
 import type { CharacterMeta } from "@/lib/characters";
 import type { CharacterProgress } from "@/lib/progress";
@@ -44,6 +44,22 @@ export default function RoadmapPage({ params }: { params: Promise<{ character: s
         console.error(err);
         setLoading(false);
       });
+
+    // Merge in the server copy (another device / earlier session) and refresh the roadmap
+    let alive = true;
+    syncRoadmapWithServer().then(() => {
+      if (!alive) return;
+      const merged = getCharacterProgress(characterName);
+      setProgress(merged);
+      if (merged.tier2Unlocked && !charProgress.tier2Unlocked) {
+        fetchTier2Lessons(characterName)
+          .then((t2) => alive && setTier2Lessons(t2))
+          .catch(console.error);
+      }
+    });
+    return () => {
+      alive = false;
+    };
   }, [characterName]);
 
   if (loading) {

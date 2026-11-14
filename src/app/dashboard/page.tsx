@@ -11,33 +11,38 @@ export default function DashboardOverview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProgress()
-      .then((data) => {
-        setProgress(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setProgress({
-          total_attempts: 0,
-          correct_attempts: 0,
-          total_stars: 0,
-          accuracy: 0,
+    const load = () => {
+      fetchProgress()
+        .then((data) => {
+          setProgress(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setProgress({
+            total_attempts: 0,
+            correct_attempts: 0,
+            total_stars: 0,
+            accuracy: 0,
+          });
+          setLoading(false);
         });
-        setLoading(false);
-      });
+    };
+    load();
+    // Reload when the parent switches to another child
+    window.addEventListener("dashboard-child-changed", load);
+    return () => window.removeEventListener("dashboard-child-changed", load);
   }, []);
 
-  // Simulated weekly data for the bar chart
-  const weeklyData = [
-    { day: "Mon", value: 35 },
-    { day: "Tue", value: 50 },
-    { day: "Wed", value: 40 },
-    { day: "Thu", value: 55 },
-    { day: "Fri", value: 70 },
-    { day: "Sat", value: 85 },
-    { day: "Sun", value: 95 },
-  ];
+  // Real stars earned per day over the last 7 days (today is the last bar)
+  const weeklyData = (progress?.daily ?? []).map((d) => ({ day: d.day, value: d.stars }));
   const maxVal = Math.max(...weeklyData.map((d) => d.value), 1);
+  const streak = progress?.streak_days ?? 0;
+  const lastActive = progress?.last_activity ? new Date(progress.last_activity) : null;
+  const lastActiveLabel = !lastActive
+    ? ""
+    : lastActive.toDateString() === new Date().toDateString()
+    ? "Today"
+    : lastActive.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 
   return (
     <div className="p-6 md:p-10 max-w-5xl">
@@ -103,7 +108,7 @@ export default function DashboardOverview() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[13px] font-bold text-on-surface">Today</p>
+                      <p className="text-[13px] font-bold text-on-surface">{lastActiveLabel}</p>
                     </div>
                   </div>
                 </div>
@@ -121,13 +126,13 @@ export default function DashboardOverview() {
                 <span className="material-symbols-outlined text-[32px] text-primary mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
                 <p className="text-[14px] font-semibold text-on-surface-variant mb-1">Current Streak</p>
                 <p className="text-[40px] font-bold text-on-surface leading-tight">
-                  {(progress?.total_attempts ?? 0) > 0 ? "1" : "0"} <span className="text-[18px] text-on-surface-variant">Days</span>
+                  {streak} <span className="text-[18px] text-on-surface-variant">Days</span>
                 </p>
                 <div className="flex gap-1.5 justify-center mt-3">
                   {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                     <div
                       key={i}
-                      className={`w-3 h-3 rounded-full ${i === 0 && (progress?.total_attempts ?? 0) > 0 ? 'bg-primary' : 'bg-surface-container-high'}`}
+                      className={`w-3 h-3 rounded-full ${i < Math.min(streak, 7) ? 'bg-primary' : 'bg-surface-container-high'}`}
                     />
                   ))}
                 </div>
@@ -140,22 +145,22 @@ export default function DashboardOverview() {
             <div className="flex items-center justify-between mb-2">
               <div>
                 <h2 className="text-[20px] font-bold text-on-surface">Progress Overview</h2>
-                <p className="text-[14px] text-on-surface-variant">Engagement score over the week</p>
+                <p className="text-[14px] text-on-surface-variant">Stars earned each day this week</p>
               </div>
               <div className="flex gap-2">
-                <button className="px-4 py-1.5 rounded-full text-[13px] font-bold bg-surface-container-high text-on-surface-variant">Week</button>
-                <button className="px-4 py-1.5 rounded-full text-[13px] font-bold bg-primary text-on-primary">Month</button>
+                <button className="px-4 py-1.5 rounded-full text-[13px] font-bold bg-primary text-on-primary">Week</button>
+                <button className="px-4 py-1.5 rounded-full text-[13px] font-bold bg-surface-container-high text-on-surface-variant">Month</button>
               </div>
             </div>
 
             <div className="flex items-end gap-3 mt-6 h-[180px]">
-              {weeklyData.map((d) => (
-                <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
+              {weeklyData.map((d, i) => (
+                <div key={d.day + i} className="flex-1 flex flex-col items-center gap-2">
                   <div
                     className="w-full rounded-xl transition-all duration-500"
                     style={{
-                      height: `${(d.value / maxVal) * 150}px`,
-                      backgroundColor: d.day === "Sun" ? "var(--color-primary)" : "var(--color-secondary-container)",
+                      height: `${Math.max((d.value / maxVal) * 150, 6)}px`,
+                      backgroundColor: i === weeklyData.length - 1 ? "var(--color-primary)" : "var(--color-secondary-container)",
                     }}
                   />
                   <span className="text-[12px] font-semibold text-on-surface-variant">{d.day}</span>

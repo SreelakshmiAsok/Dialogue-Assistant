@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import { CHARACTERS } from "@/lib/characters";
+import { fetchHistory } from "@/lib/api";
+import type { HistorySession } from "@/lib/api";
 
 interface SessionEntry {
   id: string;
@@ -15,63 +18,58 @@ interface SessionEntry {
   exchanges: { question: string; answer: string; correct: boolean }[];
 }
 
-// Generate demo session data from our real characters
-const DEMO_SESSIONS: SessionEntry[] = [
-  {
-    id: "s1",
-    character: "Father",
-    date: "Today",
-    time: "2:30 PM",
-    questionsAttempted: 5,
-    correctAnswers: 4,
-    starsEarned: 18,
-    status: "completed",
-    exchanges: [
-      { question: "En kooda kadaiki variya?", answer: "Varen appa", correct: true },
-      { question: "Saaptiya?", answer: "Saaptaen appa", correct: true },
-      { question: "TV off pannuva?", answer: "Ok appa", correct: true },
-      { question: "Homework mudichacha?", answer: "Mudichiten", correct: false },
-      { question: "Book eduthu kudu.", answer: "Seri appa", correct: true },
-    ],
-  },
-  {
-    id: "s2",
-    character: "Teacher",
-    date: "Yesterday",
-    time: "10:45 AM",
-    questionsAttempted: 3,
-    correctAnswers: 2,
-    starsEarned: 9,
-    status: "attempted",
-    exchanges: [
-      { question: "Good morning! Ulla vaanga.", answer: "Good morning teacher", correct: true },
-      { question: "Homework mudichacha?", answer: "Aama teacher", correct: true },
-      { question: "Notebook kudunga.", answer: "Ok", correct: false },
-    ],
-  },
-  {
-    id: "s3",
-    character: "Friend",
-    date: "Aug 7",
-    time: "4:15 PM",
-    questionsAttempted: 4,
-    correctAnswers: 4,
-    starsEarned: 20,
-    status: "completed",
-    exchanges: [
-      { question: "Cricket vilayaadalaama?", answer: "Va da", correct: true },
-      { question: "Movie paakalaama?", answer: "Polaam da", correct: true },
-      { question: "Saapdalama?", answer: "Sapdalaam da", correct: true },
-      { question: "Game aadalaama?", answer: "Aama da", correct: true },
-    ],
-  },
-];
+function dateLabel(iso: string): string {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "Today";
+  if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function timeLabel(iso: string): string {
+  return new Date(iso).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function toEntry(s: HistorySession): SessionEntry {
+  return {
+    id: s.id,
+    character: s.character,
+    date: dateLabel(s.ended_at),
+    time: timeLabel(s.ended_at),
+    questionsAttempted: s.questionsAttempted,
+    correctAnswers: s.correctAnswers,
+    starsEarned: s.starsEarned,
+    status: s.status,
+    exchanges: s.exchanges.map((e) => ({ question: e.question, answer: e.answer, correct: e.correct })),
+  };
+}
 
 export default function SessionHistory() {
-  const [selectedSession, setSelectedSession] = useState<SessionEntry | null>(DEMO_SESSIONS[0]);
+  const [sessions, setSessions] = useState<SessionEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSession, setSelectedSession] = useState<SessionEntry | null>(null);
   const [filter, setFilter] = useState<"all" | "completed" | "attempted">("all");
 
-  const filteredSessions = DEMO_SESSIONS.filter(
+  useEffect(() => {
+    const load = () => {
+      fetchHistory()
+        .then((data) => {
+          const entries = data.map(toEntry);
+          setSessions(entries);
+          setSelectedSession((prev) => entries.find((e) => e.id === prev?.id) || entries[0] || null);
+        })
+        .catch(() => setSessions([]))
+        .finally(() => setLoading(false));
+    };
+    load();
+    // Reload when the parent switches to another child
+    window.addEventListener("dashboard-child-changed", load);
+    return () => window.removeEventListener("dashboard-child-changed", load);
+  }, []);
+
+  const filteredSessions = sessions.filter(
     (s) => filter === "all" || s.status === filter
   );
 
@@ -103,6 +101,12 @@ export default function SessionHistory() {
           </div>
 
           {/* Session cards */}
+          {!loading && sessions.length === 0 && (
+            <div className="text-center py-10 px-4 bg-surface-container-low rounded-2xl">
+              <span className="material-symbols-outlined text-[40px] text-outline-variant mb-2">history</span>
+              <p className="text-[15px] text-on-surface-variant">No practice sessions yet. Answers will appear here as your child practises.</p>
+            </div>
+          )}
           <div className="space-y-3">
             {filteredSessions.map((session) => {
               const charMeta = getCharMeta(session.character);

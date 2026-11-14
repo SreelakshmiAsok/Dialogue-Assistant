@@ -40,6 +40,35 @@ export interface ProgressData {
   correct_attempts: number;
   total_stars: number;
   accuracy: number;
+  streak_days?: number;
+  daily?: { day: string; date: string; stars: number }[];
+  last_activity?: string | null;
+}
+
+export interface HistoryExchange {
+  question: string;
+  answer: string;
+  correct: boolean;
+  at: string;
+}
+
+export interface HistorySession {
+  id: string;
+  character: string;
+  tier: number;
+  started_at: string;
+  ended_at: string;
+  exchanges: HistoryExchange[];
+  starsEarned: number;
+  questionsAttempted: number;
+  correctAnswers: number;
+  status: "completed" | "attempted";
+}
+
+export interface ChildSummary {
+  id: string;
+  email: string;
+  name: string;
 }
 
 export interface Tier2LessonSummary {
@@ -87,7 +116,7 @@ export interface Tier2EvaluationResult {
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL
   ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/api`
   : "/api";
-import { getAuthHeaders, getRole } from "./auth";
+import { getAuthHeaders, getParentToken, getToken } from "./auth";
 
 export async function fetchCharacters(): Promise<Character[]> {
   const res = await fetch(`${API_BASE}/characters`, { headers: getAuthHeaders() });
@@ -131,15 +160,54 @@ export function getTtsAudioUrl(text: string, character: string): string {
   return `${API_BASE}/tts?text=${encodeURIComponent(text)}&character=${encodeURIComponent(character)}`;
 }
 
+// ---- Parent dashboard data (per child, stored on the server / MongoDB) ----
+function dashboardHeaders(): Record<string, string> {
+  const token = getParentToken() || getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+const SELECTED_CHILD_KEY = "dashboard_child_id";
+
+export function getSelectedChildId(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    return localStorage.getItem(SELECTED_CHILD_KEY) || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function setSelectedChildId(id: string): void {
+  try {
+    localStorage.setItem(SELECTED_CHILD_KEY, id);
+    window.dispatchEvent(new Event("dashboard-child-changed"));
+  } catch {
+    /* ignore */
+  }
+}
+
+export async function fetchChildren(): Promise<ChildSummary[]> {
+  const res = await fetch(`${API_BASE}/parents/children`, { headers: dashboardHeaders() });
+  if (!res.ok) throw new Error("Failed to fetch children");
+  const data = await res.json();
+  return data.children || [];
+}
+
 export async function fetchProgress(studentId?: string): Promise<ProgressData> {
-  const role = getRole();
-  const url = role === "parent" && studentId 
-    ? `${API_BASE}/progress?student_id=${studentId}` 
-    : `${API_BASE}/progress`;
-    
-  const res = await fetch(url, { headers: getAuthHeaders() });
+  const id = studentId || getSelectedChildId();
+  const url = id ? `${API_BASE}/progress?student_id=${encodeURIComponent(id)}` : `${API_BASE}/progress`;
+  const res = await fetch(url, { headers: dashboardHeaders() });
   if (!res.ok) throw new Error("Failed to fetch progress");
   return res.json();
+}
+
+export async function fetchHistory(studentId?: string): Promise<HistorySession[]> {
+  const id = studentId || getSelectedChildId();
+  const url = id ? `${API_BASE}/history?student_id=${encodeURIComponent(id)}` : `${API_BASE}/history`;
+  const res = await fetch(url, { headers: dashboardHeaders() });
+  if (!res.ok) throw new Error("Failed to fetch history");
+  const data = await res.json();
+  return data.sessions || [];
 }
 
 export async function fetchTier2Lessons(character: string): Promise<Tier2LessonSummary[]> {

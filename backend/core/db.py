@@ -46,6 +46,8 @@ class Database:
                     self.db = self.client["dialogue_assistant"]
                     self.use_fallback = False
                     self._seed_mongodb_if_empty()
+                    self._ensure_indexes()
+                    self._import_local_users_if_empty()
                     print("[DB] Connected to MongoDB.")
                 else:
                     print("[DB] No valid MONGO_URI configured. Using local JSON fallback.")
@@ -55,6 +57,32 @@ class Database:
                 self.use_fallback = True
         else:
             print("[DB] pymongo not installed. Using local JSON fallback.")
+
+    def _ensure_indexes(self):
+        """Unique users, one progress row per (user, question, tier), one roadmap doc per user."""
+        try:
+            self.db["users"].create_index("email", unique=True)
+            self.db["users"].create_index("id", unique=True)
+            self.db["progress"].create_index([("user_id", 1), ("interaction_id", 1), ("tier", 1)])
+            self.db["roadmap_progress"].create_index("user_id", unique=True)
+        except Exception as e:
+            print(f"[DB] Index creation skipped: {e}")
+
+    def _import_local_users_if_empty(self):
+        """First connection only: copy accounts from users.json so nobody has to sign up again."""
+        try:
+            if self.db["users"].count_documents({}) > 0:
+                return
+            users_file = os.path.join(os.path.dirname(__file__), "..", "..", "users.json")
+            if not os.path.exists(users_file):
+                return
+            with open(users_file, "r", encoding="utf-8-sig") as f:
+                local_users = json.load(f)
+            if local_users:
+                self.db["users"].insert_many(local_users)
+                print(f"[DB] Imported {len(local_users)} accounts from users.json into MongoDB.")
+        except Exception as e:
+            print(f"[DB] Local user import skipped: {e}")
 
     def _seed_mongodb_if_empty(self):
         """Seed MongoDB with JSON files, upserting to ensure latest lessons."""

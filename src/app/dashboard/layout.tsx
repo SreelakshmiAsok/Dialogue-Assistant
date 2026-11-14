@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { fetchChildren, getSelectedChildId, setSelectedChildId } from "@/lib/api";
+import type { ChildSummary } from "@/lib/api";
 
 const NAV_ITEMS = [
   { label: "Overview", icon: "home", path: "/dashboard" },
@@ -15,6 +18,44 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [children_, setChildren] = useState<ChildSummary[]>([]);
+  const [selectedChild, setSelectedChild] = useState<string>("");
+
+  // A parent with several children picks whose progress to view
+  useEffect(() => {
+    fetchChildren()
+      .then((list) => {
+        setChildren(list);
+        const saved = getSelectedChildId();
+        const valid = list.find((c) => c.id === saved) ? saved : list[0]?.id;
+        if (valid) {
+          setSelectedChild(valid);
+          if (valid !== saved) setSelectedChildId(valid);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const childSwitcher =
+    children_.length > 1 ? (
+      <label className="block mb-6">
+        <span className="block text-[12px] font-semibold text-on-surface-variant mb-1">Viewing</span>
+        <select
+          value={selectedChild}
+          onChange={(e) => {
+            setSelectedChild(e.target.value);
+            setSelectedChildId(e.target.value);
+          }}
+          className="w-full h-11 px-3 rounded-xl border-2 border-outline-variant bg-surface-container-lowest text-[14px] font-semibold text-on-surface"
+        >
+          {children_.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name || c.email.split("@")[0]}
+            </option>
+          ))}
+        </select>
+      </label>
+    ) : null;
 
   return (
     <div className="bg-background text-on-background min-h-screen font-sans antialiased flex">
@@ -27,6 +68,8 @@ export default function DashboardLayout({
           <h2 className="text-[24px] font-bold text-primary leading-[32px]">Serene Path</h2>
           <p className="text-[13px] font-medium text-on-surface-variant">Therapy Assistant</p>
         </button>
+
+        {childSwitcher}
 
         <nav className="flex flex-col gap-1 flex-1">
           {NAV_ITEMS.map((item) => {
@@ -90,6 +133,7 @@ export default function DashboardLayout({
 
       {/* Main content */}
       <main className="flex-1 min-h-screen pb-24 md:pb-0">
+        <div className="md:hidden px-6 pt-6">{childSwitcher}</div>
         {children}
       </main>
     </div>
