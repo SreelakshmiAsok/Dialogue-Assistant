@@ -50,7 +50,8 @@
       ],
       "feedback": {
         "hint": "Compliment your friend's drawing!",
-        "gentle_correction": "Try saying: 'Super ah irukku da'"
+        "gentle_correction": "Try saying: 'Super ah irukku da'",
+        "hint_tamil": "ஃப்ரெண்ட் வரைஞ்சத பாராட்டு."
       },
       "expected_intents": [
         "OfferCompliment"
@@ -58,7 +59,8 @@
       "violates": [
         "HostileRefusal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "சூப்பரா இருக்கு டா"
     },
     {
       "turn_id": "turn_2",
@@ -89,7 +91,8 @@
       ],
       "feedback": {
         "hint": "Express enthusiasm for their favorite character.",
-        "gentle_correction": "Try saying: 'Wow super'"
+        "gentle_correction": "Try saying: 'Wow super'",
+        "hint_tamil": "அவனுக்குப் பிடிச்ச கேரக்டர பத்தி ஜாலியா பேசு."
       },
       "expected_intents": [
         "EnthusiasticAgreement"
@@ -98,7 +101,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "வாவ், சூப்பர்"
     }
-  ]
+  ],
+  "scenario_tamil": "உன் ஃப்ரெண்ட் அவன் வரைஞ்ச ட்ராயிங்க உனக்குக் காட்டுறான்."
 }

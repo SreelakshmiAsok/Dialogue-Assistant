@@ -26,7 +26,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "(Talking on phone) Aama, adhu naalaiki anupren... (Pauses)",
-        "tamil": "(போனில் பேசுகிறார்) ஆமா, அது நாளைக்கு அனுப்புறேன்... (நிறுத்துகிறார்)"
+        "tamil": "(போனில் பேசுகிறார்) ஆமா, அது நாளைக்கு அனுப்புறேன்... (நிறுத்துகிறார்)",
+        "english": "(Talking on phone) Yes, I will send it tomorrow... (Pauses)"
       },
       "target_intent": "PoliteInterruption",
       "required_features": [
@@ -41,11 +42,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Appa is on the phone. Say excuse me to interrupt politely.",
-        "gentle_correction": "Try saying: 'Excuse me appa'"
+        "gentle_correction": "Try saying: 'Excuse me appa'",
+        "hint_tamil": "அப்பா போன்ல இருக்காரு. மெதுவா எக்ஸ்கியூஸ் மீ அப்பான்னு சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "(To you) Sollu kanna, enna venum?",
-        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?"
+        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?",
+        "english": "Tell me, son, what do you need?"
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -55,14 +58,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "எக்ஸ்கியூஸ் மீ அப்பா"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "(To you) Sollu kanna, enna venum?",
-        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?"
+        "tamil": "(உன்னிடம்) சொல்லு கண்ணா, என்ன வேணும்?",
+        "english": "Tell me, son, what do you need?"
       },
       "target_intent": "RequestHelp",
       "required_features": [
@@ -77,11 +82,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask Appa politely to help you find your book.",
-        "gentle_correction": "Try saying: 'Enaku oru help venum, book thedi thareengala?'"
+        "gentle_correction": "Try saying: 'Enaku oru help venum, book thedi thareengala?'",
+        "hint_tamil": "புக் தேட ஹெல்ப் பண்ணுங்கன்னு அப்பாகிட்ட பணிவா கேளு."
       },
       "next_character_reply": {
         "tanglish": "Seri kanna, idho varen.",
-        "tamil": "சரி கண்ணா, இதோ வரேன்."
+        "tamil": "சரி கண்ணா, இதோ வரேன்.",
+        "english": "Okay son, I am coming."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -91,12 +98,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "எனக்கு ஒரு ஹெல்ப் வேணும், புக் தேடித் தரீங்களா?"
     }
   ],
   "completion": {
     "success_title": "Very Polite! 🗣️",
     "success_message": "Great job! You waited for a pause and interrupted politely!",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "உனக்கு ஒரு புக் தேடணும், ஹெல்ப் வேணும். ஆனா அப்பா போன்ல பேசிட்டு இருக்காரு."
 }

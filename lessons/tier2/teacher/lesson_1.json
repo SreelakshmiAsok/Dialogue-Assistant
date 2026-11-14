@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Yes, kanna? Ennaku edhavathu help venuma?",
-        "tamil": "எஸ், கண்ணா? எனக்கு ஏதாவது ஹெல்ப் வேணுமா?"
+        "tamil": "எஸ், கண்ணா? எனக்கு ஏதாவது ஹெல்ப் வேணுமா?",
+        "english": "Yes, dear? Do you need some help?"
       },
       "target_intent": "RequestPermission",
       "required_features": [
@@ -50,11 +51,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask your teacher politely if you can go to the restroom. Remember to say 'Miss' or 'Teacher'!",
-        "gentle_correction": "Try asking: 'Miss, naan restroom pogalama?'"
+        "gentle_correction": "Try asking: 'Miss, naan restroom pogalama?'",
+        "hint_tamil": "டீச்சர்கிட்ட பணிவா, ரெஸ்ட்ரூம் போகலாமான்னு கேளு. மிஸ்னு சொல்ல மறந்துடாத."
       },
       "next_character_reply": {
         "tanglish": "Kandippa pogalam. Seekiram poitu va.",
-        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா."
+        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா.",
+        "english": "Sure, you can go. Come back quickly."
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -64,14 +67,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "மிஸ், நான் ரெஸ்ட்ரூம் போகலாமா?"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Kandippa pogalam. Seekiram poitu va.",
-        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா."
+        "tamil": "கண்டிப்பா போகலாம். சீக்கிரம் போய்ட்டு வா.",
+        "english": "Sure, you can go. Come back quickly."
       },
       "target_intent": "AcknowledgePermission",
       "required_features": [
@@ -88,11 +93,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Always thank your teacher when she gives permission!",
-        "gentle_correction": "A polite reply is: 'Thank you miss!'"
+        "gentle_correction": "A polite reply is: 'Thank you miss!'",
+        "hint_tamil": "பர்மிஷன் குடுத்தா டீச்சருக்கு தேங்க்ஸ் சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "You're welcome!",
-        "tamil": "யு ஆர் வெல்கம்!"
+        "tamil": "யு ஆர் வெல்கம்!",
+        "english": "You are welcome!"
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -102,12 +109,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "தேங்க்ஸ் மிஸ்"
     }
   ],
   "completion": {
     "success_title": "Good Manners! 🏫",
     "success_message": "Excellent! You asked the teacher respectfully and remembered your manners.",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "க்ளாஸ்ல இருக்க. உனக்கு ரெஸ்ட்ரூம் போகணும். டீச்சர் போர்டு பக்கத்துல இருக்காங்க."
 }

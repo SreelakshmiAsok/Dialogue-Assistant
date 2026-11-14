@@ -1,0 +1,118 @@
+{
+  "_id": "t2_friend_00",
+  "id": "t2_friend_00",
+  "character": "Friend",
+  "tier": 2,
+  "difficulty": 1,
+  "skill": "Introducing Yourself & Getting to Know a New Friend",
+  "learning_objective": "Child introduces themselves by name, shares their school when asked, and responds warmly when meeting a new friend.",
+  "curriculum": {
+    "source": "UCLA PEERS® Curriculum (Dr. Elizabeth Laugeson)",
+    "module": "Starting and Keeping a Friendly Conversation",
+    "target_rules": [
+      "Say your name when someone introduces themselves",
+      "Answer simple questions about yourself, like your school",
+      "Listen and respond in a friendly way"
+    ]
+  },
+  "scenario": "A new friend comes up to you, says hi and introduces themselves. You want to get to know each other.",
+  "scenario_tamil": "ஒரு புது ஃப்ரெண்ட் உன்கிட்ட வந்து ஹாய் சொல்லி, அவன் பேர சொல்றான். நீங்க ரெண்டு பேரும் பேசி பழகப் போறீங்க.",
+  "initial_prompt": {
+    "tanglish": "Hi! Naan Arun. Un peru enna?",
+    "tamil": "ஹாய்! நான் அருண். உன் பேரு என்ன?",
+    "english": "Hi! I am Arun. What is your name?"
+  },
+  "turns": [
+    {
+      "turn_id": "turn_1",
+      "step_number": 1,
+      "prompt": {
+        "tanglish": "Hi! Naan Arun. Un peru enna?",
+        "tamil": "ஹாய்! நான் அருண். உன் பேரு என்ன?",
+        "english": "Hi! I am Arun. What is your name?"
+      },
+      "target_intent": "SelfIntroduction",
+      "required_features": [
+        "NameIntro"
+      ],
+      "expected_responses": [
+        "En peru Ravi",
+        "Naan Ravi",
+        "Hi, en peru Ravi",
+        "My name is Ravi",
+        "Hello, naan Ravi"
+      ],
+      "model_answer": "En peru Ravi",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Tell your friend your name. Say 'En peru ...'.",
+        "gentle_correction": "Try saying: 'En peru Ravi' (My name is Ravi)",
+        "hint_tamil": "ஃப்ரெண்ட்கிட்ட உன் பேர சொல்லு. என் பேரு ... ன்னு சொல்லு."
+      },
+      "next_character_reply": {
+        "tanglish": "Oh, nalla peru! Nee entha school la padikira?",
+        "tamil": "ஓ, நல்ல பேரு! நீ எந்த ஸ்கூல்ல படிக்கிற?",
+        "english": "Oh, nice name! Which school do you study in?"
+      },
+      "next_turn_id": "turn_2",
+      "is_terminal": false,
+      "expected_intents": [
+        "SelfIntroduction"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "என் பேரு ரவி"
+    },
+    {
+      "turn_id": "turn_2",
+      "step_number": 2,
+      "prompt": {
+        "tanglish": "Oh, nalla peru! Nee entha school la padikira?",
+        "tamil": "ஓ, நல்ல பேரு! நீ எந்த ஸ்கூல்ல படிக்கிற?",
+        "english": "Oh, nice name! Which school do you study in?"
+      },
+      "target_intent": "ShareSchool",
+      "required_features": [
+        "SchoolMention"
+      ],
+      "expected_responses": [
+        "Naan Sunrise school la padikiren",
+        "My school name is ABC School",
+        "Amrita Vidyalayam",
+        "Kendriya Vidyalaya",
+        "Government school",
+        "St. Mary's School",
+        "Naan Amrita Vidyalayam la padikiren"
+      ],
+      "model_answer": "Naan Sunrise school la padikiren",
+      "max_retries": 2,
+      "feedback": {
+        "hint": "Tell your friend the name of your school. Any school name is fine!",
+        "gentle_correction": "Try saying: 'Naan Sunrise school la padikiren' (use your own school's name)",
+        "hint_tamil": "உன் ஸ்கூல் பேர சொல்லு. எந்த ஸ்கூல் பேரா இருந்தாலும் ஓகே."
+      },
+      "next_character_reply": {
+        "tanglish": "Oh nice! Unna meet pannadhula romba happy!",
+        "tamil": "ஓ சூப்பர்! உன்ன மீட் பண்ணதுல ரொம்ப ஹேப்பி!",
+        "english": "Oh nice! It's nice to meet you!"
+      },
+      "next_turn_id": null,
+      "is_terminal": true,
+      "expected_intents": [
+        "ShareSchool"
+      ],
+      "allowed_intents": [],
+      "violates": [],
+      "violating_intents": [],
+      "nextTurn": null,
+      "model_answer_tamil": "நான் சன்ரைஸ் ஸ்கூல்ல படிக்கிறேன்"
+    }
+  ],
+  "completion": {
+    "success_title": "New Friend Made! 👋",
+    "success_message": "Great job! You told your name and school and made a new friend!",
+    "stars": 3
+  }
+}

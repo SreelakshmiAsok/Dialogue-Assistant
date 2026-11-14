@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Hey! Naanga cricket vilayadrom.",
-        "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்."
+        "tamil": "ஹேய்! நாங்க கிரிக்கெட் விளையாடுறோம்.",
+        "english": "Hey! We are playing cricket."
       },
       "target_intent": "RequestToJoin",
       "required_features": [
@@ -44,11 +45,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask your friend nicely if you can join the game!",
-        "gentle_correction": "Try asking: 'Naanum vilayadava?' (Can I play?)"
+        "gentle_correction": "Try asking: 'Naanum vilayadava?' (Can I play?)",
+        "hint_tamil": "கேம்ல சேந்துக்கலாமான்னு ஃப்ரெண்ட்கிட்ட நல்லா கேளு."
       },
       "next_character_reply": {
         "tanglish": "Seri va! Aana adutha round la nee dhaan batting pannanum.",
-        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்."
+        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்.",
+        "english": "Okay, come! But in the next round you must bat."
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -58,14 +61,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "நானும் விளையாடவா?"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Seri va! Aana adutha round la nee dhaan batting pannanum.",
-        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்."
+        "tamil": "சரி வா! ஆனா அடுத்த ரவுண்ட்ல நீ தான் பேட்டிங் பண்ணனும்.",
+        "english": "Okay, come! But in the next round you must bat."
       },
       "target_intent": "CooperationAgreement",
       "required_features": [
@@ -82,11 +87,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Say okay and thank your friend for letting you play!",
-        "gentle_correction": "A friendly reply is: 'Seri da, thank you!'"
+        "gentle_correction": "A friendly reply is: 'Seri da, thank you!'",
+        "hint_tamil": "ஓகே சொல்லி, சேத்துக்கிட்டதுக்கு தேங்க்ஸ் சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Super! Bat eduthutu vaa, start pannalam!",
-        "tamil": "சூப்பர்! பேட் எடுத்துட்டு வா, ஸ்டார்ட் பண்ணலாம்!"
+        "tamil": "சூப்பர்! பேட் எடுத்துட்டு வா, ஸ்டார்ட் பண்ணலாம்!",
+        "english": "Super! Take the bat and come, let's start!"
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -96,12 +103,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "சரி டா, தேங்க்ஸ்"
     }
   ],
   "completion": {
     "success_title": "Game Joined! 🏏",
     "success_message": "Awesome! You joined the cricket game using polite turn-taking!",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "க்ரவுண்ட்ல உன் ஃப்ரெண்ட் கிரிக்கெட் விளையாடிட்டு இருக்கான். நீயும் சேரணும்னு நினைக்கிற."
 }

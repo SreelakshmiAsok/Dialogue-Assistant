@@ -53,7 +53,8 @@
       ],
       "feedback": {
         "hint": "Apologize politely to Teacher for forgetting your book.",
-        "gentle_correction": "Try saying: 'Sorry miss, naan book marandhuten'"
+        "gentle_correction": "Try saying: 'Sorry miss, naan book marandhuten'",
+        "hint_tamil": "புக் மறந்ததுக்கு டீச்சர்கிட்ட சாரி கேளு."
       },
       "expected_intents": [
         "PoliteApology"
@@ -62,7 +63,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "சாரி மிஸ், நான் புக் மறந்துட்டேன்"
     },
     {
       "turn_id": "turn_2",
@@ -96,7 +98,8 @@
       ],
       "feedback": {
         "hint": "Thank Teacher for letting you bring it tomorrow.",
-        "gentle_correction": "Try saying: 'Seri miss, thank you'"
+        "gentle_correction": "Try saying: 'Seri miss, thank you'",
+        "hint_tamil": "நாளைக்கு எடுத்துட்டு வர விட்டதுக்கு தேங்க்ஸ் சொல்லு."
       },
       "expected_intents": [
         "AcceptCorrection"
@@ -106,7 +109,9 @@
         "DisrespectfulInformal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "சரி மிஸ், தேங்க்ஸ்"
     }
-  ]
+  ],
+  "scenario_tamil": "க்ளாஸ்க்கு இங்கிலீஷ் புக் எடுத்துட்டு வர மறந்துட்ட."
 }

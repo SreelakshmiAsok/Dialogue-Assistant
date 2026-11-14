@@ -54,7 +54,8 @@
       ],
       "feedback": {
         "hint": "Say NO loudly and pull your hand away!",
-        "gentle_correction": "Try saying: 'No! Vidu en kaiya!'"
+        "gentle_correction": "Try saying: 'No! Vidu en kaiya!'",
+        "hint_tamil": "சத்தமா வேணாம்னு சொல்லி, கைய இழுத்துக்கோ."
       },
       "expected_intents": [
         "EscapeDanger"
@@ -62,7 +63,8 @@
       "violates": [
         "StrangerCompliance"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "இல்ல! என் கைய விடுங்க!"
     },
     {
       "turn_id": "turn_2",
@@ -93,7 +95,8 @@
       ],
       "feedback": {
         "hint": "Scream for help as loud as you can!",
-        "gentle_correction": "Try shouting: 'Help! Yarachum kaapathunga!'"
+        "gentle_correction": "Try shouting: 'Help! Yarachum kaapathunga!'",
+        "hint_tamil": "முடிஞ்ச அளவு சத்தமா ஹெல்ப்னு கத்து."
       },
       "expected_intents": [
         "CallForHelp"
@@ -102,7 +105,9 @@
         "StrangerCompliance"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "ஹெல்ப்! யாராவது காப்பாத்துங்க!"
     }
-  ]
+  ],
+  "scenario_tamil": "நீ நடந்து போகும்போது தெரியாத ஒருத்தர் உன் பின்னாடியே வராரு."
 }

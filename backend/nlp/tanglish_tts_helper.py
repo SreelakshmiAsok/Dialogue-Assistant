@@ -9,6 +9,8 @@ import re
 import glob
 import json
 import subprocess
+import threading
+import uuid
 from gtts import gTTS
 
 # Normalization helper for Tanglish phrases
@@ -52,6 +54,10 @@ COMMON_VOCAB = {
     "saaptacha": "சாப்பிட்டாச்சா",
     "saaptiya": "சாப்பிட்டியா"
 }
+
+_FILE_LOCKS = {}
+_LOCKS_GUARD = threading.Lock()
+
 
 class TanglishAudioResolver:
     def __init__(self):
@@ -128,8 +134,8 @@ class TanglishAudioResolver:
         if not cleaned:
             cleaned = text.strip()
 
-        # Narrator stays in original (English)
-        if character == "Narrator":
+        # Narrator stays English; Scenario/Result are already authored Tamil
+        if character in ("Narrator", "Scenario", "Result") and (character == "Narrator" or has_tamil(cleaned)):
             return cleaned
 
         # If already in Tamil Unicode script, return it
@@ -151,6 +157,33 @@ class TanglishAudioResolver:
 
     def synthesize_to_file(self, text, character, output_filepath):
         """
+        Thread-safe wrapper: one generator per output file, written to a temp file and
+        atomically moved into place, so two simultaneous requests for the same sentence
+        (e.g. React Strict Mode double-mount) can never write the same mp3 at once or
+        serve a half-written/garbled file.
+        """
+        output_filepath = os.path.abspath(output_filepath)
+        with _LOCKS_GUARD:
+            lock = _FILE_LOCKS.setdefault(output_filepath, threading.Lock())
+        with lock:
+            if os.path.exists(output_filepath) and os.path.getsize(output_filepath) > 0:
+                return True
+            tmp_path = f"{output_filepath}.{uuid.uuid4().hex}.tmp.mp3"
+            try:
+                ok = self._synthesize_unlocked(text, character, tmp_path)
+                if ok and os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
+                    os.replace(tmp_path, output_filepath)
+                    return True
+                return False
+            finally:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.remove(tmp_path)
+                    except OSError:
+                        pass
+
+    def _synthesize_unlocked(self, text, character, output_filepath):
+        """
         Synthesizes speech to output_filepath.
         Uses edge-tts with ta-IN neural voices for characters.
         Falls back to gTTS if edge-tts fails or creates a 0-byte file.
@@ -166,7 +199,18 @@ class TanglishAudioResolver:
                 pass
 
         # Select voice
-        if character == "Narrator":
+        extra_args = []
+        if character == "Scenario":
+            # Clear, slightly robotic Tamil voice for Tier 2 scenarios
+            voice = "ta-IN-ValluvarNeural"
+            lang = "ta"
+            extra_args = ["--rate=-10%", "--pitch=-4Hz"]
+        elif character == "Result":
+            # Same clear, slightly robotic Tamil voice style for Tier 2 results/feedback
+            voice = "ta-IN-ValluvarNeural"
+            lang = "ta"
+            extra_args = ["--rate=-10%", "--pitch=-6Hz"]
+        elif character == "Narrator":
             voice = "en-IN-NeerjaExpressiveNeural"
             lang = "en"
         elif character in ["Father", "Stranger", "Friend"]:
@@ -179,7 +223,7 @@ class TanglishAudioResolver:
         # Try edge-tts first
         try:
             res = subprocess.run(
-                ["edge-tts", "--voice", voice, "--text", spoken_text, "--write-media", output_filepath],
+                ["edge-tts", "--voice", voice, *extra_args, "--text", spoken_text, "--write-media", output_filepath],
                 capture_output=True,
                 text=True,
                 timeout=12

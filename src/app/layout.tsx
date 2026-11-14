@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AudioRouteGuard from "@/components/AudioRouteGuard";
 
 export const metadata: Metadata = {
   title: "Navil",
@@ -24,6 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-soft-gradient text-on-background">
+        <AudioRouteGuard />
         {children}
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchQuestions, evaluateAnswer, getAudioUrl, getTtsAudioUrl } from "@/lib/api";
 import { getCharacterByBackendName } from "@/lib/characters";
+import { playSequence, stopAll } from "@/lib/audioManager";
 import type { Question, EvaluationResult } from "@/lib/api";
 import type { CharacterMeta } from "@/lib/characters";
 import { fetchTier2Lessons, fetchTier2Lesson, evaluateTier2Turn } from "@/lib/api";
@@ -36,9 +37,13 @@ function Tier1SessionContent() {
   const starsRef = useRef(0);
   const correctRef = useRef(0);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const playCounterRef = useRef(0);
+
+  // Speak a Tamil result/feedback line through the central audio manager (stops anything else first)
+  const playTamilResult = useCallback((text?: string) => {
+    if (!text || !/[஀-௿]/.test(text)) return;
+    playSequence([{ url: getTtsAudioUrl(text, "Result"), text }]);
+  }, []);
 
   const currentQuestion = questions[currentIndex] || null;
   const progress = questions.length > 0 ? ((currentIndex) / questions.length) * 100 : 0;
@@ -71,6 +76,7 @@ function Tier1SessionContent() {
     try {
       const result = await evaluateAnswer(currentQuestion.id, answer);
       setEvaluation(result);
+      playTamilResult(result.feedback_tamil);
       starsRef.current += result.stars;
       setSessionStars(starsRef.current);
       if (result.correct) {
@@ -82,6 +88,7 @@ function Tier1SessionContent() {
         correct: false,
         stars: 0,
         feedback: "Something went wrong. Let's try again! 🌸",
+        feedback_tamil: "ஏதோ தவறு நடந்தது. மீண்டும் முயற்சி செய்வோம்.",
         suggestion: null,
         model_answer: "",
         encouragement: "Keep going!",
@@ -93,108 +100,37 @@ function Tier1SessionContent() {
     } finally {
       setIsEvaluating(false);
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, playTamilResult]);
 
+// Speaker button / initial playback: scenario (Tamil) then the character's Tamil line.
+// playSequence() stops whatever is playing first, so repeated clicks never overlap.
 const handlePlayAudio = useCallback(async () => {
   if (!currentQuestion) return;
-  const currentPlayId = ++playCounterRef.current;
-  
-  // Cancel any in‑progress speech or audio before starting new
-  window.speechSynthesis.cancel();
-  if (audioRef.current) {
-    audioRef.current.pause();
-    audioRef.current.src = "";
-    audioRef.current = null;
-  }
+  const items = [];
+  const storyTa = currentQuestion.social_story_tamil;
+  if (storyTa) items.push({ url: getTtsAudioUrl(storyTa, "Scenario"), text: storyTa });
+  items.push({ url: getAudioUrl(currentQuestion.id), text: currentQuestion.question_tamil || "" });
   setIsPlaying(true);
+  const result = await playSequence(items);
+  if (result !== "cancelled") setIsPlaying(false);
+}, [currentQuestion]);
 
-  // Helper to speak text via TTS and resolve when finished
-  const speak = (text: string) =>
-    new Promise<void>((resolve) => {
-      if ("speechSynthesis" in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "ta-IN";
-        utterance.rate = 0.85;
-        const voices = window.speechSynthesis.getVoices();
-        const isMale = ["Father", "Stranger"].includes(characterName);
-        const preferred =
-          voices.find(
-            (v) =>
-              v.lang.startsWith("ta") &&
-              (isMale
-                ? v.name.toLowerCase().includes("male") || v.name.includes("Valluvar")
-                : v.name.toLowerCase().includes("female") || v.name.includes("Pallavi"))
-          ) ||
-          voices.find(
-            (v) =>
-              v.lang.startsWith("en") &&
-              (isMale
-                ? v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david") || v.name.toLowerCase().includes("mark")
-                : v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("susan"))
-          );
-        if (preferred) utterance.voice = preferred;
-        utterance.pitch = isMale ? 0.75 : 1.1;
-        utterance.onend = () => resolve();
-        utterance.onerror = () => resolve(); // Resolve immediately on cancel/error so we don't hang
-        window.speechSynthesis.speak(utterance);
-      } else {
-        resolve();
-      }
-    });
-
-  try {
-    // 1. Play context (social_story) if present
-    if (currentQuestion.social_story) {
-      await speak(currentQuestion.social_story);
-    }
-    
-    // Abort if another play was requested while we were speaking the story
-    if (currentPlayId !== playCounterRef.current) return;
-    
-    // 2. Play dialogue – try pre‑recorded audio first, fallback to TTS
-    const audio = new Audio(getAudioUrl(currentQuestion.id));
-    audioRef.current = audio;
-    await new Promise<void>((resolve) => {
-      const onEnd = () => resolve();
-      const onError = () => {
-        if (currentPlayId !== playCounterRef.current) return resolve();
-        // fallback to TTS for the dialogue text
-        speak(currentQuestion.question_tanglish).then(() => resolve());
-      };
-      audio.onended = onEnd;
-      audio.onerror = onError;
-      const playPromise = audio.play();
-      if (playPromise && typeof playPromise.catch === "function") {
-        playPromise.catch(onError);
-      }
-    });
-  } finally {
-    if (currentPlayId === playCounterRef.current) {
-      setIsPlaying(false);
-    }
-  }
-}, [currentQuestion, characterName]);
-
+// Play once when a question opens; silence everything when it changes or the page unmounts.
 useEffect(() => {
-  if (currentQuestion) {
+  let alive = true;
+  if (currentQuestion && alive) {
     handlePlayAudio();
   }
-  
-  // Cleanup to ensure we don't get overlapping audio on unmount or question change
   return () => {
-    playCounterRef.current++; // Invalidates any running async audio promises
-    window.speechSynthesis.cancel();
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
+    alive = false;
+    stopAll();
   };
 }, [currentQuestion, handlePlayAudio]);
-
-
 
   // Start speech recognition
   const handleMicTap = useCallback(() => {
     if (isListening) return;
+    stopAll();
 
     const SpeechRecognitionAPI = (window as unknown as { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition ||
       (window as unknown as { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
@@ -291,7 +227,10 @@ useEffect(() => {
       {/* Top Navigation */}
       <header className="w-full h-14 flex justify-between items-center px-4 md:px-12 shrink-0 relative z-10">
         <button 
-          onClick={() => router.push("/choose-friend")}
+          onClick={() => {
+            stopAll(); // silence audio immediately, before the route change completes
+            router.push("/choose-friend");
+          }}
           className="w-11 h-11 flex items-center justify-center text-primary rounded-full hover:bg-surface-container-high transition-colors active:scale-95 shadow-sm bg-surface"
         >
           <span className="material-symbols-outlined text-[24px]">close</span>
@@ -550,8 +489,6 @@ function Tier2SessionContent() {
   const recognitionRef = useRef<any>(null);
   const starsAccumulatedRef = useRef<number>(0);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
-  const audioTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hasInteractedRef = useRef<boolean>(false);
 
   // Auto scroll chat to bottom on new messages
   useEffect(() => {
@@ -560,68 +497,208 @@ function Tier2SessionContent() {
     }
   }, [conversationHistory, evaluation, isEvaluating]);
 
-  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const mountedRef = useRef(true);
+  const initialBlockedRef = useRef(false);
+  const timersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
-  const playAudioSequence = useCallback(
-    async (items: { text: string; character: string }[]) => {
-      // Cancel any ongoing audio
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current.src = "";
-        currentAudioRef.current = null;
-      }
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
+  // Turn-taking state (refs so async callbacks always see the latest value)
+  const evaluatingRef = useRef(false);
+  const completedRef = useRef(false);
+  const finalAppreciationDoneRef = useRef(false); // closing appreciation fires at most once
+  const listenGenRef = useRef(0);
+  const silentRoundsRef = useRef(0);
+  const micBlockedRef = useRef(false);
+  const autoListenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const submitRef = useRef<(answer: string) => void>(() => {});
+  const [micNotice, setMicNotice] = useState("");
 
-      setIsPlayingAudio(true);
+  const later = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timersRef.current.delete(id);
+      if (mountedRef.current) fn();
+    }, ms);
+    timersRef.current.add(id);
+    return id;
+  }, []);
+
+  // Turn the microphone OFF and invalidate any pending/auto listen. Safe to call any time.
+  const abortListening = useCallback(() => {
+    listenGenRef.current++;
+    if (autoListenTimerRef.current) {
+      clearTimeout(autoListenTimerRef.current);
+      autoListenTimerRef.current = null;
+    }
+    const rec = recognitionRef.current;
+    recognitionRef.current = null;
+    if (rec) {
+      rec.onstart = rec.onresult = rec.onerror = rec.onend = null;
       try {
-        for (const item of items) {
-          if (!item.text?.trim()) continue;
-          const url = getTtsAudioUrl(item.text, item.character);
-          await new Promise<void>((resolve) => {
-            const audio = new Audio(url);
-            currentAudioRef.current = audio;
-            audio.onended = () => resolve();
-            audio.onerror = (e) => {
-              console.warn("Neural audio error, using speech synthesis fallback:", e);
-              if ("speechSynthesis" in window) {
-                const u = new SpeechSynthesisUtterance(item.text);
-                u.lang = item.character === "Narrator" ? "en-IN" : "ta-IN";
-                u.rate = 0.9;
-                u.onend = () => resolve();
-                u.onerror = () => resolve();
-                window.speechSynthesis.speak(u);
-              } else {
-                resolve();
-              }
-            };
-            const p = audio.play();
-            if (p && typeof p.catch === "function") {
-              p.catch((err) => {
-                console.warn("Autoplay blocked (user gesture required):", err);
-                resolve();
-              });
-            }
-          });
-        }
-      } finally {
-        setIsPlayingAudio(false);
+        rec.abort();
+      } catch {
+        /* ignore */
+      }
+    }
+    setIsListening(false);
+  }, []);
+
+  // Mount flag + full cleanup: leaving the lesson silences audio AND the microphone and cancels callbacks.
+  useEffect(() => {
+    mountedRef.current = true;
+    const timers = timersRef.current;
+    const onPageHide = () => abortListening();
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      mountedRef.current = false;
+      window.removeEventListener("pagehide", onPageHide);
+      timers.forEach(clearTimeout);
+      timers.clear();
+      abortListening();
+      stopAll();
+    };
+  }, [abortListening]);
+
+  // Silence in the answer window: retry listening once, then stop and hand control to the child.
+  const handleSilence = useCallback(
+    (retry: () => void) => {
+      silentRoundsRef.current += 1;
+      if (silentRoundsRef.current < 2) {
+        autoListenTimerRef.current = later(retry, 500);
+      } else {
+        silentRoundsRef.current = 0;
+        setMicNotice("Tap the microphone when you are ready to answer");
       }
     },
-    []
+    [later]
   );
 
-  // Load Tier 2 Lesson
+  // Start the microphone. auto=true when triggered by the end of the computer's speech.
+  const startListening = useCallback(
+    (auto: boolean) => {
+      if (!mountedRef.current || completedRef.current || evaluatingRef.current) return;
+      if (recognitionRef.current) return; // never two microphone sessions
+      const SpeechRecognitionAPI =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognitionAPI) {
+        setShowTextInput(true);
+        return;
+      }
+      if (auto && micBlockedRef.current) return;
+      if (!auto) {
+        silentRoundsRef.current = 0;
+        micBlockedRef.current = false;
+      }
+      stopAll(); // the mic must never run while any voice is playing
+      setMicNotice("");
+
+      const gen = ++listenGenRef.current;
+      const rec = new SpeechRecognitionAPI();
+      rec.lang = "ta-IN";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.continuous = false;
+      let handled = false;
+      const stale = () => gen !== listenGenRef.current || !mountedRef.current;
+
+      rec.onstart = () => {
+        if (stale()) return;
+        setIsListening(true);
+        setSttText("");
+      };
+      rec.onresult = (e: any) => {
+        if (stale() || handled) return;
+        handled = true;
+        const transcript = e.results?.[0]?.[0]?.transcript?.trim();
+        recognitionRef.current = null;
+        setIsListening(false);
+        if (!transcript) {
+          handleSilence(() => startListening(true));
+          return;
+        }
+        silentRoundsRef.current = 0;
+        setSttText(transcript);
+        submitRef.current(transcript); // mic is already off while the answer is processed
+      };
+      rec.onerror = (e: any) => {
+        if (stale() || handled) return;
+        handled = true;
+        recognitionRef.current = null;
+        setIsListening(false);
+        const err = e?.error;
+        if (err === "no-speech") {
+          handleSilence(() => startListening(true));
+        } else if (err === "not-allowed" || err === "service-not-allowed") {
+          micBlockedRef.current = true;
+          setShowTextInput(true);
+          setMicNotice("Microphone is blocked. You can type your answer instead.");
+        } else if (err === "audio-capture" || err === "network") {
+          micBlockedRef.current = true;
+          setShowTextInput(true);
+          setMicNotice("Microphone is not available. You can type your answer instead.");
+        }
+        // "aborted": we stopped it ourselves, nothing to do
+      };
+      rec.onend = () => {
+        if (stale() || handled) return;
+        handled = true;
+        recognitionRef.current = null;
+        setIsListening(false);
+        handleSilence(() => startListening(true)); // ended with no result = silence
+      };
+      recognitionRef.current = rec;
+      try {
+        rec.start();
+      } catch {
+        recognitionRef.current = null;
+        setIsListening(false);
+      }
+    },
+    [handleSilence]
+  );
+
+  // After the computer has COMPLETELY finished speaking, open the microphone (once).
+  const listenAfterSpeech = useCallback(
+    (result: "done" | "cancelled" | "blocked") => {
+      if (result !== "done" || !mountedRef.current || completedRef.current || evaluatingRef.current) return;
+      if (autoListenTimerRef.current) clearTimeout(autoListenTimerRef.current);
+      // short pause so the tail of the voice is not picked up by the microphone
+      autoListenTimerRef.current = later(() => {
+        autoListenTimerRef.current = null;
+        startListening(true);
+      }, 400);
+    },
+    [later, startListening]
+  );
+
+  // All Tier 2 playback goes through the central manager: one audio at a time, previous one stopped first.
+  // The microphone is switched off before any computer speech starts.
+  const playAudioSequence = useCallback(
+    async (items: { text: string; character: string }[]) => {
+      const playable = items.filter((it) => it.text?.trim() && /[\u0B80-\u0BFF]/.test(it.text));
+      if (playable.length === 0) return "done" as const;
+      abortListening();
+      setIsPlayingAudio(true);
+      const result = await playSequence(
+        playable.map((it) => ({ url: getTtsAudioUrl(it.text, it.character), text: it.text }))
+      );
+      if (result !== "cancelled" && mountedRef.current) setIsPlayingAudio(false);
+      return result;
+    },
+    [abortListening]
+  );
+
+  // Load Tier 2 Lesson (plays the opening scenario once, then opens the mic)
   useEffect(() => {
+    let alive = true;
     const meta = getCharacterByBackendName(characterName);
     setCharMeta(meta || null);
 
     fetchTier2Lessons(characterName)
       .then((summaries) => {
+        if (!alive) return;
         const targetSummary = lessonId ? summaries.find((s) => s.id === lessonId) : summaries[0];
         if (targetSummary) {
           fetchTier2Lesson(targetSummary.id).then((fullLesson) => {
+            if (!alive) return; // unmounted / Strict Mode re-run: never start audio
             setLesson(fullLesson);
             if (fullLesson.turns.length > 0) {
               const firstTurn = fullLesson.turns[0];
@@ -635,11 +712,17 @@ function Tier2SessionContent() {
                 },
               ]);
 
-              // Read out character dialogue directly (using authentic Tamil text so words are pronounced properly)
               const promptText = firstTurn.prompt.tamil || firstTurn.prompt.tanglish;
               playAudioSequence([
-                { text: promptText, character: characterName },
-              ]);
+                ...(fullLesson.scenario_tamil
+                  ? [{ text: fullLesson.scenario_tamil, character: "Scenario" }]
+                  : []),
+                { text: promptText, character: "Scenario" },
+              ]).then((r) => {
+                // Browser blocked autoplay: allow ONE retry on the first user gesture
+                if (r === "blocked") initialBlockedRef.current = true;
+                listenAfterSpeech(r);
+              });
             }
           });
         }
@@ -647,27 +730,22 @@ function Tier2SessionContent() {
       .catch(console.error);
 
     return () => {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current = null;
-      }
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-      if (audioTimeoutRef.current) {
-        clearTimeout(audioTimeoutRef.current);
-      }
+      alive = false;
+      stopAll();
     };
-  }, [characterName, lessonId, playAudioSequence]);
+  }, [characterName, lessonId, playAudioSequence, listenAfterSpeech]);
 
-  // First user interaction listener to unblock audio autoplay
+  // Only if autoplay was blocked: first user gesture plays the opening scenario once.
   useEffect(() => {
     const handleFirstInteraction = () => {
-      if (!hasInteractedRef.current && lesson && lesson.turns.length > 0) {
-        hasInteractedRef.current = true;
+      if (initialBlockedRef.current && lesson && lesson.turns.length > 0) {
+        initialBlockedRef.current = false;
         const firstTurn = lesson.turns[0];
         const promptText = firstTurn.prompt.tamil || firstTurn.prompt.tanglish;
-        playAudioSequence([{ text: promptText, character: characterName }]);
+        playAudioSequence([
+          ...(lesson.scenario_tamil ? [{ text: lesson.scenario_tamil, character: "Scenario" }] : []),
+          { text: promptText, character: "Scenario" },
+        ]).then(listenAfterSpeech);
       }
     };
     window.addEventListener("click", handleFirstInteraction, { once: true });
@@ -676,18 +754,39 @@ function Tier2SessionContent() {
       window.removeEventListener("click", handleFirstInteraction);
       window.removeEventListener("touchstart", handleFirstInteraction);
     };
-  }, [lesson, characterName, playAudioSequence]);
+  }, [lesson, playAudioSequence, listenAfterSpeech]);
+
+  const goToComplete = useCallback(
+    (lessonData: Tier2Lesson) => {
+      const finalStars = starsAccumulatedRef.current;
+      router.push(
+        `/session/complete?stars=${finalStars}&correct=${lessonData.turns.length}&total=${lessonData.turns.length}&character=${characterName}&tier=2&lessonId=${lessonData.id}`
+      );
+    },
+    [router, characterName]
+  );
 
   const submitAnswer = useCallback(
     async (answer: string) => {
       if (!lesson || !currentTurnId || !answer.trim()) return;
-      hasInteractedRef.current = true;
+      if (evaluatingRef.current || completedRef.current) return; // one answer at a time
+      evaluatingRef.current = true;
+      abortListening(); // microphone OFF while the answer is processed
+      setMicNotice("");
       setIsEvaluating(true);
       setEvaluation(null);
 
       try {
         const result = await evaluateTier2Turn(lesson.id, currentTurnId, answer, retryCount);
+        if (!mountedRef.current) return; // user already left the lesson
         setEvaluation(result);
+
+        // NO appreciation after individual answers. Only hints / gentle redirects are spoken
+        // (feedback_tamil is empty for a normal correct answer).
+        const audio: { text: string; character: string }[] = [];
+        if (result.feedback_tamil) {
+          audio.push({ text: result.feedback_tamil, character: "Result" });
+        }
 
         if (result.correct) {
           const awarded = result.stars_awarded || 1;
@@ -699,8 +798,29 @@ function Tier2SessionContent() {
             { speaker: "child", text: result.transcribed_text, tamilText: result.transcribed_tamil },
           ]);
 
+          // The computer's next line (or the closing line of the conversation)
           if (result.next_character_reply) {
-            audioTimeoutRef.current = setTimeout(() => {
+            audio.push({
+              text: result.next_character_reply.tamil || result.next_character_reply.tanglish,
+              character: "Scenario",
+            });
+          }
+
+          // ONE final appreciation, only when the whole conversation is complete, only once
+          const finalText =
+            result.is_completed && !finalAppreciationDoneRef.current
+              ? result.final_appreciation_tamil || ""
+              : "";
+          if (result.is_completed) {
+            completedRef.current = true;
+            finalAppreciationDoneRef.current = true;
+            if (finalText) audio.push({ text: finalText, character: "Result" });
+          }
+
+          const audioDone = audio.length > 0 ? playAudioSequence(audio) : Promise.resolve("done" as const);
+
+          if (result.next_character_reply) {
+            later(() => {
               setConversationHistory((prev) => [
                 ...prev,
                 {
@@ -709,87 +829,61 @@ function Tier2SessionContent() {
                   tamilText: result.next_character_reply!.tamil,
                   englishText: (result.next_character_reply as any).english,
                 },
-              ]);
-              playAudioSequence([
-                {
-                  text: result.next_character_reply!.tamil || result.next_character_reply!.tanglish,
-                  character: characterName,
-                },
+                ...(finalText ? [{ speaker: "character" as const, text: finalText }] : []),
               ]);
               setCurrentTurnId(result.next_turn_id);
               setEvaluation(null);
               setRetryCount(0);
-
-              if (result.is_completed) {
-                audioTimeoutRef.current = setTimeout(() => {
-                  const finalStars = starsAccumulatedRef.current;
-                  router.push(
-                    `/session/complete?stars=${finalStars}&correct=${lesson.turns.length}&total=${lesson.turns.length}&character=${characterName}&tier=2&lessonId=${lesson.id}`
-                  );
-                }, 3500);
-              }
             }, 1200);
-          } else if (result.is_completed) {
-            audioTimeoutRef.current = setTimeout(() => {
-              const finalStars = starsAccumulatedRef.current;
-              router.push(
-                `/session/complete?stars=${finalStars}&correct=${lesson.turns.length}&total=${lesson.turns.length}&character=${characterName}&tier=2&lessonId=${lesson.id}`
-              );
-            }, 2000);
+          } else if (finalText) {
+            setConversationHistory((prev) => [...prev, { speaker: "character", text: finalText }]);
+          }
+
+          if (result.is_completed) {
+            // Leave only after everything has been spoken (capped), and only if still on this lesson
+            audioDone.then(async () => {
+              await new Promise((r) => setTimeout(r, 800));
+              if (!mountedRef.current) return;
+              goToComplete(lesson);
+            });
+            setTimeout(() => {
+              if (mountedRef.current) goToComplete(lesson);
+            }, 20000);
+          } else {
+            audioDone.then(listenAfterSpeech); // next question finished speaking -> mic ON
           }
         } else {
           setRetryCount((prev) => prev + 1);
-          // Let whatever the character says (hint or gentle correction) be a voice output too!
-          if (result.feedback) {
-            playAudioSequence([
-              { text: result.feedback, character: characterName },
-            ]);
+          // Hint / gentle correction is spoken in Tamil, then the mic opens for another try
+          if (audio.length > 0) {
+            playAudioSequence(audio).then(listenAfterSpeech);
+          } else {
+            listenAfterSpeech("done");
           }
         }
       } catch (err) {
         console.error("Tier 2 evaluation error:", err);
       } finally {
+        evaluatingRef.current = false;
         setIsEvaluating(false);
       }
     },
-    [lesson, currentTurnId, retryCount, characterName, router, playAudioSequence]
+    [lesson, currentTurnId, retryCount, playAudioSequence, later, abortListening, listenAfterSpeech, goToComplete]
   );
 
-  // STT Handlers
+  // Keep the latest submitAnswer reachable from long-lived recognition callbacks
+  useEffect(() => {
+    submitRef.current = submitAnswer;
+  }, [submitAnswer]);
+
+  // Manual microphone control (always available as a fallback)
   const handleMicTap = useCallback(() => {
-    if (isListening) return;
-    const SpeechRecognitionAPI =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognitionAPI) {
-      setShowTextInput(true);
+    if (recognitionRef.current) {
+      abortListening(); // tap again while listening = stop
       return;
     }
-    const recognition = new SpeechRecognitionAPI();
-    recognition.lang = "ta-IN";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.onstart = () => {
-      setIsListening(true);
-      setSttText("");
-    };
-    recognition.onresult = (e: any) => {
-      const transcript = e.results[0][0].transcript;
-      setSttText(transcript);
-      setIsListening(false);
-      submitAnswer(transcript);
-    };
-    recognition.onerror = (e: any) => {
-      if (e.error !== "not-allowed") {
-        setIsListening(false);
-        setShowTextInput(true);
-      }
-    };
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-    recognitionRef.current = recognition;
-    recognition.start();
-  }, [isListening, submitAnswer]);
+    startListening(false);
+  }, [abortListening, startListening]);
 
   const handleTextSubmit = () => {
     if (textInput.trim()) {
@@ -823,7 +917,8 @@ function Tier2SessionContent() {
       <header className="w-full h-14 shrink-0 flex justify-between items-center px-4 md:px-8 border-b border-surface-variant/40 bg-surface/90 backdrop-blur-md relative z-20">
         <button
           onClick={() => {
-            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+            abortListening();
+            stopAll();
             router.push(`/roadmap/${charMeta.backendName}`);
           }}
           className="w-10 h-10 flex items-center justify-center text-primary rounded-full hover:bg-surface-container-high transition-colors active:scale-95 shadow-sm bg-surface-container"
@@ -869,7 +964,7 @@ function Tier2SessionContent() {
               </div>
             </div>
             <button
-              onClick={() => playAudioSequence([{ text: lesson.scenario, character: "Narrator" }])}
+              onClick={() => playAudioSequence([{ text: lesson.scenario_tamil || "", character: "Scenario" }]).then(listenAfterSpeech)}
               className="shrink-0 p-2 text-secondary hover:bg-secondary/10 active:scale-95 rounded-full transition-all flex items-center justify-center cursor-pointer"
               title="Read scenario aloud"
               type="button"
@@ -914,13 +1009,12 @@ function Tier2SessionContent() {
                 {msg.speaker === "character" && (
                   <button
                     onClick={() => {
-                      hasInteractedRef.current = true;
-                      playAudioSequence([
+                                      playAudioSequence([
                         {
                           text: msg.tamilText || msg.text,
-                          character: characterName,
+                          character: "Scenario",
                         },
-                      ]);
+                      ]).then(listenAfterSpeech);
                     }}
                     className="p-2 rounded-full text-primary hover:bg-primary/15 active:scale-95 transition-all self-center shrink-0 cursor-pointer flex items-center justify-center border border-primary/30 bg-surface-container shadow-xs"
                     title="Listen to character voice"
@@ -1033,7 +1127,7 @@ function Tier2SessionContent() {
               </button>
             </div>
             <p className="mt-1 text-[11px] font-semibold text-on-surface-variant">
-              {isListening ? "Listening... Speak your answer" : "Tap microphone to speak"}
+              {isListening ? "Listening... Speak your answer" : micNotice || "Tap microphone to speak"}
             </p>
           </div>
         )}

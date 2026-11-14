@@ -144,7 +144,7 @@ class TestOWLReasoning(unittest.TestCase):
         inferred_service = OntologyService(mode="inferred")
 
         lesson_files = sorted(glob.glob(os.path.join(self.lessons_dir, "**", "*.json"), recursive=True))
-        self.assertEqual(len(lesson_files), 120, f"Expected 120 lesson files, found {len(lesson_files)}")
+        self.assertEqual(len(lesson_files), 121, f"Expected 121 lesson files, found {len(lesson_files)}")
 
         matches = 0
         mismatches = []
@@ -171,14 +171,14 @@ class TestOWLReasoning(unittest.TestCase):
                 })
 
         print(f"Total Scenarios Evaluated: {len(lesson_files)}")
-        print(f"Matches:                  {matches} / 120")
+        print(f"Matches:                  {matches} / 121")
         print(f"Mismatches:               {len(mismatches)}")
         print(f"Safety Scenarios Identified: {sorted(safety_scenarios_found)}")
 
         if mismatches:
             print("Mismatches found:", mismatches)
 
-        self.assertEqual(matches, 120, f"Legacy and inferred modes disagreed on {len(mismatches)} scenarios: {mismatches}")
+        self.assertEqual(matches, 121, f"Legacy and inferred modes disagreed on {len(mismatches)} scenarios: {mismatches}")
         self.assertEqual(len(mismatches), 0)
 
 if __name__ == "__main__":

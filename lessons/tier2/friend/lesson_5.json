@@ -51,7 +51,8 @@
       ],
       "feedback": {
         "hint": "Congratulate your friend on their race!",
-        "gentle_correction": "Try saying: 'Congrats da, super ah odina'"
+        "gentle_correction": "Try saying: 'Congrats da, super ah odina'",
+        "hint_tamil": "ஜெயிச்ச ஃப்ரெண்டுக்கு கங்ராட்ஸ் சொல்லு."
       },
       "expected_intents": [
         "ShowSportsmanship"
@@ -59,7 +60,8 @@
       "violates": [
         "HostileRefusal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "கங்ராட்ஸ் டா, சூப்பரா ஓடின"
     },
     {
       "turn_id": "turn_2",
@@ -90,7 +92,8 @@
       ],
       "feedback": {
         "hint": "Ask if they want to play another game or race again.",
-        "gentle_correction": "Try saying: 'Innoru match polama?'"
+        "gentle_correction": "Try saying: 'Innoru match polama?'",
+        "hint_tamil": "இன்னொரு ரவுண்ட் விளையாடலாமான்னு கேளு."
       },
       "expected_intents": [
         "ProposeActivity"
@@ -99,7 +102,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "இன்னொரு மேட்ச் போலாமா?"
     }
-  ]
+  ],
+  "scenario_tamil": "நீங்க ரெண்டு பேரும் ரேஸ் ஓடுனீங்க. உன் ஃப்ரெண்ட் ஜெயிச்சுட்டான்."
 }

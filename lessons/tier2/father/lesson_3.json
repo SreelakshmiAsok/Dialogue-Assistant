@@ -55,7 +55,8 @@
       ],
       "feedback": {
         "hint": "Offer to help Appa carry a bag!",
-        "gentle_correction": "Try saying: 'Naan help panren appa'"
+        "gentle_correction": "Try saying: 'Naan help panren appa'",
+        "hint_tamil": "பேக் தூக்க ஹெல்ப் பண்றேன்னு அப்பாகிட்ட சொல்லு."
       },
       "expected_intents": [
         "OfferAssistance"
@@ -64,7 +65,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "நான் ஹெல்ப் பண்றேன் அப்பா"
     },
     {
       "turn_id": "turn_2",
@@ -98,7 +100,8 @@
       ],
       "feedback": {
         "hint": "Politely accept the bag and say yes to Appa.",
-        "gentle_correction": "Try saying: 'Seri appa'"
+        "gentle_correction": "Try saying: 'Seri appa'",
+        "hint_tamil": "அப்பாகிட்ட சரின்னு சொல்லு."
       },
       "expected_intents": [
         "AcknowledgeInstructions"
@@ -108,7 +111,9 @@
         "DisrespectfulInformal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "சரி அப்பா"
     }
-  ]
+  ],
+  "scenario_tamil": "அப்பா ரொம்ப வெயிட்டான க்ரோசரி பேக்ஸ் எடுத்துட்டு வீட்டுக்கு வராரு."
 }

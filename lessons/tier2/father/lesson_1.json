@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Kanna, TV off pannuva? Study time achu.",
-        "tamil": "கண்ணா, டிவி ஆஃப் பண்ணுவா? ஸ்டடி டைம் ஆச்சு."
+        "tamil": "கண்ணா, டிவி ஆஃப் பண்ணுவா? ஸ்டடி டைம் ஆச்சு.",
+        "english": "Dear, will you turn off the TV? It's study time."
       },
       "target_intent": "NegotiationIntent",
       "required_features": [
@@ -45,11 +46,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask Appa politely for a little more time, like 5 minutes.",
-        "gentle_correction": "Try saying: 'Innum 5 minutes pa' (Just 5 more minutes, dad)"
+        "gentle_correction": "Try saying: 'Innum 5 minutes pa' (Just 5 more minutes, dad)",
+        "hint_tamil": "அப்பாகிட்ட பணிவா, இன்னும் அஞ்சு நிமிஷம் கேளு."
       },
       "next_character_reply": {
         "tanglish": "Seri, 5 minutes apram kandippa padikanum. Promise-ah?",
-        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?"
+        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?",
+        "english": "Okay, after 5 minutes you must study without fail. Promise?"
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -59,14 +62,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "இன்னும் அஞ்சு நிமிஷம் பா"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Seri, 5 minutes apram kandippa padikanum. Promise-ah?",
-        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?"
+        "tamil": "சரி, 5 நிமிஷம் அப்புறம் கண்டிப்பா படிக்கணும். பிராமிஸா?",
+        "english": "Okay, after 5 minutes you must study without fail. Promise?"
       },
       "target_intent": "PromiseConfirmation",
       "required_features": [
@@ -83,11 +88,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Confirm your agreement by making a promise to Appa.",
-        "gentle_correction": "A good way to agree is saying: 'Promise appa!'"
+        "gentle_correction": "A good way to agree is saying: 'Promise appa!'",
+        "hint_tamil": "அப்பாகிட்ட ப்ராமிஸ் பண்ணி ஓகே சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Good boy! 5 minutes timer vechiko.",
-        "tamil": "குட் பாய்! 5 நிமிஷம் டைமர் வச்சுக்கோ."
+        "tamil": "குட் பாய்! 5 நிமிஷம் டைமர் வச்சுக்கோ.",
+        "english": "Good boy! Set a 5 minute timer."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -97,12 +104,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "ப்ராமிஸ் அப்பா"
     }
   ],
   "completion": {
     "success_title": "Transition Handled Well! ⏱️",
     "success_message": "Great job! You politely asked for a little more time and made a promise.",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "அப்பா ஏழு மணிக்கு ஹால்க்கு வந்து, ஸ்டடி டைம் ஆச்சு, டிவி ஆஃப் பண்ணுன்னு சொல்றாரு."
 }

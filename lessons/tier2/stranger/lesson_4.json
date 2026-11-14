@@ -51,7 +51,8 @@
       ],
       "feedback": {
         "hint": "Do not give out your number. Tell them you will not share it.",
-        "gentle_correction": "Try saying: 'Naan sollamaten'"
+        "gentle_correction": "Try saying: 'Naan sollamaten'",
+        "hint_tamil": "உன் நம்பர யாருக்கும் குடுக்காத. சொல்ல மாட்டேன்னு சொல்லு."
       },
       "expected_intents": [
         "PrivacyProtection"
@@ -59,7 +60,8 @@
       "violates": [
         "StrangerCompliance"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "நான் சொல்ல மாட்டேன்"
     },
     {
       "turn_id": "turn_2",
@@ -93,7 +95,8 @@
       ],
       "feedback": {
         "hint": "Firmly refuse again and find a trusted adult.",
-        "gentle_correction": "Try saying: 'No, naan sollamaten.'"
+        "gentle_correction": "Try saying: 'No, naan sollamaten.'",
+        "hint_tamil": "இன்னொரு தடவ தைரியமா வேணாம்னு சொல்லி, தெரிஞ்ச பெரியவங்கள தேடு."
       },
       "expected_intents": [
         "SafetyRefusal"
@@ -103,7 +106,9 @@
         "SocialAcceptance"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "இல்ல, நான் சொல்ல மாட்டேன்"
     }
-  ]
+  ],
+  "scenario_tamil": "தெரியாத ஒருத்தர் உன் வீட்டு அட்ரஸ் இல்லன்னா போன் நம்பர் கேக்குறாரு."
 }

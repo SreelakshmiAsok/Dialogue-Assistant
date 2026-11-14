@@ -53,7 +53,8 @@
       ],
       "feedback": {
         "hint": "Wish Appa a cheerful good morning!",
-        "gentle_correction": "Try saying: 'Good morning appa!'"
+        "gentle_correction": "Try saying: 'Good morning appa!'",
+        "hint_tamil": "அப்பாவுக்கு சந்தோஷமா குட் மார்னிங் சொல்லு."
       },
       "expected_intents": [
         "GreetingPolite"
@@ -62,7 +63,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "குட் மார்னிங் அப்பா"
     },
     {
       "turn_id": "turn_2",
@@ -96,7 +98,8 @@
       ],
       "feedback": {
         "hint": "Tell Appa you are going to brush your teeth right away.",
-        "gentle_correction": "Try saying: 'Seri appa, idho poren'"
+        "gentle_correction": "Try saying: 'Seri appa, idho poren'",
+        "hint_tamil": "இப்பவே ப்ரஷ் பண்ணப் போறேன்னு அப்பாகிட்ட சொல்லு."
       },
       "expected_intents": [
         "ComplianceConfirmation"
@@ -106,7 +109,9 @@
         "DisrespectfulInformal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "சரி அப்பா, இதோ போறேன்"
     }
-  ]
+  ],
+  "scenario_tamil": "காலைல எழுந்திருக்க. அப்பா உன் ரூம்க்கு வராரு."
 }

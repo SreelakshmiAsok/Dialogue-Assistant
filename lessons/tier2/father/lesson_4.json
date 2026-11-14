@@ -54,7 +54,8 @@
       ],
       "feedback": {
         "hint": "Tell Appa politely you will try a little bit.",
-        "gentle_correction": "Try saying: 'Enaku carrot pudikadhu appa, aana konjam saapduren'"
+        "gentle_correction": "Try saying: 'Enaku carrot pudikadhu appa, aana konjam saapduren'",
+        "hint_tamil": "கொஞ்சம் மட்டும் சாப்பிடுறேன்னு அப்பாகிட்ட பணிவா சொல்லு."
       },
       "expected_intents": [
         "PoliteNegotiation"
@@ -63,7 +64,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "எனக்கு கேரட் பிடிக்காது அப்பா, ஆனா கொஞ்சம் சாப்பிடுறேன்"
     },
     {
       "turn_id": "turn_2",
@@ -96,7 +98,8 @@
       ],
       "feedback": {
         "hint": "Thank Appa for understanding.",
-        "gentle_correction": "Try saying: 'Thank you appa'"
+        "gentle_correction": "Try saying: 'Thank you appa'",
+        "hint_tamil": "புரிஞ்சுக்கிட்டதுக்கு அப்பாவுக்கு தேங்க்ஸ் சொல்லு."
       },
       "expected_intents": [
         "ExpressGratitude"
@@ -105,7 +108,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "தேங்க்ஸ் அப்பா"
     }
-  ]
+  ],
+  "scenario_tamil": "உனக்குப் பிடிக்காத காய்கறிய அப்பா சாப்பிடச் சொல்றாரு."
 }

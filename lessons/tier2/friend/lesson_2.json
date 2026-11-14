@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "(Crying) Ahh! En mutti adippatiduchu!",
-        "tamil": "(அழுகிறான்) ஆஆ! என் முட்டி அடிபட்டுடுச்சு!"
+        "tamil": "(அழுகிறான்) ஆஆ! என் முட்டி அடிபட்டுடுச்சு!",
+        "english": "(Crying) Ahh! I hurt my knee!"
       },
       "target_intent": "ShowEmpathy",
       "required_features": [
@@ -43,11 +44,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask your friend if they are okay or if it hurts.",
-        "gentle_correction": "Try asking: 'Ennachu da? Valikudha?' (What happened? Does it hurt?)"
+        "gentle_correction": "Try asking: 'Ennachu da? Valikudha?' (What happened? Does it hurt?)",
+        "hint_tamil": "ஃப்ரெண்டுக்கு என்ன ஆச்சு, வலிக்குதான்னு கேளு."
       },
       "next_character_reply": {
         "tanglish": "Aama da, romba valikudhu. Ratham varudhu.",
-        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது."
+        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது.",
+        "english": "Yes, it hurts a lot. There is bleeding."
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -57,14 +60,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "என்ன ஆச்சு டா? வலிக்குதா?"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Aama da, romba valikudhu. Ratham varudhu.",
-        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது."
+        "tamil": "ஆமா டா, ரொம்ப வலிக்குது. ரத்தம் வருது.",
+        "english": "Yes, it hurts a lot. There is bleeding."
       },
       "target_intent": "OfferHelp",
       "required_features": [
@@ -80,11 +85,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Offer to get help from a teacher or adult.",
-        "gentle_correction": "A friendly reply is: 'Naan poi help kupudrava?'"
+        "gentle_correction": "A friendly reply is: 'Naan poi help kupudrava?'",
+        "hint_tamil": "டீச்சர் இல்லன்னா பெரியவங்கள கூப்பிடப் போறேன்னு சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Seri da, seekiram koopidu.",
-        "tamil": "சரி டா, சீக்கிரம் கூப்பிடு."
+        "tamil": "சரி டா, சீக்கிரம் கூப்பிடு.",
+        "english": "Okay, call someone quickly."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -94,12 +101,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "நான் போய் ஹெல்ப்க்கு கூப்பிடவா?"
     }
   ],
   "completion": {
     "success_title": "Good Friend! 🤝",
     "success_message": "Awesome! You showed empathy and helped your friend!",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "ஓடும்போது உன் ஃப்ரெண்ட் தடுக்கி விழுந்துட்டான். முட்டில அடிபட்டு அழறான்."
 }

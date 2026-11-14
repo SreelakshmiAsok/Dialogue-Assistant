@@ -15,6 +15,7 @@ export interface Question {
   avatar: string;
   lesson: string;
   social_story: string;
+  social_story_tamil?: string;
   question_tanglish: string;
   question_tamil: string;
   difficulty: number;
@@ -24,6 +25,7 @@ export interface EvaluationResult {
   correct: boolean;
   stars: number;
   feedback: string;
+  feedback_tamil?: string;
   suggestion: string | null;
   model_answer: string;
   encouragement: string;
@@ -57,6 +59,7 @@ export interface Tier2Lesson {
   skill: string;
   learning_objective: string;
   scenario: string;
+  scenario_tamil?: string;
   initial_prompt: { tanglish: string; tamil: string; english: string };
   turns: any[];
   completion: any;
@@ -66,6 +69,8 @@ export interface Tier2EvaluationResult {
   correct: boolean;
   stars_awarded: number;
   feedback: string;
+  feedback_tamil?: string;
+  final_appreciation_tamil?: string;
   suggestion: string | null;
   next_character_reply: { tanglish: string; tamil: string; english?: string } | null;
   next_turn_id: string | null;

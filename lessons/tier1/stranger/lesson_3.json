@@ -5,7 +5,7 @@
   "lesson": "Thank You Response",
   "social_story": "You helped someone with directions. They say thank you.",
   "question_tanglish": "Nandri, thank you.",
-  "question_tamil": "நன்றி, தேங்க் யூ.",
+  "question_tamil": "தேங்க்ஸ் பா!",
   "expected_answers": [
     "Paravala sir",
     "Parava illa sir",
@@ -23,7 +23,7 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Nandri, thank you.",
-        "tamil": "நன்றி, தேங்க் யூ."
+        "tamil": "தேங்க்ஸ் பா!"
       },
       "target_intent": "SocialAcceptance",
       "allowed_intents": [

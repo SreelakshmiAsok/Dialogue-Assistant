@@ -4,7 +4,8 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCharacterByBackendName } from "@/lib/characters";
 import { saveLessonCompletion } from "@/lib/progress";
-import { fetchQuestions, fetchTier2Lessons } from "@/lib/api";
+import { fetchQuestions, fetchTier2Lessons, getTtsAudioUrl } from "@/lib/api";
+import { playSequence, stopAll } from "@/lib/audioManager";
 
 function SessionCompleteContent() {
   const router = useRouter();
@@ -31,29 +32,18 @@ function SessionCompleteContent() {
       ? Math.min(100, Math.max(0, Math.round((correct / total) * 100)))
       : 0;
 
+  // Tamil praise via the central audio manager (one audio at a time, stopped on leave)
   const speakReward = () => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const shortMessages = ["Amazing job today!", "You are a superstar!", "Keep it up, great work!"];
-      const utterance = new SpeechSynthesisUtterance(
-        shortMessages[Math.floor(Math.random() * shortMessages.length)]
-      );
-      utterance.rate = 0.9;
-      utterance.pitch = 0.8;
-      const voices = window.speechSynthesis.getVoices();
-      const maleVoice = voices.find(
-        (v) =>
-          v.name.includes("Valluvar") ||
-          v.name.toLowerCase().includes("david") ||
-          v.name.toLowerCase().includes("mark") ||
-          v.name.toLowerCase().includes("male")
-      );
-      if (maleVoice) utterance.voice = maleVoice;
-      utterance.onstart = () => setIsPlaying(true);
-      utterance.onend = () => setIsPlaying(false);
-      utterance.onerror = () => setIsPlaying(false);
-      speechSynthesis.speak(utterance);
-    }
+    const taMessages = [
+      "சூப்பரா பண்ணிட்ட! நீ தான் ஸ்டார்!",
+      "செம! இதே மாதிரி கண்டினியூ பண்ணு!",
+      "நல்லா பண்ணின! வாழ்த்துகள்!",
+    ];
+    const taText = taMessages[Math.floor(Math.random() * taMessages.length)];
+    setIsPlaying(true);
+    playSequence([{ url: getTtsAudioUrl(taText, "Result"), text: taText }]).then((r) => {
+      if (r !== "cancelled") setIsPlaying(false);
+    });
   };
 
   // Save progress and resolve the next lesson
@@ -83,10 +73,9 @@ function SessionCompleteContent() {
         .catch(() => {});
     }
 
-    if ("speechSynthesis" in window) {
-      if (speechSynthesis.getVoices().length > 0) speakReward();
-      else speechSynthesis.onvoiceschanged = speakReward;
-    }
+    // Tier 2 already gave its ONE closing appreciation at the end of the conversation
+    if (tier !== "2") speakReward();
+    return () => stopAll();
   }, [lessonId, characterName, stars]);
 
   const getMessage = () => {

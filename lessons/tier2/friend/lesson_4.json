@@ -50,7 +50,8 @@
       ],
       "feedback": {
         "hint": "Tell your friend that you like Ben 10 too!",
-        "gentle_correction": "Try saying: 'Enakkum Ben 10 romba pudikkum'"
+        "gentle_correction": "Try saying: 'Enakkum Ben 10 romba pudikkum'",
+        "hint_tamil": "எனக்கும் பென் டென் பிடிக்கும்னு ஃப்ரெண்ட்கிட்ட சொல்லு."
       },
       "expected_intents": [
         "ShareInterest"
@@ -58,7 +59,8 @@
       "violates": [
         "HostileRefusal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "எனக்கும் பென் டென் ரொம்ப பிடிக்கும்"
     },
     {
       "turn_id": "turn_2",
@@ -90,7 +92,8 @@
       ],
       "feedback": {
         "hint": "Name your favorite alien like Four Arms or Heatblast.",
-        "gentle_correction": "Try saying: 'Four arms'"
+        "gentle_correction": "Try saying: 'Four arms'",
+        "hint_tamil": "உனக்குப் பிடிச்ச ஏலியன் பேர சொல்லு."
       },
       "expected_intents": [
         "EngageConversation"
@@ -99,7 +102,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "ஃபோர் ஆர்ம்ஸ்"
     }
-  ]
+  ],
+  "scenario_tamil": "உன் ஃப்ரெண்ட் கார்ட்டூன் பாத்துட்டு இருக்கான்."
 }

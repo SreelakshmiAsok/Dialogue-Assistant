@@ -51,7 +51,8 @@
       ],
       "feedback": {
         "hint": "Tell the stranger politely that you don't know the way.",
-        "gentle_correction": "Try saying: 'Enaku theriyadhu sir.'"
+        "gentle_correction": "Try saying: 'Enaku theriyadhu sir.'",
+        "hint_tamil": "வழி தெரியாதுன்னு பணிவா சொல்லு."
       },
       "expected_intents": [
         "PoliteRefusal"
@@ -59,7 +60,8 @@
       "violates": [
         "StrangerCompliance"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "எனக்குத் தெரியாது சார்"
     },
     {
       "turn_id": "turn_2",
@@ -93,7 +95,8 @@
       ],
       "feedback": {
         "hint": "Firmly say NO and tell them you cannot go with them!",
-        "gentle_correction": "Try saying: 'No, naan vara maaten. Vera yaravathu kitta kelunga.'"
+        "gentle_correction": "Try saying: 'No, naan vara maaten. Vera yaravathu kitta kelunga.'",
+        "hint_tamil": "அவரு கூட வர முடியாதுன்னு உறுதியா சொல்லு."
       },
       "expected_intents": [
         "FirmRefusal"
@@ -103,7 +106,9 @@
         "SocialAcceptance"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "இல்ல, நான் வர மாட்டேன். வேற யாரையாவது கேளுங்க"
     }
-  ]
+  ],
+  "scenario_tamil": "தெரியாத ஒருத்தர் ஹாஸ்பிடல் எங்க இருக்குன்னு உன்கிட்ட கேக்குறாரு."
 }

@@ -38,6 +38,7 @@ from nlp.preprocessing import normalize_text
 from core.progress_tracker import save_progress, get_progress
 from nlp.transliterate_tamil import to_tanglish
 from nlp.tanglish_tts_helper import tanglish_resolver
+from data.tier1_tamil import story_tamil, feedback_tamil as t1_feedback_tamil
 import re
 import sys
 from pydantic import ValidationError
@@ -241,6 +242,7 @@ def api_questions(character):
             "avatar": q["avatar"],
             "lesson": q["lesson"],
             "social_story": q["social_story"],
+            "social_story_tamil": story_tamil(q["id"]),
             "question_tanglish": q["question_tanglish"],
             "question_tamil": q["question_tamil"],
             "difficulty": q["difficulty"]
@@ -290,6 +292,10 @@ def api_tts():
 
     if not text:
         return jsonify({"error": "No text provided"}), 400
+
+    # Tier 2 voices (Scenario / Result) are Tamil-only: never synthesize English
+    if character in ("Scenario", "Result") and not has_tamil(text):
+        return jsonify({"error": "Tamil text required for this voice"}), 400
 
     # Cache by hash of character + text
     h = hashlib.md5(f"{character}_{text}".encode("utf-8")).hexdigest()
@@ -423,6 +429,7 @@ def api_evaluate():
             "stars": 0,
             "feedback": "Take your time! Tap 🎤 when you're ready to speak. 🌸",
             "suggestion": f"Try saying: '{model_answer}'",
+            "feedback_tamil": t1_feedback_tamil(question_id, False, 0, kind="empty"),
             "model_answer": model_answer,
             "encouragement": "You can do it! 💪",
             "transcribed_text": "",
@@ -453,6 +460,7 @@ def api_evaluate():
             "stars": stars,
             "feedback": bad_check["gentle_message"],
             "suggestion": f"A great way to answer is: '{model_answer}' 🌸",
+            "feedback_tamil": t1_feedback_tamil(question_id, False, stars, kind="inappropriate"),
             "model_answer": model_answer,
             "encouragement": feedback_result["encouragement"],
             "transcribed_text": transcribed_tanglish,
@@ -481,6 +489,7 @@ def api_evaluate():
         return jsonify({
             "correct": False,
             "stars": 1,
+            "feedback_tamil": t1_feedback_tamil(question_id, False, 1, kind="safety"),
             "feedback": feedback_result["feedback"],
             "suggestion": rule_result.get("suggestion") or feedback_result["suggestion"],
             "model_answer": model_answer,
@@ -644,6 +653,9 @@ def api_evaluate():
         "correct": matched,
         "stars": stars,
         "feedback": feedback_result["feedback"],
+        "feedback_tamil": t1_feedback_tamil(
+            question_id, matched, stars, missing_honorific=bool(matched and missing_preferred_vocative)
+        ),
         "suggestion": feedback_result["suggestion"],
         "model_answer": model_answer,
         "encouragement": feedback_result["encouragement"],
@@ -678,7 +690,7 @@ def api_progress():
 
 @app.route("/api/tier2/lessons/<character>", methods=["GET"])
 def api_tier2_lessons(character):
-    lessons = get_tier2_lessons_for_character(character)
+    lessons = sorted(get_tier2_lessons_for_character(character), key=lambda l: l["id"])
     # Strip turns for the list view
     summary = []
     for l in lessons:

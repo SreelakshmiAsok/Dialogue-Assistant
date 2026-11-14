@@ -54,7 +54,8 @@
       ],
       "feedback": {
         "hint": "Tell Teacher politely that you need a little quiet time.",
-        "gentle_correction": "Try saying: 'Miss, enaku konjam quiet time venum'"
+        "gentle_correction": "Try saying: 'Miss, enaku konjam quiet time venum'",
+        "hint_tamil": "கொஞ்சம் அமைதியா இருக்கணும்னு டீச்சர்கிட்ட பணிவா சொல்லு."
       },
       "expected_intents": [
         "SelfAdvocacyRequest"
@@ -63,7 +64,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "மிஸ், எனக்குக் கொஞ்சம் குயட் டைம் வேணும்"
     },
     {
       "turn_id": "turn_2",
@@ -96,7 +98,8 @@
       ],
       "feedback": {
         "hint": "Confirm politely that you are feeling better.",
-        "gentle_correction": "Try saying: 'Aama miss, ippo better ah irukku'"
+        "gentle_correction": "Try saying: 'Aama miss, ippo better ah irukku'",
+        "hint_tamil": "இப்போ பெட்டரா இருக்குன்னு பணிவா சொல்லு."
       },
       "expected_intents": [
         "ConfirmationResponse"
@@ -105,7 +108,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "ஆமா மிஸ், இப்போ பெட்டரா இருக்கு"
     }
-  ]
+  ],
+  "scenario_tamil": "க்ளாஸ் ரொம்ப நாய்சா இருக்கு, உனக்குத் தாங்க முடியல. அஞ்சு நிமிஷம் அமைதியா இருக்கணும்."
 }

@@ -1338,7 +1338,7 @@ QUESTIONS = {
             "lesson": "Thank You Response",
             "social_story": "You helped someone with directions. They say thank you.",
             "question_tanglish": "Nandri, thank you.",
-            "question_tamil": "நன்றி, தேங்க் யூ.",
+            "question_tamil": "தேங்க்ஸ் பா!",
             "expected_answers": [
                 "Paravala sir", "Parava illa sir",
                 "Welcome sir", "Ok sir",

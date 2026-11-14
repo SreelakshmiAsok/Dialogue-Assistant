@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "(Cashier) Hello thambi, enna venum?",
-        "tamil": "(பணியாளர்) ஹலோ தம்பி, என்ன வேணும்?"
+        "tamil": "(பணியாளர்) ஹலோ தம்பி, என்ன வேணும்?",
+        "english": "(Cashier) Hello little one, what do you want?"
       },
       "target_intent": "RequestHelp",
       "required_features": [
@@ -42,11 +43,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask the store worker for help politely.",
-        "gentle_correction": "Try saying: 'Excuse me, enaku help pannunga.'"
+        "gentle_correction": "Try saying: 'Excuse me, enaku help pannunga.'",
+        "hint_tamil": "கடைல இருக்கவங்கிட்ட பணிவா ஹெல்ப் கேளு."
       },
       "next_character_reply": {
         "tanglish": "Ennachu pa? Yaara thedura?",
-        "tamil": "என்னச்சு பா? யார தேடுற?"
+        "tamil": "என்னச்சு பா? யார தேடுற?",
+        "english": "What happened? Who are you looking for?"
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -56,14 +59,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "எக்ஸ்கியூஸ் மீ, ஹெல்ப் பண்ணுங்க"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Ennachu pa? Yaara thedura?",
-        "tamil": "என்னச்சு பா? யார தேடுற?"
+        "tamil": "என்னச்சு பா? யார தேடுற?",
+        "english": "What happened? Who are you looking for?"
       },
       "target_intent": "ExplainSituation",
       "required_features": [
@@ -78,11 +83,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Tell the worker that you can't find your dad.",
-        "gentle_correction": "Try saying: 'Enga appava kanom, announcement kudukareengala?'"
+        "gentle_correction": "Try saying: 'Enga appava kanom, announcement kudukareengala?'",
+        "hint_tamil": "அப்பாவக் காணோம்னு கடைக்காரர்கிட்ட சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Bayapadadha, naan mic la anounce panren.",
-        "tamil": "பயப்படாத, நான் மைக்-ல அனவுன்ஸ் பண்றேன்."
+        "tamil": "பயப்படாத, நான் மைக்-ல அனவுன்ஸ் பண்றேன்.",
+        "english": "Don't be afraid, I will announce it on the mic."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -92,12 +99,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "எங்க அப்பாவ காணோம், அனவுன்ஸ் பண்றீங்களா?"
     }
   ],
   "completion": {
     "success_title": "Safe Choice! 🛡️",
     "success_message": "Awesome! You safely asked for help from a store worker!",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "சூப்பர் மார்க்கெட்ல அம்மா அப்பாவக் காணோம். நீ கேஷியர்கிட்ட போற."
 }

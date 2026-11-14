@@ -17,7 +17,7 @@
   "scenario": "The teacher explains a homework assignment, but you didn't understand what to do.",
   "initial_prompt": {
     "tanglish": "Ellarukum purinjidha? Any doubts?",
-    "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?",
+    "tamil": "எல்லாருக்கும் புரிஞ்சுதா? ஏதாவது டவுட் இருக்கா?",
     "english": "Did everyone understand? Any doubts?"
   },
   "turns": [
@@ -26,7 +26,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Ellarukum purinjidha? Any doubts?",
-        "tamil": "எல்லாருக்கும் புரிஞ்சிதா? ஏதேனும் சந்தேகம் இருக்கா?"
+        "tamil": "எல்லாருக்கும் புரிஞ்சுதா? ஏதாவது டவுட் இருக்கா?",
+        "english": "Did everyone understand? Any doubts?"
       },
       "target_intent": "RaiseDoubt",
       "required_features": [
@@ -41,11 +42,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Tell the teacher that you have a doubt.",
-        "gentle_correction": "Try saying: 'Mam, enaku oru doubt.'"
+        "gentle_correction": "Try saying: 'Mam, enaku oru doubt.'",
+        "hint_tamil": "உனக்கு டவுட் இருக்குன்னு டீச்சர்கிட்ட சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Sollu thambi, enna doubt?",
-        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?",
+        "english": "Tell me, dear, what is your doubt?"
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -55,14 +58,16 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "மேடம், எனக்கு ஒரு டவுட்"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Sollu thambi, enna doubt?",
-        "tamil": "சொல்லு தம்பி, என்ன டவுட்?"
+        "tamil": "சொல்லு தம்பி, என்ன டவுட்?",
+        "english": "Tell me, dear, what is your doubt?"
       },
       "target_intent": "AskClarification",
       "required_features": [
@@ -77,11 +82,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Ask the teacher to explain the homework again.",
-        "gentle_correction": "Try saying: 'Idhu enaku puriyala, thirumba solreengala?'"
+        "gentle_correction": "Try saying: 'Idhu enaku puriyala, thirumba solreengala?'",
+        "hint_tamil": "ஹோம்வொர்க்க திரும்ப சொல்லிக் குடுக்கச் சொல்லி கேளு."
       },
       "next_character_reply": {
         "tanglish": "Kandippa, naan thirumba explain panren.",
-        "tamil": "கண்டிப்பா, நான் திரும்ப எக்ஸ்பிளைன் பண்றேன்."
+        "tamil": "கண்டிப்பா, நான் திரும்ப எக்ஸ்பிளைன் பண்றேன்.",
+        "english": "Sure, I will explain again."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -91,12 +98,14 @@
       "allowed_intents": [],
       "violates": [],
       "violating_intents": [],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "இது எனக்குப் புரியல, திரும்ப சொல்றீங்களா?"
     }
   ],
   "completion": {
     "success_title": "Great Question! ✋",
     "success_message": "Awesome! You asked for help when you didn't understand!",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "டீச்சர் ஹோம்வொர்க் சொல்லிக் குடுத்தாங்க. ஆனா என்ன பண்ணணும்னு உனக்குப் புரியல."
 }

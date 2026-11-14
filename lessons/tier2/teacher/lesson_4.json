@@ -53,7 +53,8 @@
       ],
       "feedback": {
         "hint": "Answer the question and say 'miss' politely.",
-        "gentle_correction": "Try saying: 'Four miss'"
+        "gentle_correction": "Try saying: 'Four miss'",
+        "hint_tamil": "கேள்விக்கு ஆன்சர் சொல்லி, மிஸ்னு பணிவா சொல்லு."
       },
       "expected_intents": [
         "AnswerQuestion"
@@ -62,7 +63,8 @@
         "HostileRefusal",
         "DisrespectfulInformal"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "நாலு மிஸ்"
     },
     {
       "turn_id": "turn_2",
@@ -95,7 +97,8 @@
       ],
       "feedback": {
         "hint": "Thank the teacher when she praises your answer.",
-        "gentle_correction": "Try saying: 'Thank you miss'"
+        "gentle_correction": "Try saying: 'Thank you miss'",
+        "hint_tamil": "பாராட்டுனதுக்கு டீச்சருக்கு தேங்க்ஸ் சொல்லு."
       },
       "expected_intents": [
         "ExpressGratitude"
@@ -104,7 +107,9 @@
         "HostileRefusal"
       ],
       "nextTurn": null,
-      "next_turn_id": null
+      "next_turn_id": null,
+      "model_answer_tamil": "தேங்க்ஸ் மிஸ்"
     }
-  ]
+  ],
+  "scenario_tamil": "டீச்சர் உன் பேர சொல்லி ஒரு கேள்விக்கு ஆன்சர் கேக்குறாங்க."
 }

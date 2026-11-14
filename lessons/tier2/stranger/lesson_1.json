@@ -27,7 +27,8 @@
       "step_number": 1,
       "prompt": {
         "tanglish": "Thambi, indha chocolate vachiko. En kuda vandha innum tharen.",
-        "tamil": "தம்பி, இந்த சாக்லேட் வச்சுக்கோ. என் கூட வந்தா இன்னும் தாரேன்."
+        "tamil": "தம்பி, இந்த சாக்லேட் வச்சுக்கோ. என் கூட வந்தா இன்னும் தாரேன்.",
+        "english": "Little boy, take this chocolate. Come with me and I'll give you more."
       },
       "target_intent": "RefusalAndEscape",
       "allowed_intents": [
@@ -52,11 +53,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "Say NO firmly and tell them you are going to your parents!",
-        "gentle_correction": "Be safe! Say: 'Venaam! Naan enga amma kitta poren' (No! I'm going to my mom)"
+        "gentle_correction": "Be safe! Say: 'Venaam! Naan enga amma kitta poren' (No! I'm going to my mom)",
+        "hint_tamil": "தைரியமா வேணாம்னு சொல்லி, அம்மாகிட்ட போறேன்னு சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Paravala, onnum aagathu, vaa.",
-        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா."
+        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா.",
+        "english": "It's alright, nothing will happen, come."
       },
       "next_turn_id": "turn_2",
       "is_terminal": false,
@@ -67,14 +70,16 @@
         "StrangerCompliance",
         "SocialAcceptance"
       ],
-      "nextTurn": "turn_2"
+      "nextTurn": "turn_2",
+      "model_answer_tamil": "வேண்டாம்! நான் எங்க அம்மா கிட்ட போறேன்"
     },
     {
       "turn_id": "turn_2",
       "step_number": 2,
       "prompt": {
         "tanglish": "Paravala, onnum aagathu, vaa.",
-        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா."
+        "tamil": "பரவால்ல, ஒன்னும் ஆகாது, வா.",
+        "english": "It's alright, nothing will happen, come."
       },
       "target_intent": "FirmRefusal",
       "allowed_intents": [
@@ -98,11 +103,13 @@
       "max_retries": 2,
       "feedback": {
         "hint": "They are insisting. Be very loud and say NO, you won't go!",
-        "gentle_correction": "Say it loud: 'No! Naan vara maten!'"
+        "gentle_correction": "Say it loud: 'No! Naan vara maten!'",
+        "hint_tamil": "அவரு ஃபோர்ஸ் பண்றாரு. சத்தமா, வர மாட்டேன்னு சொல்லு."
       },
       "next_character_reply": {
         "tanglish": "Seri seri, naan poren.",
-        "tamil": "சரி சரி, நான் போறேன்."
+        "tamil": "சரி சரி, நான் போறேன்.",
+        "english": "Okay okay, I am going."
       },
       "next_turn_id": null,
       "is_terminal": true,
@@ -113,12 +120,14 @@
         "StrangerCompliance",
         "SocialAcceptance"
       ],
-      "nextTurn": null
+      "nextTurn": null,
+      "model_answer_tamil": "இல்ல! நான் வர மாட்டேன்!"
     }
   ],
   "completion": {
     "success_title": "Stay Safe! 🛡️",
     "success_message": "Brave job! You said NO to a stranger and went to a trusted adult.",
     "stars": 3
-  }
+  },
+  "scenario_tamil": "பார்க்ல தெரியாத ஒருத்தர் உன்கிட்ட வந்து சாக்லேட் தராரு."
 }

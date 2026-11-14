@@ -4,6 +4,55 @@ from nlp.preprocessing import normalize_text
 from nlp.bad_words_filter import check_inappropriate
 from engines.rule_engine import check_respect
 
+import random
+
+# NO appreciation after individual answers. Exactly ONE closing appreciation is given when the
+# whole conversation is completed (varied, natural everyday Tamil/Tanglish, never one fixed line).
+FINAL_PRAISE = [
+    "செம! நல்லா பேசிருக்க. குட் ஜாப்!",
+    "நல்லா பேசுன! ரொம்ப நல்லா பண்ணிருக்க.",
+    "வெரி குட்! கரெக்டா எல்லாம் சொல்லிட்ட.",
+    "குட் ஜாப்! நல்லா கான்வர்சேஷன் பண்ண.",
+    "செம, நல்லா பேசிருக்க! இதே மாதிரி கண்டினியூ பண்ணு.",
+    "நைஸ்! முழுசா நல்லா பேசி முடிச்சிட்ட.",
+]
+# Conversation finished only after retries ran out: gentle encouragement, not praise.
+FINAL_ENCOURAGE = [
+    "நல்லா ட்ரை பண்ண! அடுத்த தடவ இன்னும் நல்லா வரும்.",
+    "பரவால்ல, முடிச்சிட்ட. இன்னொரு தடவ ட்ரை பண்ணலாம்.",
+]
+
+
+def final_message(forced=False):
+    return random.choice(FINAL_ENCOURAGE if forced else FINAL_PRAISE)
+
+
+# Any reasonable school name is a valid answer to "which school?": the intent is "mentions a school".
+_SCHOOL_STEMS = re.compile(
+    r"school|skool|skul|vi[dt]h?y|college|academy|convent|matric|public|govt|government|"
+    r"aided|cbse|icse|nursery|kendriy|navodaya|ashram|palli|padik|study|studying|class|"
+    r"\bkv\b|\bdav\b|\bst\b|saint|ch?eyin|seyin|sain[dt]|mer(?:i|ee)|sri\b|shri\b",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_school(raw, normalized):
+    """True for 'Kendriya Vidyalaya', "St. Mary's", 'Amrita Vidyalayam', 'Govt school', 'Sunrise Matric'."""
+    text = f"{raw or ''} {normalized or ''}"
+    if _SCHOOL_STEMS.search(text):
+        return True
+    words = re.findall(r"[A-Za-z][A-Za-z'.]*", raw or "")
+    capitalised = [w for w in words if w[0].isupper()]
+    return 2 <= len(words) <= 5 and len(capitalised) >= len(words) - 1
+TA_RETRY = "இன்னொரு தடவ ட்ரை பண்ணு."
+TA_SAFE = "நல்ல வார்த்தைய யூஸ் பண்ணலாம். இன்னொரு தடவ மெதுவா சொல்லு."
+
+
+def _say_this_ta(turn):
+    ans = turn.get("model_answer_tamil")
+    return f"இப்படி சொல்லிப் பாரு: {ans}" if ans else TA_RETRY
+
+
 def evaluate_tier2_turn(lesson, turn, response, retry_count):
     """
     Evaluates the child's response for a specific turn in a Tier 2 lesson.
@@ -30,7 +79,10 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
     safety_score = 0 if bad_check["is_inappropriate"] else 5
     
     if bad_check["is_inappropriate"]:
-        return _build_failure(turn, False, bad_check["gentle_message"], model_answer, safety_score, 0, 0, retry_count)
+        result = _build_failure(turn, False, bad_check["gentle_message"], model_answer, safety_score, 0, 0, retry_count)
+        if not result["correct"]:
+            result["feedback_tamil"] = TA_SAFE
+        return result
         
     normalized = normalize_text(response)
     
@@ -81,6 +133,15 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
             "police", "poren", "kupduven", "solluven"
         ],
 
+        # --- Friend introduction scenario ---
+        "NameIntro": [
+            "name", "peru", "peyar", "naan", "nan", "en", "my", "am", "im"
+        ],
+        "SchoolMention": [
+            "school", "skool", "padikiren", "padikkiren", "padikuren", "padikren",
+            "padikkuren", "padikaren", "study", "studying", "college", "class"
+        ],
+
         # --- New Empathy scenario (Friend - hurt) ---
         "EmpathyKeyword": [
             "ennachu", "valikudha", "okay", "괜찮아", "sorry", "onnum", "ok va",
@@ -121,6 +182,8 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
                 bool(re.search(r'\b' + re.escape(syn) + r'\b', normalized))
                 for syn in synonyms
             )
+            if req_feat == "SchoolMention" and not has_feature:
+                has_feature = _looks_like_school(response, normalized)
             if not has_feature:
                 features_met = False
                 break
@@ -157,6 +220,8 @@ def evaluate_tier2_turn(lesson, turn, response, retry_count):
             "correct": True,
             "stars_awarded": 1,
             "feedback": "Great job! You said the right thing.",
+            "feedback_tamil": "",
+            "final_appreciation_tamil": final_message() if turn.get("is_terminal", False) else "",
             "suggestion": suggestion,
             "next_character_reply": turn["next_character_reply"],
             "next_turn_id": turn.get("next_turn_id"),
@@ -198,10 +263,19 @@ def _build_failure(turn, safe, custom_msg, model_answer, safety, politeness, rel
         next_turn_id = turn.get("next_turn_id")
         is_completed = turn.get("is_terminal", False)
         
+    if retry_count >= max_retries:
+        feedback_tamil = "பரவால்ல, அடுத்து போலாம். நெக்ஸ்ட் டைம் இப்படி சொல்லு: " + (turn.get("model_answer_tamil") or "")
+    elif retry_count < max_retries - 1:
+        feedback_tamil = feedback_obj.get("hint_tamil") or TA_RETRY
+    else:
+        feedback_tamil = _say_this_ta(turn)
+
     return {
         "correct": correct,
         "stars_awarded": 0,
         "feedback": feedback,
+        "feedback_tamil": feedback_tamil,
+        "final_appreciation_tamil": final_message(forced=True) if (correct and is_completed) else "",
         "suggestion": suggestion,
         "next_character_reply": next_character_reply,
         "next_turn_id": next_turn_id,
